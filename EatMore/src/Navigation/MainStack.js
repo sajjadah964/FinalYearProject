@@ -8,6 +8,7 @@ import Profile from "../tabs/Profile/Profile";
 export default function (Stack) {
     return (
         <>
+        {/* INITIAL SCREEN  */}
             <Stack.Screen
                 name={NavigationStrings.LOGIN}
                 component={Login}
