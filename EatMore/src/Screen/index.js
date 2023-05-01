@@ -13,6 +13,9 @@ export { default as ItemsDetails } from './ItemsDetails/ItemsDetails';
 export { default as Checkout } from './Checkout/Checkout';
 export { default as OrderInformation } from './OrderInformation/OrderInformation';
 export { default as AllOrder } from './AllOrder/AllOrder';
+export { default as AllOrder } from './AllOrder/AllOrder';
+export { default as AllOrder } from './AllOrder/AllOrder';
+
 
 
 
