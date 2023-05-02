@@ -12,7 +12,7 @@ function Routes() {
         <NavigationContainer>
             <Stack.Navigator
                 screenOptions={{ presentation: 'card', headerShown: false }}
-                initialRouteName={NavigationStrings.RESET_PASSWORD}
+                initialRouteName={NavigationStrings.PROFILE}
             >
                 {/* {user ? MainStack(Stack) : AuthStack(Stack)} */}
                 {MainStack(Stack)}

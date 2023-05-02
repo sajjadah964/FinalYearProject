@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useState, } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Alert } from 'react-native'
 import { moderateScale, scale, moderateVerticalScale } from 'react-native-size-matters';
@@ -11,7 +12,9 @@ import * as Animatable from 'react-native-animatable';
 import Loader from '../../components/Loader';
 
 
+
 const Login = () => {
+    const [selectedTab, setSelectedTab] = useState(0);
     const [isLoading, setisLoading] = useState(false);
     const navigation = useNavigation();
     const [email, setEmail] = useState();

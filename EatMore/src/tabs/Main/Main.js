@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useState, useContext, useEffect } from 'react';
 import { Alert, FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { moderateScale, scale, moderateVerticalScale } from 'react-native-size-matters';
@@ -22,6 +23,9 @@ const Main = () => {
     const navigation = useNavigation()
     const [isFocused, setIsFocused] = useState(false);
     const [selectedItem, setSelectedItem] = useState(0);
+    const logout = () => {
+        isFocused== (false)
+    }
     const logoutData = () => {
         Alert.alert(
             'Logout',
