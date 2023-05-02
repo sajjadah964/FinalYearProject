@@ -93,7 +93,13 @@ const Signup = ({ navigation }) => {
                             rightIcon={CVisible ? imagePath.icHide : imagePath.icShow}
                             onPressRight={() => setCVisible(!CVisible)}
                             inputStyle={{ marginBottom: moderateVerticalScale(10) }}
-                        />                        <CustomPkgBtn
+                        />
+
+                        <TouchableOpacity activeOpacity={0.7} style={styles.forgotPassView}>
+                            <Text style={styles.forgotPassStyle}>Forgot Password </Text>
+                        </TouchableOpacity>
+
+                        <CustomPkgBtn
                             textStyle={{ ...styles.textStyle, ...styles.customTextStyle }}
                             btnStyle={{ ...styles.btnStyle, ...styles.customStyle }}
                             btnText={'Sign Up'}
