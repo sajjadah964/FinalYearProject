@@ -92,9 +92,9 @@ const Signup = ({ navigation }) => {
                             secureTextEntry={CVisible}
                             rightIcon={CVisible ? imagePath.icHide : imagePath.icShow}
                             onPressRight={() => setCVisible(!CVisible)}
-                            inputStyle={{ marginBottom: moderateVerticalScale(10) }}
-                        />                       
-                         <CustomPkgBtn
+                            inputStyle={{ marginBottom: moderateVerticalScale(30) }}
+                        />
+                        <CustomPkgBtn
                             textStyle={{ ...styles.textStyle, ...styles.customTextStyle }}
                             btnStyle={{ ...styles.btnStyle, ...styles.customStyle }}
                             btnText={'Sign Up'}
