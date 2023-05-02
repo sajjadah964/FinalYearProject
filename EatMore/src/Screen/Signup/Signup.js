@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, { useState ,useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity } from 'react-native'
 import { moderateScale, scale, moderateVerticalScale } from 'react-native-size-matters';
 import CustomPkgBtn from '../../components/CustomPkgBtn';
@@ -65,8 +65,8 @@ const Signup = ({ navigation }) => {
                             placeHolder='Enter Name'
                             onChangeText={(userName) => setName(userName)}
                             style={styles.placeholder}
-                            // inputStyle={{ marginBottom: moderateVerticalScale(10) }}
-                            // keyboardType="email-address"
+                        // inputStyle={{ marginBottom: moderateVerticalScale(10) }}
+                        // keyboardType="email-address"
                         />
                         <TextInputWithLabel
                             placeHolder='Enter Email'
@@ -82,7 +82,7 @@ const Signup = ({ navigation }) => {
                             secureTextEntry={isVisible}
                             rightIcon={isVisible ? imagePath.icHide : imagePath.icShow}
                             onPressRight={() => setVisible(!isVisible)}
-                            // inputStyle={{ marginBottom: moderateVerticalScale(14) }}
+                        // inputStyle={{ marginBottom: moderateVerticalScale(14) }}
                         />
 
                         <TextInputWithLabel
@@ -93,11 +93,12 @@ const Signup = ({ navigation }) => {
                             rightIcon={CVisible ? imagePath.icHide : imagePath.icShow}
                             onPressRight={() => setCVisible(!CVisible)}
                             inputStyle={{ marginBottom: moderateVerticalScale(10) }}
-                        />                        <CustomPkgBtn
+                        />                       
+                         <CustomPkgBtn
                             textStyle={{ ...styles.textStyle, ...styles.customTextStyle }}
                             btnStyle={{ ...styles.btnStyle, ...styles.customStyle }}
                             btnText={'Sign Up'}
-                            // onPress={() => handleSignup(email,password)}
+                        // onPress={() => handleSignup(email,password)}
                         />
                         <TouchableOpacity
                             style={styles.loginSignview}
@@ -105,7 +106,7 @@ const Signup = ({ navigation }) => {
                                 moveToScreen(NavigationStrings.LOGIN)
                             }}>
                             <Text style={styles.loginSignText} onLayout={onTextLayout}>
-                            Already Account! Login here
+                                Already Account! Login here
                             </Text>
                             {textWidth ? <View style={[styles.line, { width: textWidth }]} /> : null}
                         </TouchableOpacity>
@@ -146,10 +147,10 @@ const styles = StyleSheet.create({
         width: moderateScale(130),
         height: moderateScale(36),
         justifyContent: 'center',
-        backgroundColor:Colors.white,
+        backgroundColor: Colors.white,
         marginBottom: moderateVerticalScale(60),
-        borderColor:Colors.primaryColor,
-        borderWidth:1,
+        borderColor: Colors.primaryColor,
+        borderWidth: 1,
     },
     textStyle: {
         color: Colors.primaryColor
@@ -165,7 +166,7 @@ const styles = StyleSheet.create({
     },
     customStyle: {
         marginBottom: moderateVerticalScale(10),
-        backgroundColor:Colors.primaryColor
+        backgroundColor: Colors.primaryColor
     },
     placeholder: {
         fontSize: 15,
@@ -174,7 +175,7 @@ const styles = StyleSheet.create({
     customTextStyle: {
         fontSize: scale(15),
         fontWeight: '500',
-        color:Colors.white
+        color: Colors.white
     },
     loginSignview: {
         flexDirection: 'column',
@@ -182,12 +183,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     loginSignText: {
-        fontSize:scale(15),
+        fontSize: scale(15),
         fontWeight: '500',
         color: Colors.primaryColor
     },
     line: {
-        height:moderateScale(1),
+        height: moderateScale(1),
         backgroundColor: Colors.primaryColor,
     },
 })
