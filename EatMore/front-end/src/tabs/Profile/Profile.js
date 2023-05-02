@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react';
-import { FlatList, SafeAreaView, StyleSheet, Text, View } from 'react-native'
+import { FlatList, SafeAreaView, StyleSheet, Text, View, ScrollView} from 'react-native'
 import { moderateScale, moderateVerticalScale, scale, } from 'react-native-size-matters';
 import CustomHeader from '../../components/CustomHeader';
 import imagePath from '../../constants/imagePath';
