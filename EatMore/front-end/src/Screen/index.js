@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // Auth Stack 
 export { default as InitialScreen } from './InitialScreen/InitialScreen';
 export { default as Login } from './Login/Login';

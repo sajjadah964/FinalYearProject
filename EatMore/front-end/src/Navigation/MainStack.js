@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React from "react";
 import NavigationStrings from "../constants/NavigationStrings";
 import { AllOrder, Checkout, Home, InitialScreen, ItemsDetails, Login, OrderInformation, Signup, } from "../Screen";
