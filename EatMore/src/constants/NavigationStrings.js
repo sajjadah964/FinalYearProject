@@ -3,6 +3,7 @@ export default {
     INITIAL_SCREEN: 'InitialScreen',
     LOGIN: 'Login',
     SIGNUP: 'Signup',
+    RESET_PASSWORD: 'ResetPassword',
     TABROUTES: 'TabRoutes',
     HOME: 'Home',
     MAIN:'Main',
