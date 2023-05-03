@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import TextInputWithLabel from '../../components/TextinputWithLable';
 import NavigationStrings from '../../constants/NavigationStrings';
 import * as Animatable from 'react-native-animatable';
+import auth from '@react-native-firebase/auth';
 import Loader from '../../components/Loader';
 
 

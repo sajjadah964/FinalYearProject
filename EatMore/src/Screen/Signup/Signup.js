@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Alert } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Alert,ToastAndroid } from 'react-native'
 import { moderateScale, scale, moderateVerticalScale } from 'react-native-size-matters';
 import CustomPkgBtn from '../../components/CustomPkgBtn';
 import imagePath from '../../constants/imagePath';
@@ -9,14 +9,17 @@ import NavigationStrings from '../../constants/NavigationStrings';
 import * as Animatable from 'react-native-animatable';
 import auth from '@react-native-firebase/auth';
 import Loader from '../../components/Loader';
+import firestore from '@react-native-firebase/firestore';
 
 const Signup = ({ navigation }) => {
     //   const navigation = useNavigation();
     const [isLoading, setisLoading] = useState(false);
-    const [name, setName] = useState();
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
-    const [confirmPassword, setConfirmPassword] = useState();
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    // const [image, setImage] = useState();
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
 
     const [isVisible, setVisible] = useState(true);
     const [CVisible, setCVisible] = useState(true);
@@ -41,11 +44,13 @@ const Signup = ({ navigation }) => {
                 name: name,
                 email: result.user.email,
                 uid: result.user.uid,
+                // pic:image
             })
-            setisLoading(false)
+            ToastAndroid.show('Signup Successfully', ToastAndroid.SHORT);
+            setisLoading(false);
         } catch (error) {
             console.log('error', error);
-            setisLoading(false)
+            setisLoading(false);
 
         }
         // navigation.navigate(NavigationStrings.LOGIN);

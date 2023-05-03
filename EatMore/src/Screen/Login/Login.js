@@ -1,5 +1,5 @@
 import React, { useState, } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Alert } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Alert,ToastAndroid } from 'react-native'
 import { moderateScale, scale, moderateVerticalScale } from 'react-native-size-matters';
 import CustomPkgBtn from '../../components/CustomPkgBtn';
 import imagePath from '../../constants/imagePath';
@@ -15,8 +15,8 @@ import Loader from '../../components/Loader';
 const Login = () => {
     const [isLoading, setisLoading] = useState(false);
     const navigation = useNavigation();
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const [isVisible, setVisible] = useState(true)
     const [textWidth, setTextWidth] = useState(null);
@@ -35,11 +35,15 @@ const Login = () => {
         }
         try {
             const result = await auth().signInWithEmailAndPassword(email, password);
+            ToastAndroid.show('Login Succcessfully', ToastAndroid.SHORT);
             console.log(result);
             setisLoading(false)
+
+        navigation.navigate(NavigationStrings.HOME);
+
         } catch (error) {
             console.log('error', error);
-            Alert.alert('Something went wrong plz try different password');
+            ToastAndroid.show('Login Failed', ToastAndroid.SHORT);
             setisLoading(false)
 
         }
@@ -94,7 +98,9 @@ const Login = () => {
 
                         />
 
-                        <TouchableOpacity style={styles.forgotPassView}>
+                        <TouchableOpacity style={styles.forgotPassView} onPress={() => {
+                                moveToScreen(NavigationStrings.RESET_PASSWORD)
+                            }}>
                             <Text style={styles.forgotPassStyle}>Forgot Password </Text>
                         </TouchableOpacity>
 
