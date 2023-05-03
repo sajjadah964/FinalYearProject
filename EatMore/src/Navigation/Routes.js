@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import MainStack from './MainStack';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -12,7 +12,7 @@ function Routes() {
         <NavigationContainer>
             <Stack.Navigator
                 screenOptions={{ presentation: 'card', headerShown: false }}
-                initialRouteName={NavigationStrings.RESET_PASSWORD}
+                initialRouteName={NavigationStrings.LOGIN}
             >
                 {/* {user ? MainStack(Stack) : AuthStack(Stack)} */}
                 {MainStack(Stack)}

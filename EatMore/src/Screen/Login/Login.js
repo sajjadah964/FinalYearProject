@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import TextInputWithLabel from '../../components/TextinputWithLable';
 import NavigationStrings from '../../constants/NavigationStrings';
 import * as Animatable from 'react-native-animatable';
+import auth from '@react-native-firebase/auth';
 import Loader from '../../components/Loader';
 
 
@@ -26,13 +27,24 @@ const Login = () => {
         const { width } = event.nativeEvent.layout;
         setTextWidth(width);
     };
-    // const handleLogin = async (email, password) => {
-    //     if (email && password) {
-    //         setisLoading(true)
-    //         await login(email, password)
-    //         setisLoading(false);
-    //     }
-    // };
+    const handleUserLogin = async () => {
+        setisLoading(true)
+        if (!email || !password) {
+            Alert.alert('Plz fill all the field');
+            return
+        }
+        try {
+            const result = await auth().signInWithEmailAndPassword(email, password);
+            console.log(result);
+            setisLoading(false)
+        } catch (error) {
+            console.log('error', error);
+            Alert.alert('Something went wrong plz try different password');
+            setisLoading(false)
+
+        }
+        // navigation.navigate(NavigationStrings.LOGIN);
+    };
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -69,6 +81,7 @@ const Login = () => {
                             onChangeText={(userEmail) => setEmail(userEmail)}
                             inputStyle={{ marginBottom: moderateVerticalScale(10) }}
                             keyboardType="email-address"
+                            value={email}
                         />
                         <TextInputWithLabel
                             placeHolder={'Password'}
@@ -77,6 +90,7 @@ const Login = () => {
                             rightIcon={isVisible ? imagePath.icHide : imagePath.icShow}
                             onPressRight={() => setVisible(!isVisible)}
                             inputStyle={{ marginBottom: moderateVerticalScale(14) }}
+                            value={password}
 
                         />
 
@@ -88,7 +102,7 @@ const Login = () => {
                             textStyle={{ ...styles.textStyle, ...styles.customTextStyle }}
                             btnStyle={{ ...styles.btnStyle, ...styles.customStyle }}
                             btnText={'Login'}
-                            // onPress={() => handleLogin(email, password)}
+                            onPress={() => handleUserLogin()}
                         />
                         <TouchableOpacity
                             style={styles.loginSignview}
@@ -137,10 +151,10 @@ const styles = StyleSheet.create({
         width: moderateScale(130),
         height: moderateScale(36),
         justifyContent: 'center',
-        backgroundColor:Colors.white,
+        backgroundColor: Colors.white,
         marginBottom: moderateVerticalScale(60),
-        borderColor:Colors.primaryColor,
-        borderWidth:1,
+        borderColor: Colors.primaryColor,
+        borderWidth: 1,
     },
     textStyle: {
         color: Colors.primaryColor
@@ -158,12 +172,12 @@ const styles = StyleSheet.create({
         // width: moderateScale(130),
         // height: moderateScale(36),
         marginBottom: moderateVerticalScale(30),
-        backgroundColor:Colors.primaryColor
+        backgroundColor: Colors.primaryColor
     },
     customTextStyle: {
         fontSize: scale(15),
         fontWeight: '500',
-        color:Colors.white
+        color: Colors.white
     },
     loginSignview: {
         flexDirection: 'column',
@@ -171,7 +185,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     loginSignText: {
-        fontSize:scale(15),
+        fontSize: scale(15),
         fontWeight: '500',
         color: Colors.primaryColor
     },

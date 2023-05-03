@@ -1,6 +1,5 @@
-/* eslint-disable prettier/prettier */
 import React, { useState, useContext } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Alert } from 'react-native'
 import { moderateScale, scale, moderateVerticalScale } from 'react-native-size-matters';
 import CustomPkgBtn from '../../components/CustomPkgBtn';
 import imagePath from '../../constants/imagePath';
@@ -8,9 +7,12 @@ import Colors from '../../styles/Colors';
 import TextInputWithLabel from '../../components/TextinputWithLable';
 import NavigationStrings from '../../constants/NavigationStrings';
 import * as Animatable from 'react-native-animatable';
+import auth from '@react-native-firebase/auth';
+import Loader from '../../components/Loader';
 
 const Signup = ({ navigation }) => {
     //   const navigation = useNavigation();
+    const [isLoading, setisLoading] = useState(false);
     const [name, setName] = useState();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
@@ -27,13 +29,30 @@ const Signup = ({ navigation }) => {
     const moveToScreen = (screen) => {
         navigation.navigate(screen);
     }
-    // const handleSignup = async (email, password) => {
-    //     await register(email, password);
-    //     // navigate to login screen
-    //     navigation.navigate(NavigationStrings.LOGIN);
-    //   };
+    const handleUserSignup = async () => {
+        setisLoading(true)
+        if (!email || !password || !name || !confirmPassword) {
+            Alert.alert('Plz fill all the field');
+            return
+        }
+        try {
+            const result = await auth().createUserWithEmailAndPassword(email, password);
+            firestore().collection('users').doc(result.user.uid).set({
+                name: name,
+                email: result.user.email,
+                uid: result.user.uid,
+            })
+            setisLoading(false)
+        } catch (error) {
+            console.log('error', error);
+            setisLoading(false)
+
+        }
+        // navigation.navigate(NavigationStrings.LOGIN);
+    };
     return (
         <SafeAreaView style={{ flex: 1 }}>
+            <Loader isLoading={isLoading} />
             <View style={{ flex: 1, flexDirection: 'column', }}>
                 <View style={styles.eatmoreLogo}>
                     <View style={styles.loginLogoView}>
@@ -65,6 +84,7 @@ const Signup = ({ navigation }) => {
                             placeHolder='Enter Name'
                             onChangeText={(userName) => setName(userName)}
                             style={styles.placeholder}
+                            value={name}
                         // inputStyle={{ marginBottom: moderateVerticalScale(10) }}
                         // keyboardType="email-address"
                         />
@@ -74,6 +94,7 @@ const Signup = ({ navigation }) => {
                             style={styles.placeholder}
                             // inputStyle={{ marginBottom: moderateVerticalScale(10) }}
                             keyboardType="email-address"
+                            value={email}
                         />
                         <TextInputWithLabel
                             placeHolder={'Password'}
@@ -82,7 +103,8 @@ const Signup = ({ navigation }) => {
                             secureTextEntry={isVisible}
                             rightIcon={isVisible ? imagePath.icHide : imagePath.icShow}
                             onPressRight={() => setVisible(!isVisible)}
-                        // inputStyle={{ marginBottom: moderateVerticalScale(14) }}
+                            // inputStyle={{ marginBottom: moderateVerticalScale(14) }}
+                            value={password}
                         />
 
                         <TextInputWithLabel
@@ -93,12 +115,13 @@ const Signup = ({ navigation }) => {
                             rightIcon={CVisible ? imagePath.icHide : imagePath.icShow}
                             onPressRight={() => setCVisible(!CVisible)}
                             inputStyle={{ marginBottom: moderateVerticalScale(30) }}
+                            value={confirmPassword}
                         />
                         <CustomPkgBtn
                             textStyle={{ ...styles.textStyle, ...styles.customTextStyle }}
                             btnStyle={{ ...styles.btnStyle, ...styles.customStyle }}
                             btnText={'Sign Up'}
-                        // onPress={() => handleSignup(email,password)}
+                            onPress={() => handleUserSignup()}
                         />
                         <TouchableOpacity
                             style={styles.loginSignview}
