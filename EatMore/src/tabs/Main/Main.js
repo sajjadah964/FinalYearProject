@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Alert, FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View,ToastAndroid} from 'react-native';
+import { Alert, FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, ToastAndroid } from 'react-native';
 import { moderateScale, scale, moderateVerticalScale } from 'react-native-size-matters';
 import imagePath from '../../constants/imagePath';
 import TextInputWithLabel from '../../components/TextinputWithLable';
@@ -11,7 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import Loader from '../../components/Loader';
 import auth from '@react-native-firebase/auth';
-
+import AuthStack from '../../Navigation/AuthStack';
 const numColumns = 2;
 const Main = () => {
     const [isLoading, setisLoading] = useState(true);
@@ -24,27 +24,30 @@ const Main = () => {
     const [isFocused, setIsFocused] = useState(false);
     const [selectedItem, setSelectedItem] = useState(0);
     const logoutData = async () => {
-        // Alert.alert(
-        //     'Logout',
-        //     'Are you sure you want to Logout!',
-        //     [
-        //         {
-        //             text: 'Cancel',
-        //             style: 'cancel',
-        //         },
-        //         {
-        //             text: 'OK',
-        //             onPress: () => logout(),
-        //             style: 'cancel',
-        //         },
-        //     ],
-        //     { cancelable: false }
-        // );
+        Alert.alert(
+            'Logout',
+            'Are you sure you want to Logout!',
+            [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                },
+                {
+                    text: 'OK',
+                    onPress: () => logout(),
+                    style: 'cancel',
+                },
+            ],
+            { cancelable: false }
+        );
+    }
+    const logout = async () => {
         auth()
             .signOut()
             .then(() => {
-            ToastAndroid.show('Logout Succcessfully', ToastAndroid.SHORT);
-                navigation.navigate(NavigationStrings.LOGIN)
+                ToastAndroid.show('Logout Succcessfully', ToastAndroid.SHORT);
+                navigation.navigate(NavigationStrings.MAIN_STACK, { screen:NavigationStrings.LOGIN});
+
             });
     }
     const onItemPress = (id) => {

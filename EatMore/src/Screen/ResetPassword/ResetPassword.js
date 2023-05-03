@@ -24,7 +24,8 @@ const Login = () => {
         auth()
             .sendPasswordResetEmail(email)
             .then(() => {
-                Alert.alert('Success', 'Password reset email sent.');
+                Alert.alert('Password reset email sent successfully.');
+                navigation.navigate(NavigationStrings.LOGIN)
             })
             .catch(error => {
                 Alert.alert('Reset Email error')

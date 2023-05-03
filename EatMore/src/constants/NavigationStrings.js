@@ -1,6 +1,5 @@
-/* eslint-disable prettier/prettier */
 export default {
-    INITIAL_SCREEN: 'InitialScreen',
+    SPLASH_SCREEN: 'SplashScreen',
     LOGIN: 'Login',
     SIGNUP: 'Signup',
     RESET_PASSWORD: 'ResetPassword',
@@ -15,7 +14,8 @@ export default {
     CHECKOUT: 'Checkout',
     SUBSCRIPTION: 'Subscription',
     ORDER_INFORMATION: 'OrderInformation',
-
+    MAIN_STACK:'MainStack',
+    AUTH_STACK:'AuthStack',
 
 
 
