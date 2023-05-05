@@ -4,15 +4,19 @@ import { moderateScale, scale, moderateVerticalScale } from 'react-native-size-m
 import CustomPkgBtn from '../../components/CustomPkgBtn';
 import imagePath from '../../constants/imagePath';
 import Colors from '../../styles/Colors';
+import { useNavigation } from '@react-navigation/native';
+
 import TextInputWithLabel from '../../components/TextinputWithLable';
 import NavigationStrings from '../../constants/NavigationStrings';
 import * as Animatable from 'react-native-animatable';
 import auth from '@react-native-firebase/auth';
 import Loader from '../../components/Loader';
 import firestore from '@react-native-firebase/firestore';
+// import PropTypes from 'prop-types';
+import { CommonActions } from '@react-navigation/native';
 
-const Signup = ({ navigation }) => {
-    //   const navigation = useNavigation();
+const Signup = ({navigateToLogin}) => {
+      const navigation = useNavigation();
     const [isLoading, setisLoading] = useState(false);
     const [isVisible, setVisible] = useState(true);
     const [CVisible, setCVisible] = useState(true);
@@ -37,7 +41,7 @@ const Signup = ({ navigation }) => {
     const handleUserSignup = async () => {
         if (!email || !password || !name) {
             ToastAndroid.show('Please fill all the field', ToastAndroid.SHORT);
-            return
+            return;
         }
         try {
             setisLoading(true);
@@ -49,6 +53,9 @@ const Signup = ({ navigation }) => {
                 // pic:image
             })
             ToastAndroid.show('Signed up successfully', ToastAndroid.SHORT);
+            // Navigate to the Login screen after successful signup
+            navigation.replace(NavigationStrings.LOGIN);
+              
             setisLoading(false);
         } catch (error) {
             console.log('error', error);
@@ -226,7 +233,9 @@ const Signup = ({ navigation }) => {
         </SafeAreaView>
     )
 }
-
+// Signup.propTypes = {
+//     navigateToLogin: PropTypes.func.isRequired,
+//   };
 const styles = StyleSheet.create({
     eatmoreLogo: {
         // flex: 1,

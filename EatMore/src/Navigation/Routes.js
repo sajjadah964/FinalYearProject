@@ -10,16 +10,19 @@ import MainStack from './MainStack'
 const Stack = createNativeStackNavigator();
 
 function Routes() {
-    const [user, setUser] = useState('')
+    const [user, setUser] = useState('');
+    // const navigation = useNavigation();
     useEffect(() => {
-        auth().onAuthStateChanged((userExist) => {
-            if (userExist) {
+        const unsubscribe =  auth().onAuthStateChanged((userExist) => {
+            if (user) {
                 setUser(userExist)
             } else {
                 setUser('')
             }
         })
+        return unsubscribe; // Unsubscribe from the listener when the component unmounts
     }, []);
+
     return (
         <NavigationContainer>
             {/* <Stack.Navigator

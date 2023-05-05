@@ -1,5 +1,5 @@
 import React, { useState, } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Alert } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Alert,ToastAndroid } from 'react-native'
 import { moderateScale, scale, moderateVerticalScale } from 'react-native-size-matters';
 import CustomPkgBtn from '../../components/CustomPkgBtn';
 import imagePath from '../../constants/imagePath';
@@ -24,11 +24,11 @@ const Login = () => {
         auth()
             .sendPasswordResetEmail(email)
             .then(() => {
-                Alert.alert('Password reset email sent successfully.');
-                navigation.navigate(NavigationStrings.LOGIN)
+                ToastAndroid.show('Password reset email sent successfully.', ToastAndroid.SHORT);
+                // navigation.navigate(NavigationStrings.LOGIN)
             })
             .catch(error => {
-                Alert.alert('Reset Email error')
+                Alert.alert('Reset Email error',error)
             });
     };
 

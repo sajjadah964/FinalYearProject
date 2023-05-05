@@ -6,6 +6,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
 export default function AuthStack() {
     console.log("this is my authstack file")
+    // const navigateToLogin = () => {
+    //     NavigationStrings.navigateToLogin
+    //   };
     return (
         <Stack.Navigator screenOptions={{ presentation: 'card', headerShown: false }}>
             <Stack.Screen
@@ -19,8 +22,9 @@ export default function AuthStack() {
             <Stack.Screen
                 name={NavigationStrings.SIGNUP}
                 component={Signup}
+
             />
-                        <Stack.Screen
+            <Stack.Screen
                 name={NavigationStrings.RESET_PASSWORD}
                 component={ResetPassword}
             />
