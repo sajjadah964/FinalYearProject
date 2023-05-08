@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Alert, ToastAndroid } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity,ToastAndroid } from 'react-native'
 import { moderateScale, scale, moderateVerticalScale } from 'react-native-size-matters';
 import CustomPkgBtn from '../../components/CustomPkgBtn';
 import imagePath from '../../constants/imagePath';

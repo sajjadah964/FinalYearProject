@@ -112,20 +112,22 @@ const Login = () => {
     //     });
     // }, []);
 
-    // const adminLogin= async ()=>{
-    //     const users = await firestore().collection('AdminLogin').get();
-    //     if (email == users.docs[0]._data.email && password == users.docs[0]._data.password) {
-    //         ToastAndroid.show('Login successfully  ', ToastAndroid.SHORT);
-
-    //         navigation.navigate(NavigationStrings.DASHBOARD);
+    const adminLogin= async ()=>{
+        setisLoading(true);
+        const users = await firestore().collection('AdminLogin').get();
+        if (email == users.docs[0]._data.email && password == users.docs[0]._data.password) {
+            ToastAndroid.show('Login successfully  ', ToastAndroid.SHORT);
+            setisLoading(false);
+            navigation.navigate(NavigationStrings.DASHBOARD);
             
-    //     } else {
-    //         ToastAndroid.show('Wrong email and password ', ToastAndroid.SHORT);
-    //     }
-    //     console.log(users.docs[0]._data)
-    //     setEmail('');
-    //     setPassword('');
-    // }
+        } else {
+            setisLoading(false)
+            ToastAndroid.show('Wrong email and password ', ToastAndroid.SHORT);
+        }
+        console.log(users.docs[0]._data)
+        setEmail('');
+        setPassword('');
+    }
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -187,12 +189,12 @@ const Login = () => {
                             btnStyle={{ ...styles.btnStyle, ...styles.customStyle }}
                             btnText={'Login'}
                             onPress={() => {
-                                navigation.navigate(NavigationStrings.DASHBOARD)
-                            // if (email !== '' && password !== '') {
-                            //     adminLogin()
-                            // } else {
-                            //     ToastAndroid.show('please enter data', ToastAndroid.SHORT);
-                            // }
+                                // navigation.navigate(NavigationStrings.DASHBOARD)
+                            if (email !== '' && password !== '') {
+                                adminLogin()
+                            } else {
+                                ToastAndroid.show('please enter data', ToastAndroid.SHORT);
+                            }
                             }}
 
                         />

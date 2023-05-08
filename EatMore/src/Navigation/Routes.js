@@ -14,7 +14,7 @@ function Routes() {
     // const navigation = useNavigation();
     useEffect(() => {
         const unsubscribe =  auth().onAuthStateChanged((userExist) => {
-            if (user) {
+            if (userExist) {
                 setUser(userExist)
             } else {
                 setUser('')

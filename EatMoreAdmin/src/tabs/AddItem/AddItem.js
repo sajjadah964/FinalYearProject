@@ -81,55 +81,55 @@ const AddItem = () => {
 
     const uploadItem = async (url) => {
         if (!name || !price || !points || !description || !imageData) {
-          ToastAndroid.show('Please enter all data', ToastAndroid.SHORT);
-          return;
+            ToastAndroid.show('Please enter all data', ToastAndroid.SHORT);
+            return;
         }
-      
+
         let imageUploaded = false;
-      
+
         if (imageData.assets[0] !== '') {
-          try {
-            const reference = storage().ref(imageData.assets[0].fileName);
-            const pathToFile = imageData.assets[0].uri;
-            // uploads file
-            await reference.putFile(pathToFile);
-            url = await storage()
-              .ref(imageData.assets[0].fileName)
-              .getDownloadURL();
-            console.log(url);
-            imageUploaded = true;
-          } catch (error) {
-            ToastAndroid.show('Image upload failed', ToastAndroid.SHORT);
-            console.log(error);
-          }
+            try {
+                const reference = storage().ref(imageData.assets[0].fileName);
+                const pathToFile = imageData.assets[0].uri;
+                // uploads file
+                await reference.putFile(pathToFile);
+                url = await storage()
+                    .ref(imageData.assets[0].fileName)
+                    .getDownloadURL();
+                console.log(url);
+                imageUploaded = true;
+            } catch (error) {
+                ToastAndroid.show('Image upload failed', ToastAndroid.SHORT);
+                console.log(error);
+            }
         }
         firestore()
-          .collection('items')
-          .add({
-            name: name,
-            price: price,
-            points: points,
-            description: description,
-            category:
-              selectedIndex == 0 ? 'All Items' : selectedIndex == 1 ? 'Burger' : 'Pizza',
-            imageUrl: imageUploaded ? url : null,
-          })
-          .then(() => {
-            ToastAndroid.show('Item Added', ToastAndroid.SHORT);
-          })
-          .catch((error) => {
-            ToastAndroid.show('Item added failed', ToastAndroid.SHORT);
-            console.log(error);
-          });
-      
+            .collection('items')
+            .add({
+                name: name,
+                price: price,
+                points: points,
+                description: description,
+                category:
+                    selectedIndex == 0 ? 'All Items' : selectedIndex == 1 ? 'Burger' : 'Pizza',
+                imageUrl: imageUploaded ? url : null,
+            })
+            .then(() => {
+                ToastAndroid.show('Item Added', ToastAndroid.SHORT);
+            })
+            .catch((error) => {
+                ToastAndroid.show('Item added failed', ToastAndroid.SHORT);
+                console.log(error);
+            });
+
         setName('');
         setPrice('');
         setPoints('');
         setDescription('');
         setSelectedIndex(0);
         setImageData('');
-      };
-      
+    };
+
     // LOADING CODE
     // useEffect(() => {
     //     setTimeout(() => {
@@ -160,7 +160,8 @@ const AddItem = () => {
                                 inlineInputStyle={styles.inlineInputStyle}
                                 placeholderTextColor='rgba(0, 0, 0, 0.3)'
                                 value={name}
-                                onChangeText={setName}
+                                onChangeText={txt => setName(txt)}
+
                             />
                             <TextInputWithLabel
                                 // label={'Gender'}
@@ -170,7 +171,8 @@ const AddItem = () => {
                                 inlineInputStyle={styles.inlineInputStyle}
                                 placeholderTextColor='rgba(0, 0, 0, 0.3)'
                                 value={price}
-                                onChangeText={setPrice}
+                                onChangeText={txt => setPrice(txt)}
+
                             />
                             <TextInputWithLabel
                                 // label={'City'}
@@ -180,7 +182,7 @@ const AddItem = () => {
                                 inlineInputStyle={styles.inlineInputStyle}
                                 placeholderTextColor='rgba(0, 0, 0, 0.3)'
                                 value={points}
-                                onChangeText={setPoints}
+                                onChangeText={txt => setPoints(txt)}
                             />
                             <TextInputWithLabel
                                 // label={'Address'}
@@ -190,7 +192,7 @@ const AddItem = () => {
                                 inlineInputStyle={styles.inlineInputStyle}
                                 placeholderTextColor='rgba(0, 0, 0, 0.3)'
                                 value={description}
-                                onChangeText={setDescription}
+                                onChangeText={txt => setDescription(txt)}
                             />
                             <View style={styles.categoryView}>
                                 <Text style={styles.categorylabel}>Select Your Category</Text>

@@ -16,10 +16,10 @@ export default function MainStack() {
                 name={NavigationStrings.SPLASH_SCREEN}
                 component={SplashScreen}
             /> */}
-            {/* <Stack.Screen
+            <Stack.Screen
                 name={NavigationStrings.LOGIN}
                 component={Login}
-            /> */}
+            />
 
             <Stack.Screen
                 name={NavigationStrings.DASHBOARD}

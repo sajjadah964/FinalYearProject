@@ -27,7 +27,7 @@ function Routes() {
         <NavigationContainer>
             <Stack.Navigator
                 screenOptions={{ presentation: 'card', headerShown: false }}
-                initialRouteName={NavigationStrings.DASHBOARD}
+                initialRouteName={NavigationStrings.LOGIN}
             >
                 {/* {user ? MainStack(Stack) : AuthStack(Stack)}
                 {MainStack(Stack)} */}
