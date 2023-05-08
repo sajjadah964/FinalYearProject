@@ -34,4 +34,5 @@ export default {
     icShowItemFill: require('../assets/images/show-item-fill.png'),
     icShowItem: require('../assets/images/show-item.png'),
     icAddImage: require('../assets/images/add-image.png'),
+    icCloseIcon:require('../assets/images/close-square.png'),
 }

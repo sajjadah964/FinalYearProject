@@ -19,7 +19,7 @@ const AddItem = () => {
     const [price, setPrice] = useState('');
     const [points, setPoints] = useState('');
     const [description, setDescription] = useState('');
-    const [category, setCategory] = useState('');
+    const [category, setCategory] = useState([]);
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [imageData, setImageData] = useState(null);
     const buttons = [
@@ -37,7 +37,7 @@ const AddItem = () => {
         }
     ]
     const selectCategory = (index) => {
-        setSelectedIndex(index)
+        // setSelectedIndex(index)
     }
     const getButtonStyle = (index) => {
         if (index === selectedIndex) {
@@ -84,9 +84,8 @@ const AddItem = () => {
             ToastAndroid.show('Please enter all data', ToastAndroid.SHORT);
             return;
         }
-
+        setisLoading(true);
         let imageUploaded = false;
-
         if (imageData.assets[0] !== '') {
             try {
                 const reference = storage().ref(imageData.assets[0].fileName);
@@ -112,12 +111,14 @@ const AddItem = () => {
                 description: description,
                 category:
                     selectedIndex == 0 ? 'All Items' : selectedIndex == 1 ? 'Burger' : 'Pizza',
-                imageUrl: imageUploaded ? url : null,
+                imageUrl: imageUploaded ? url + '' : null,
             })
             .then(() => {
+                setisLoading(false)
                 ToastAndroid.show('Item Added', ToastAndroid.SHORT);
             })
             .catch((error) => {
+                setisLoading(false)
                 ToastAndroid.show('Item added failed', ToastAndroid.SHORT);
                 console.log(error);
             });
@@ -127,7 +128,7 @@ const AddItem = () => {
         setPoints('');
         setDescription('');
         setSelectedIndex(0);
-        setImageData('');
+        // setImageData('');
     };
 
     // LOADING CODE
@@ -139,133 +140,131 @@ const AddItem = () => {
     //     [];
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            {isLoading ? <Loader isLoading={isLoading} /> :
-                <View style={styles.container}>
-                    <CustomHeader
-                        // leftImg={imagePath.icBack}
-                        headerTitle={'Add Items'}
-                    // headerImgStyle={styles.headerImgStyle}
-                    />
-                    <ScrollView style={{ flex: 1 }}
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false}
-                    >
-                        <View style={styles.FormInputView}>
+            <Loader isLoading={isLoading} />
+            <View style={styles.container}>
+                <CustomHeader
+                    // leftImg={imagePath.icBack}
+                    headerTitle={'Add Items'}
+                // headerImgStyle={styles.headerImgStyle}
+                />
+                <ScrollView style={{ flex: 1 }}
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                >
+                    <View style={styles.FormInputView}>
 
-                            <TextInputWithLabel
-                                // label={'Department'}
-                                labelTextStyle={styles.labelTextStyle}
-                                inputStyle={styles.inputStyle}
-                                placeHolder="Item Name"
-                                inlineInputStyle={styles.inlineInputStyle}
-                                placeholderTextColor='rgba(0, 0, 0, 0.3)'
-                                value={name}
-                                onChangeText={txt => setName(txt)}
+                        <TextInputWithLabel
+                            // label={'Department'}
+                            labelTextStyle={styles.labelTextStyle}
+                            inputStyle={styles.inputStyle}
+                            placeHolder="Item Name"
+                            inlineInputStyle={styles.inlineInputStyle}
+                            placeholderTextColor='rgba(0, 0, 0, 0.3)'
+                            value={name}
+                            onChangeText={txt => setName(txt)}
 
-                            />
-                            <TextInputWithLabel
-                                // label={'Gender'}
-                                labelTextStyle={styles.labelTextStyle}
-                                inputStyle={styles.inputStyle}
-                                placeHolder="Item Price"
-                                inlineInputStyle={styles.inlineInputStyle}
-                                placeholderTextColor='rgba(0, 0, 0, 0.3)'
-                                value={price}
-                                onChangeText={txt => setPrice(txt)}
+                        />
+                        <TextInputWithLabel
+                            // label={'Gender'}
+                            labelTextStyle={styles.labelTextStyle}
+                            inputStyle={styles.inputStyle}
+                            placeHolder="Item Price"
+                            inlineInputStyle={styles.inlineInputStyle}
+                            placeholderTextColor='rgba(0, 0, 0, 0.3)'
+                            value={price}
+                            onChangeText={txt => setPrice(txt)}
 
-                            />
-                            <TextInputWithLabel
-                                // label={'City'}
-                                labelTextStyle={styles.labelTextStyle}
-                                inputStyle={styles.inputStyle}
-                                placeHolder="Item Points"
-                                inlineInputStyle={styles.inlineInputStyle}
-                                placeholderTextColor='rgba(0, 0, 0, 0.3)'
-                                value={points}
-                                onChangeText={txt => setPoints(txt)}
-                            />
-                            <TextInputWithLabel
-                                // label={'Address'}
-                                labelTextStyle={styles.labelTextStyle}
-                                inputStyle={{ ...styles.inputStyle, ...styles.descInputStyle }}
-                                placeHolder="Enter Your Description"
-                                inlineInputStyle={styles.inlineInputStyle}
-                                placeholderTextColor='rgba(0, 0, 0, 0.3)'
-                                value={description}
-                                onChangeText={txt => setDescription(txt)}
-                            />
-                            <View style={styles.categoryView}>
-                                <Text style={styles.categorylabel}>Select Your Category</Text>
-                                <View style={styles.categoryBtnView}>
-                                    {buttons.map((button, index) => {
-                                        return (
-                                            <CustomPkgBtn
-                                                key={index}
-                                                btnText={button.title}
-                                                textStyle={{ ...styles.textStyle, ...styles.categoryTextStyle, color: selectedIndex == index ? '#FFF' : '#A8A7A7' }}
-                                                btnStyle={{ ...styles.btnStyle, ...getButtonStyle(index) }}
-                                                onPress={() => selectCategory(index)}
-                                            />
-                                        )
-                                    })
+                        />
+                        <TextInputWithLabel
+                            // label={'City'}
+                            labelTextStyle={styles.labelTextStyle}
+                            inputStyle={styles.inputStyle}
+                            placeHolder="Item Points"
+                            inlineInputStyle={styles.inlineInputStyle}
+                            placeholderTextColor='rgba(0, 0, 0, 0.3)'
+                            value={points}
+                            onChangeText={txt => setPoints(txt)}
+                        />
+                        <TextInputWithLabel
+                            // label={'Address'}
+                            labelTextStyle={styles.labelTextStyle}
+                            inputStyle={{ ...styles.inputStyle, ...styles.descInputStyle }}
+                            placeHolder="Enter Your Description"
+                            inlineInputStyle={styles.inlineInputStyle}
+                            placeholderTextColor='rgba(0, 0, 0, 0.3)'
+                            value={description}
+                            onChangeText={txt => setDescription(txt)}
+                        />
+                        <View style={styles.categoryView}>
+                            <Text style={styles.categorylabel}>Select Your Category</Text>
+                            <View style={styles.categoryBtnView}>
+                                {buttons.map((button, index) => {
+                                    return (
+                                        <CustomPkgBtn
+                                            key={index}
+                                            btnText={button.title}
+                                            textStyle={{ ...styles.textStyle, ...styles.categoryTextStyle, color: selectedIndex == index ? '#FFF' : '#A8A7A7' }}
+                                            btnStyle={{ ...styles.btnStyle, ...getButtonStyle(index) }}
+                                            onPress={() => selectCategory(index)}
+                                        />
+                                    )
+                                })
 
-                                    }
-                                </View>
+                                }
                             </View>
-                            <View style={styles.addImageView}>
-                                <Text style={styles.categorylabel}>Add Your Image</Text>
-                                <View style={{
-                                    alignItems: 'center',
-                                    justifyContent: 'center'
-                                }}>
-                                    <TouchableOpacity style={styles.addImageStyle}
-                                        activeOpacity={0.7}
-                                        onPress={() => {
-                                            requestCameraPermission();
-                                        }}
-                                    >
-                                        {/* <Image
+                        </View>
+                        <View style={styles.addImageView}>
+                            <Text style={styles.categorylabel}>Add Your Image</Text>
+                            <View style={{
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <TouchableOpacity style={styles.addImageStyle}
+                                    activeOpacity={0.7}
+                                    onPress={() => {
+                                        requestCameraPermission();
+                                    }}
+                                >
+                                    {/* <Image
                                             style={{
                                                 justifyContent: 'center',
                                                 alignItems: 'center',
                                             }}
                                             source={imagePath.icAddImage}
                                         /> */}
-                                        {imageData !== null ? (
-                                            <Image
-                                                source={{ uri: imageData.assets[0].uri }}
-                                                style={{
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                    width: '100%',
-                                                    height: '100%',
-                                                    borderRadius: 10
-                                                }}
-                                            />
-                                        ) :
-                                            <Image
-                                                style={{
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center',
-                                                }}
-                                                source={imagePath.icAddImage}
-                                            />
-                                        }
-                                    </TouchableOpacity>
-                                </View>
+                                    {imageData !== null ? (
+                                        <Image
+                                            source={{ uri: imageData.assets[0].uri }}
+                                            style={{
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                width: '100%',
+                                                height: '100%',
+                                                borderRadius: 10
+                                            }}
+                                        />
+                                    ) :
+                                        <Image
+                                            style={{
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                            }}
+                                            source={imagePath.icAddImage}
+                                        />
+                                    }
+                                </TouchableOpacity>
                             </View>
-                            <CustomPkgBtn
-                                btnText={'Upload Item'}
-                                textStyle={{ ...styles.textStyle }}
-                                btnStyle={{ ...styles.btnStyle }}
-                                onPress={() => {
-                                    uploadItem();
-                                }}
-                            />
                         </View>
-                    </ScrollView>
-                </View>
-            }
+                        <CustomPkgBtn
+                            btnText={'Upload Item'}
+                            textStyle={{ ...styles.textStyle }}
+                            btnStyle={{ ...styles.btnStyle }}
+                            onPress={() => uploadItem()}
+                        />
+                    </View>
+                </ScrollView>
+            </View>
+
         </SafeAreaView >
     )
 }
