@@ -100,6 +100,7 @@ const Login = () => {
     //     return password.length >= 6;
     // };
 
+    // ADDING ADMIN LOGIN FIREBASE 
     // useEffect(() => {
     //     firestore()
     //     .collection('AdminLogin')
