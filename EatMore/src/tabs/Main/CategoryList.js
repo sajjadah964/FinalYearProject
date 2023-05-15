@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import imagePath from "../../constants/imagePath";
 
 export default CategoryList = [

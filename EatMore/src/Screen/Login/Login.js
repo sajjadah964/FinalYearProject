@@ -12,7 +12,9 @@ import auth from '@react-native-firebase/auth';
 import Loader from '../../components/Loader';
 
 
+
 const Login = () => {
+    const [selectedTab, setSelectedTab] = useState(0);
     const [isLoading, setisLoading] = useState(false);
     const navigation = useNavigation();
     const [email, setEmail] = useState('');

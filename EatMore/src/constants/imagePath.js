@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 export default {
     // bgImage: require('../assets/images/initialScreen.png'),
     bgLogo: require('../assets/images/logo.png'),
@@ -7,7 +8,6 @@ export default {
     icUserLogo: require('../assets/images/user.png'),
     icSearch: require('../assets/images/search.png'),
     icHome: require('../assets/images/home.png'),
-    icCart: require('../assets/images/cart.png'),
     icSubscription: require('../assets/images/subscription.png'),
     icUserProfileLogo: require('../assets/images/user-profile-logo.png'),
     icSearchItem: require('../assets/images/search-bar.png'),
@@ -26,4 +26,6 @@ export default {
     icSubBurger: require('../assets/images/sub-burger.png'),
     icSubPizza: require('../assets/images/sub-pizza.png'),
     icUserImg: require('../assets/images/user-img.png'),
+    icCartMinus: require('../assets/images/cartMinus.png'),
+    icCartPlus: require('../assets/images/cartPlus.png'),
 }
