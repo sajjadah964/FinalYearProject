@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useState ,useEffect } from 'react';
 import { SafeAreaView, StyleSheet, Text, View, Dimensions, Image, TouchableOpacity } from 'react-native'
 import CustomHeader from '../../components/CustomHeader';
