@@ -102,7 +102,7 @@ const ItemsDetails = (props) => {
                             </View>
                             <View>
                                 <CustomPkgBtn
-                                    onPress={() => { moveToScreen(NavigationStrings.CART_STACK) }}
+                                    onPress={() => { moveToScreen(NavigationStrings.ADD_TO_CART) }}
                                     textStyle={{ ...styles.textStyle }}
                                     btnStyle={{ ...styles.btnStyle }}
                                     btnText={'Add to Cart'}
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
         // marginTop: moderateVerticalScale(20)
     },
     textStyle: {
-        fontWeight: 400,
+        fontWeight: '400',
         fontSize: 16,
         color: Colors.primaryColor,
         fontStyle: 'normal',
