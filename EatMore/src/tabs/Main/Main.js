@@ -13,6 +13,8 @@ import * as Animatable from 'react-native-animatable';
 import Loader from '../../components/Loader';
 import auth from '@react-native-firebase/auth';
 import AuthStack from '../../Navigation/AuthStack';
+import storage from '@react-native-firebase/storage';
+import firestore from '@react-native-firebase/firestore';
 const numColumns = 2;
 const Main = () => {
     const [isLoading, setisLoading] = useState(true);
@@ -24,6 +26,7 @@ const Main = () => {
     const navigation = useNavigation()
     const [isFocused, setIsFocused] = useState(false);
     const [selectedItem, setSelectedItem] = useState(0);
+    const [items, setItems] = useState([])
     const logoutData = async () => {
         Alert.alert(
             'Logout',
@@ -75,6 +78,26 @@ const Main = () => {
     const moveToScreen = (screen) => {
         navigation.navigate(screen)
     }
+    useEffect(() => {
+        getData();
+    }, []);
+    const getData = async () => {
+        firestore()
+            .collection('items')
+            .get()
+            .then(querySnapshot => {
+                console.log('Total users: ', querySnapshot.size);
+                let tempData = [];
+                querySnapshot.forEach(documentSnapshot => {
+                    console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
+                    tempData.push({
+                        id: documentSnapshot.id,
+                        data: documentSnapshot.data(),
+                    })
+                });
+                setItems(tempData);
+            });
+    }
     const renderItem = ({ item, index }) => {
         // console.log(item)
         console.log(index)
@@ -120,17 +143,19 @@ const Main = () => {
                 <View style={styles.singleItem}>
                     <View style={{ alignItems: 'center' }}>
                         <Animatable.Image
-                            source={item.itemUrl}
+                              source={{ uri: item.data.imageUrl }}
                             duraton="1500"
                             animation="bounce"
+                            style={{width:50,height:100}}
                         />
                     </View>
                     <View style={{
                         paddingHorizontal: moderateScale(15)
                     }}>
-                        <Text style={styles.itemNameStyle}>{item.itemName}</Text>
+                        <Text style={styles.itemNameStyle}>{item.data.name}</Text>
                         <View style={styles.itemPriceDetail}>
-                            <Text style={styles.itemPriceStyle}>Rs.{item.itemPrice}</Text>
+                            <Text style={styles.itemPriceStyle}>Rs.{item.data.price}</Text>
+                            <Text style={[styles.itemStyle, {}]}>Points: {item.data.points}</Text>
                             <Animatable.Image
                                 source={item.plusIcon}
                             />
@@ -190,7 +215,7 @@ const Main = () => {
                         <Text style={styles.topItemListHeading}>Top Items</Text>
 
                         <FlatList
-                            data={TopItemList}
+                            data={items}
                             renderItem={topItemList}
                             keyExtractor={(item, index) => index.toString()}
                             numColumns={numColumns}
