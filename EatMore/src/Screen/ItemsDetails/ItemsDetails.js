@@ -13,7 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import Loader from '../../components/Loader';
 
 const ItemsDetails = (props) => {
-    // console.log(props.route.params.detail);
+    console.log(props.route.params.detail);
     // console.log(props.index)
     // const{navigation}={props
     const [isLoading, setisLoading] = useState(true);
