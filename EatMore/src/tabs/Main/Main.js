@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { useState, useContext, useEffect } from 'react';
-import { Alert, FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, ToastAndroid } from 'react-native';
 import { moderateScale, scale, moderateVerticalScale } from 'react-native-size-matters';
 import imagePath from '../../constants/imagePath';
 import TextInputWithLabel from '../../components/TextinputWithLable';
@@ -11,6 +11,11 @@ import NavigationStrings from '../../constants/NavigationStrings';
 import { useNavigation } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import Loader from '../../components/Loader';
+import CustomPkgBtn from '../../components/CustomPkgBtn';
+import auth from '@react-native-firebase/auth';
+import AuthStack from '../../Navigation/AuthStack';
+import storage from '@react-native-firebase/storage';
+import firestore from '@react-native-firebase/firestore';
 
 const numColumns = 2;
 const Main = () => {
@@ -23,10 +28,34 @@ const Main = () => {
     const navigation = useNavigation()
     const [isFocused, setIsFocused] = useState(false);
     const [selectedItem, setSelectedItem] = useState(0);
-    const logout = () => {
-        isFocused== (false)
+    const [selectedIndex, setSelectedIndex] = useState(0);
+    const [items, setItems] = useState([])
+    const buttons = [
+        {
+            id: 1,
+            title: 'All Items'
+        },
+        {
+            id: 2,
+            title: 'Burger'
+        },
+        {
+            id: 3,
+            title: 'Pizza'
+        }
+    ]
+
+    const selectCategory = (index) => {
+        setSelectedIndex(index)
     }
-    const logoutData = () => {
+    const getButtonStyle = (index) => {
+        if (index === selectedIndex) {
+            return styles.selectedButton;
+        } else {
+            return styles.unselectedButton;
+        }
+    };
+    const logoutData = async () => {
         Alert.alert(
             'Logout',
             'Are you sure you want to Logout!',
@@ -43,6 +72,15 @@ const Main = () => {
             ],
             { cancelable: false }
         );
+    }
+    const logout = async () => {
+        auth()
+            .signOut()
+            .then(() => {
+                ToastAndroid.show('Logout Succcessfully', ToastAndroid.SHORT);
+                navigation.navigate(NavigationStrings.MAIN_STACK, { screen: NavigationStrings.LOGIN });
+
+            });
     }
     const onItemPress = (id) => {
         setSelectedItem(id);
@@ -68,39 +106,25 @@ const Main = () => {
     const moveToScreen = (screen) => {
         navigation.navigate(screen)
     }
-    const renderItem = ({ item, index }) => {
-        // console.log(item)
-        console.log(index)
-        return (
-            <TouchableOpacity
-                style={[styles.categoriesViewStyle,]}
-            >
-                <TouchableOpacity style={[styles.categoriesListStyle, getStyle(index)]}
-                    onPress={() => onItemPress(index)}
-                    activeOpacity={0.8}
-                >
-                    <View style={{
-                        width: moderateScale(60),
-                        height: moderateScale(60),
-                    }}>
-                        <Image
-                            style={{
-                                width: moderateScale(60),
-                                height: moderateScale(60),
-                            }}
-                            source={item.url}
-                        />
-                    </View>
-                </TouchableOpacity>
-                <Text style={{
-                    fontSize: scale(16),
-                    fontWeight: '400',
-                    color: index == selectedItem ? '#7E58F4' : Colors.black,
-                    textAlign: 'center'
-                }}>{item.itemName}
-                </Text>
-            </TouchableOpacity>
-        )
+    useEffect(() => {
+        getData();
+    }, []);
+    const getData = async () => {
+        firestore()
+            .collection('items')
+            .get()
+            .then(querySnapshot => {
+                console.log('Total users: ', querySnapshot.size);
+                let tempData = [];
+                querySnapshot.forEach(documentSnapshot => {
+                    console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
+                    tempData.push({
+                        id: documentSnapshot.id,
+                        data: documentSnapshot.data(),
+                    })
+                });
+                setItems(tempData);
+            });
     }
     const topItemList = ({ item, index }) => {
         console.log(item, 'top item list')
@@ -113,20 +137,22 @@ const Main = () => {
                 <View style={styles.singleItem}>
                     <View style={{ alignItems: 'center' }}>
                         <Animatable.Image
-                            source={item.itemUrl}
+                            source={{ uri: item.data.imageUrl }}
                             duraton="1500"
                             animation="bounce"
+                            style={{ width: 100, height: 100, marginBottom: 5 }}
                         />
                     </View>
                     <View style={{
                         paddingHorizontal: moderateScale(15)
                     }}>
-                        <Text style={styles.itemNameStyle}>{item.itemName}</Text>
+                        <Text style={styles.itemNameStyle}>{item.data.name}</Text>
                         <View style={styles.itemPriceDetail}>
-                            <Text style={styles.itemPriceStyle}>Rs.{item.itemPrice}</Text>
-                            <Animatable.Image
-                                source={item.plusIcon}
-                            />
+                            <Text style={styles.itemPriceStyle}>Rs.{item.data.price}</Text>
+                            <Text style={[styles.itemStyle, {}]}>Points: {item.data.points}</Text> 
+                            <TouchableOpacity style={styles.addToCart}>
+                                <Text>Add To Cart</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
                 </View>
@@ -142,12 +168,17 @@ const Main = () => {
                             <Text style={styles.headerTitleStyle}>Menu</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            onPress={() => logoutData()}
-                            activeOpacity={0.7}
+                        // onPress={() => logoutData()}
+                        // activeOpacity={0.7}
                         >
                             <Image
-                                source={imagePath.icUserProfileLogo}
+                                // source={imagePath.icUserProfileLogo}
+                                source={imagePath.icShoppingCart}
+                                style={{ height: 35, width: 35 }}
                             />
+                            <View style={{ height: 24, width: 24, backgroundColor: 'red', borderRadius: 12, alignItems: 'center', justifyContent: 'center', bottom: 43, left: 23 }}>
+                                <Text style={{ color: 'white' }}>0</Text>
+                            </View>
                         </TouchableOpacity>
                     </View>
 
@@ -163,27 +194,30 @@ const Main = () => {
                         >
                         </TextInputWithLabel>
                     </View>
+                    <View style={styles.categoryView}>
+                        <View style={styles.categoryBtnView}>
+                            {buttons.map((button, index) => {
+                                return (
+                                    <CustomPkgBtn
+                                        key={index}
+                                        btnText={button.title}
+                                        textStyle={{ ...styles.textStyle, ...styles.categoryTextStyle, color: selectedIndex == index ? '#FFF' : '#A8A7A7' }}
+                                        btnStyle={{ ...styles.btnStyle, ...getButtonStyle(index) }}
+                                        onPress={() => selectCategory(index)}
+                                    />
+                                )
+                            })
 
-                    <View
-                        style={[styles.categoriesViewStyle]}
-                    >
-                        <Text style={styles.categoriesTextStyle}>Categories</Text>
-                        <FlatList
-                            horizontal
-                            data={CategoryList}
-                            renderItem={renderItem}
-                            keyExtractor={(item, index) => index.toString()}
-                            ItemSeparatorComponent={() => <View style={{ marginLeft: moderateScale(20) }} />}
-                        />
+                            }
+                        </View>
                     </View>
-
                     <View
                         style={styles.topItemViewStyle}
                     >
                         <Text style={styles.topItemListHeading}>Top Items</Text>
 
                         <FlatList
-                            data={TopItemList}
+                            data={items}
                             renderItem={topItemList}
                             keyExtractor={(item, index) => index.toString()}
                             numColumns={numColumns}
@@ -239,6 +273,51 @@ const styles = StyleSheet.create({
     },
     categoriesViewStyle: {
         marginBottom: moderateVerticalScale(10)
+    },
+    addToCart: {
+
+    },
+
+    categoryBtnView: {
+        flexDirection: 'row',
+        justifyContent: 'space-between'
+    },
+    // categoryBtnStyle: {
+    //     height: moderateVerticalScale(37),
+    //     width: moderateScale(95),
+    //     marginTop: moderateVerticalScale(1),
+    //     borderRadius: moderateScale(11),
+    //     backgroundColor: '#F2EFEF'
+    // },
+    categoryTextStyle: {
+        fontSize: scale(13),
+        color: '#A8A7A7',
+    },
+    selectedButton: {
+        backgroundColor: '#7E58F4',
+        height: moderateVerticalScale(37),
+        width: moderateScale(95),
+        borderRadius: moderateScale(11),
+        marginTop: moderateVerticalScale(1),
+        color: '#FFFFFF', // add this line
+        marginBottom: moderateVerticalScale(25)
+    },
+    unselectedButton: {
+        marginTop: moderateVerticalScale(1),
+        backgroundColor: '#F2EFEF',
+        height: moderateVerticalScale(37),
+        width: moderateScale(95),
+        borderRadius: moderateScale(11),
+        // marginTop: moderateVerticalScale(1),
+        marginBottom: moderateVerticalScale(25)
+    },
+
+    btnStyle: {
+        width: '92%',
+        height: moderateScale(48),
+        backgroundColor: '#50379E',
+        marginTop: moderateVerticalScale(22),
+        marginBottom: moderateVerticalScale(90)
     },
     categoriesTextStyle: {
         fontSize: scale(24),

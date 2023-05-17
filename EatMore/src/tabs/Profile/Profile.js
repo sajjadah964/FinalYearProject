@@ -54,7 +54,6 @@ const Profile = () => {
                 </View>
               </View>
               <View style={styles.formView}>
-                <Text style={styles.labelTextStyle}>Full Name</Text>
                 <View>
                   <Image source={require('../../assets/images/profileIcon.png')} style={styles.imgFirst} />
                   <TextInputWithLabel
@@ -64,9 +63,7 @@ const Profile = () => {
                     inlineInputStyle={styles.inlineInputStyle}
                     placeholderTextColor='rgba(0, 0, 0, 0.3)'
                   />
-                  <Image source={require('../../assets/images/profileEdit.png')} style={styles.imgSecond} />
                 </View>
-                <Text style={styles.labelTextStyle}>Email</Text>
                 <View>
                   <Image source={require('../../assets/images/profileEmail.png')} style={styles.imgFirst} />
                   <TextInputWithLabel
@@ -76,12 +73,6 @@ const Profile = () => {
                     inlineInputStyle={styles.inlineInputStyle}
                     placeholderTextColor='rgba(0, 0, 0, 0.3)'
                   />
-
-                  <Image source={require('../../assets/images/profileEdit.png')} style={styles.imgSecond} />
-                  {/* </View> */}
-                  <Text style={styles.labelTextStyle}>Password</Text>
-                  {/* <View> */}
-
                   <Image source={require('../../assets/images/profileSecurity.png')} style={styles.imgFirst} />
                   <TextInputWithLabel
                     inputStyle={styles.inputStyle}
@@ -90,22 +81,14 @@ const Profile = () => {
                     inlineInputStyle={styles.inlineInputStyle}
                     placeholderTextColor='rgba(0, 0, 0, 0.3)'
                   />
-
-                  <Image source={require('../../assets/images/profileEdit.png')} style={styles.imgSecond} />
-                  {/* </View> */}
-
-                  <Text style={styles.labelTextStyle}>Language</Text>
-                  {/* <View> */}
-
                   <Image source={require('../../assets/images/profileLanguage.png')} style={styles.imgFirst} />
                   <TextInputWithLabel
-                    inputStyle={styles.inputStyle}
+                    inputStyle={styles.inputStyleLast}
                     style={styles.placeHolder}
                     placeHolder="Language"
                     inlineInputStyle={styles.inlineInputStyle}
                     placeholderTextColor='rgba(0, 0, 0, 0.3)'
                   />
-                  <Image source={require('../../assets/images/profileEdit.png')} style={styles.imgSecond} />
                 </View>
               </View>
               <View>
@@ -118,7 +101,7 @@ const Profile = () => {
             </View>
           </ScrollView>
           <View style={styles.container1}>
-            {/* {selectedTab == 0 ? (
+            {selectedTab == 0 ? (
               <Main />
             ) : selectedTab == 1 ? (
               <Search />
@@ -126,7 +109,7 @@ const Profile = () => {
               <AddToCart />
             ) : (
               <Profile />
-            )} */}
+            )}
             <View style={{ alignContent: 'center', alignItems: 'center', justifyContent: 'center' }}>
               <View style={styles.bottomTabView}>
                 <TouchableOpacity
@@ -217,6 +200,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'absolute',
     bottom: 0,
+    // top: 10,
     left: '54%',
     transform: [{ translateX: -Dimensions.get('window').width * 0.4 }],
     borderRadius: 30,
@@ -241,9 +225,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#EFEDED',
     borderBottomWidth: 1,
     borderColor: 'rgba(168, 167, 167, 1)',
-    padding: 20,
+    padding: 15,
     // paddingVertical: 20,
-    marginBottom: 20,
+    // marginBottom: 20,
     flexDirection: 'row',
     gap: 10,
     borderRadius: moderateScale(8),
@@ -269,17 +253,18 @@ const styles = StyleSheet.create({
   placeHolder: {
     fontSize: 15,
     fontWeight: '400',
-    color: 'rgba(0, 0, 0, 0.5)'
+    color: 'rgba(0, 0, 0, 0.5)',
   },
   title: {
     fontSize: scale(24),
     fontWeight: '600',
   },
   btnStyle: {
-    width: '100%',
+    width: '50%',
     height: moderateScale(43),
     borderRadius: moderateScale(25),
-    backgroundColor: Colors.primaryColor
+    backgroundColor: Colors.primaryColor,
+    marginBottom: 150,
   },
   inputStyle: {
     borderBottomWidth: 0,
@@ -288,11 +273,20 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(8),
     paddingLeft: 40,
     zIndex: 1,
+    // marginBottom: 20
+  },
+  inputStyleLast: {
+    borderBottomWidth: 0,
+    width: '100%',
+    backgroundColor: '#EFEDED',
+    borderRadius: moderateScale(8),
+    paddingLeft: 40,
+    zIndex: 1,
+    marginBottom: 30
   },
   inlineInputStyle: {
     flex: 1,
     fontSize: scale(16),
-    // paddingHorizontal: moderateScale(15)
   },
 
 })

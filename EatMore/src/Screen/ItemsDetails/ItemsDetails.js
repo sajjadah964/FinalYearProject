@@ -13,12 +13,12 @@ import { useNavigation } from '@react-navigation/native';
 import Loader from '../../components/Loader';
 
 const ItemsDetails = (props) => {
-    // console.log(props.route.params.detail);
+    console.log(props.route.params.detail);
     // console.log(props.index)
     // const{navigation}={props
     const [isLoading, setisLoading] = useState(true);
     const navigation = useNavigation()
-    const { itemName, itemPrice, itemUrl } = props.route.params.detail;
+    const { name, price, imageUrl, points, description } = props.route.params.detail.data;
     const { index } = props.route.params.index;
     const [count, setCount] = useState(0);
 
@@ -58,7 +58,7 @@ const ItemsDetails = (props) => {
                             <Animatable.Image
                                 animation="bounceIn"
                                 duraton="1500"
-                                source={itemUrl}
+                                source={{ uri: imageUrl }}
                                 style={styles.logo}
                                 resizeMode="stretch"
                             />
@@ -72,9 +72,10 @@ const ItemsDetails = (props) => {
                     >
                         <Text style={[styles.itemNameStyle, {
                             color: Colors.black
-                        }]}>{itemName}</Text>
-                        <Text style={styles.itemPriceStyle}>Rs.{itemPrice}</Text>
-                        <Text style={styles.description}>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum   has been the industry's standard dummy text ever since the 1500s
+                        }]}>{name}</Text>
+                        <Text style={styles.itemPriceStyle}>Rs.{price}</Text>
+                        <Text style={styles.itemPriceStyle}>Rs.{points}</Text>
+                        <Text style={styles.description}>{description}
                         </Text>
                         <View style={styles.button}>
                             <View style={styles.CounterView}>
@@ -156,7 +157,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: moderateVerticalScale(40),
+        marginTop: moderateVerticalScale(30),
         // alignItems: 'center',
         // backgroundColor: 'red'
     },
