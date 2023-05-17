@@ -28,4 +28,6 @@ export default {
     icUserImg: require('../assets/images/user-img.png'),
     icCartMinus: require('../assets/images/cartMinus.png'),
     icCartPlus: require('../assets/images/cartPlus.png'),
+    icShoppingCart: require('../assets/images/shopping-cart.png'),
+    icAddToCart: require('../assets/images/add-to-cart.png')
 }

@@ -147,11 +147,11 @@ const Main = () => {
                         paddingHorizontal: moderateScale(15)
                     }}>
                         <Text style={styles.itemNameStyle}>{item.data.name}</Text>
-                        <View style={styles.itemPriceDetail}>
                             <Text style={styles.itemPriceStyle}>Rs.{item.data.price}</Text>
+                        <View style={styles.itemPriceDetail}>
                             <Text style={[styles.itemStyle, {}]}>Points: {item.data.points}</Text> 
                             <TouchableOpacity style={styles.addToCart}>
-                                <Text>Add To Cart</Text>
+                                <Image source={require ('../../assets/images/add-to-cart.png')} />
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -349,7 +349,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '100%',
         borderRadius: moderateScale(15),
-        backgroundColor: '#D9D9D9',
+        backgroundColor: 'rgba(239, 238, 238, 0.85)',
         paddingVertical: moderateVerticalScale(20),
     },
     topItemListHeading: {
@@ -367,14 +367,20 @@ const styles = StyleSheet.create({
     },
     itemNameStyle: {
         fontSize: scale(15),
-        fontWeight: '400',
+        fontWeight: '500',
         color: Colors.black,
-        marginBottom: moderateVerticalScale(10)
+        // marginBottom: moderateVerticalScale(10)
     },
     itemPriceStyle: {
         fontSize: scale(15),
         fontWeight: '400',
         color: Colors.black
+    },
+    itemStyle: {
+        fontSize: 12,
+        fontWeight: '300',
+        color: Colors.black,
+        // color: 'rgba(0, 0, 0, 1)',
     }
 
 })
