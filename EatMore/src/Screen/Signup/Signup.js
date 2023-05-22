@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useState, useContext } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Alert, ToastAndroid } from 'react-native'
 import { moderateScale, scale, moderateVerticalScale } from 'react-native-size-matters';
