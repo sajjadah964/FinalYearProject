@@ -1,24 +1,35 @@
-/* eslint-disable prettier/prettier */
 import React, { useState, useContext } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Alert, ToastAndroid } from 'react-native'
 import { moderateScale, scale, moderateVerticalScale } from 'react-native-size-matters';
 import CustomPkgBtn from '../../components/CustomPkgBtn';
 import imagePath from '../../constants/imagePath';
 import Colors from '../../styles/Colors';
+import { useNavigation } from '@react-navigation/native';
+
 import TextInputWithLabel from '../../components/TextinputWithLable';
 import NavigationStrings from '../../constants/NavigationStrings';
 import * as Animatable from 'react-native-animatable';
+import auth from '@react-native-firebase/auth';
+import Loader from '../../components/Loader';
+import firestore from '@react-native-firebase/firestore';
+// import PropTypes from 'prop-types';
+import { CommonActions } from '@react-navigation/native';
 
-const Signup = ({ navigation }) => {
-    //   const navigation = useNavigation();
-    const [name, setName] = useState();
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
-    const [confirmPassword, setConfirmPassword] = useState();
-
+const Signup = ({navigateToLogin}) => {
+      const navigation = useNavigation();
+    const [isLoading, setisLoading] = useState(false);
     const [isVisible, setVisible] = useState(true);
     const [CVisible, setCVisible] = useState(true);
     const [textWidth, setTextWidth] = useState(null);
+
+    const [email, setEmail] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [password, setPassword] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [name, setName] = useState('');
+    const [nameError, setNameError] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [confirmPasswordError, setConfirmPasswordError] = useState('');
 
     const onTextLayout = (event) => {
         const { width } = event.nativeEvent.layout;
@@ -27,13 +38,112 @@ const Signup = ({ navigation }) => {
     const moveToScreen = (screen) => {
         navigation.navigate(screen);
     }
-    // const handleSignup = async (email, password) => {
-    //     await register(email, password);
-    //     // navigate to login screen
-    //     navigation.navigate(NavigationStrings.LOGIN);
-    //   };
+    const handleUserSignup = async () => {
+        if (!email || !password || !name) {
+            ToastAndroid.show('Please fill all the field', ToastAndroid.SHORT);
+            return;
+        }
+        try {
+            setisLoading(true);
+            const result = await auth().createUserWithEmailAndPassword(email, password);
+            firestore().collection('users').
+            doc(result.user.uid)
+            .set({
+                name: name,
+                email: result.user.email,
+                uid: result.user.uid,
+                // pic:image
+                cart:[],
+            })
+            ToastAndroid.show('Signed up successfully', ToastAndroid.SHORT);
+            // Navigate to the Login screen after successful signup
+            navigation.replace(NavigationStrings.LOGIN);
+              
+            setisLoading(false);
+        } catch (error) {
+            console.log('error', error);
+            ToastAndroid.show('Sign up failed', ToastAndroid.SHORT);
+            if (error.code === 'auth/email-already-in-use') {
+                // setEmailError('Email already in use');
+                ToastAndroid.show('Email already in use', ToastAndroid.SHORT);
+
+            }
+            setisLoading(false);
+        }
+        setName('');
+        setEmail('');
+        setPassword('');
+        setConfirmPassword('');
+    };
+
+    //   VALIDATION METHOD
+    const validateEmail = (email) => {
+        const emailRegex = /^\S+@\S+\.\S+$/;
+        return emailRegex.test(email);
+    };
+
+    const validatePassword = (password) => {
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+        return passwordRegex.test(password);
+    };
+
+    const validateName = (name) => {
+        const nameRegex = /^[a-zA-Z\s'-]+$/;
+        return nameRegex.test(name);
+    };
+
+    const validateConfirmPassword = (password, confirmPassword) => {
+        return password === confirmPassword;
+    };
+    //   VALIDATION METHOD
+
+    // ON CHANGE TEXT METHOD
+    const handleEmailChange = (text) => {
+        setEmail(text);
+
+        if (!validateEmail(text)) {
+            setEmailError('Invalid email address');
+        } else {
+            setEmailError('');
+        }
+    };
+
+    const handlePasswordChange = (text) => {
+        setPassword(text);
+
+        if (!validatePassword(text)) {
+            setPasswordError('Invalid password');
+        } else {
+            setPasswordError('');
+        }
+    };
+
+    const handleNameChange = (text) => {
+        setName(text);
+
+        if (!validateName(text)) {
+            setNameError('Invalid name');
+        } else {
+            setNameError('');
+        }
+    };
+
+    const handleConfirmPasswordChange = (text) => {
+        setConfirmPassword(text);
+
+        if (!validateConfirmPassword(text)) {
+            setConfirmPasswordError('Passwords do not match');
+        }
+        if (text !== password) {
+            setConfirmPasswordError('Passwords do not match');
+        } else {
+            setConfirmPasswordError('');
+        }
+    };
+    // ON CHANGE TEXT METHOD
     return (
         <SafeAreaView style={{ flex: 1 }}>
+            <Loader isLoading={isLoading} />
             <View style={{ flex: 1, flexDirection: 'column', }}>
                 <View style={styles.eatmoreLogo}>
                     <View style={styles.loginLogoView}>
@@ -63,42 +173,51 @@ const Signup = ({ navigation }) => {
                         </View>
                         <TextInputWithLabel
                             placeHolder='Enter Name'
-                            onChangeText={(userName) => setName(userName)}
+                            // onChangeText={(userName) => setName(userName)}
+                            onChangeText={handleNameChange}
                             style={styles.placeholder}
-                        // inputStyle={{ marginBottom: moderateVerticalScale(10) }}
-                        // keyboardType="email-address"
+                            value={name}
                         />
+                        {nameError ? <Text style={styles.error}>{nameError}</Text> : null}
                         <TextInputWithLabel
                             placeHolder='Enter Email'
-                            onChangeText={(userEmail) => setEmail(userEmail)}
+                            // onChangeText={(userEmail) => setEmail(userEmail)}
+                            onChangeText={handleEmailChange}
                             style={styles.placeholder}
-                            // inputStyle={{ marginBottom: moderateVerticalScale(10) }}
                             keyboardType="email-address"
+                            value={email}
                         />
+                        {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
                         <TextInputWithLabel
                             placeHolder={'Password'}
-                            onChangeText={(userPassword) => setPassword(userPassword)}
+                            // onChangeText={(userPassword) => setPassword(userPassword)}
+                            onChangeText={handlePasswordChange}
                             style={styles.placeholder}
                             secureTextEntry={isVisible}
                             rightIcon={isVisible ? imagePath.icHide : imagePath.icShow}
                             onPressRight={() => setVisible(!isVisible)}
-                        // inputStyle={{ marginBottom: moderateVerticalScale(14) }}
+                            value={password}
                         />
 
+                        {passwordError ? <Text style={styles.error}>{passwordError}</Text> : null}
                         <TextInputWithLabel
                             placeHolder={'Confirm Password'}
-                            onChangeText={(userPassword) => setConfirmPassword(userPassword)}
+                            // onChangeText={(userPassword) => setConfirmPassword(userPassword)}
+                            onChangeText={handleConfirmPasswordChange}
                             style={styles.placeholder}
                             secureTextEntry={CVisible}
                             rightIcon={CVisible ? imagePath.icHide : imagePath.icShow}
                             onPressRight={() => setCVisible(!CVisible)}
-                            inputStyle={{ marginBottom: moderateVerticalScale(30) }}
+                            inputStyle={{ marginBottom: moderateVerticalScale(1) }}
+                            value={confirmPassword}
                         />
+                        {confirmPasswordError ? <Text style={[styles.error, { marginBottom: moderateVerticalScale(1) }]}>{confirmPasswordError}</Text> : null}
+
                         <CustomPkgBtn
                             textStyle={{ ...styles.textStyle, ...styles.customTextStyle }}
                             btnStyle={{ ...styles.btnStyle, ...styles.customStyle }}
                             btnText={'Sign Up'}
-                        // onPress={() => handleSignup(email,password)}
+                            onPress={() => handleUserSignup()}
                         />
                         <TouchableOpacity
                             style={styles.loginSignview}
@@ -117,7 +236,9 @@ const Signup = ({ navigation }) => {
         </SafeAreaView>
     )
 }
-
+// Signup.propTypes = {
+//     navigateToLogin: PropTypes.func.isRequired,
+//   };
 const styles = StyleSheet.create({
     eatmoreLogo: {
         // flex: 1,
@@ -148,7 +269,7 @@ const styles = StyleSheet.create({
         height: moderateScale(36),
         justifyContent: 'center',
         backgroundColor: Colors.white,
-        marginBottom: moderateVerticalScale(60),
+        marginBottom: moderateVerticalScale(20),
         borderColor: Colors.primaryColor,
         borderWidth: 1,
     },
@@ -165,6 +286,7 @@ const styles = StyleSheet.create({
         marginBottom: moderateVerticalScale(40)
     },
     customStyle: {
+        marginTop: moderateVerticalScale(20),
         marginBottom: moderateVerticalScale(10),
         backgroundColor: Colors.primaryColor
     },
@@ -190,6 +312,9 @@ const styles = StyleSheet.create({
     line: {
         height: moderateScale(1),
         backgroundColor: Colors.primaryColor,
+    },
+    error: {
+        color: 'red',
     },
 })
 export default Signup;

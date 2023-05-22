@@ -1,6 +1,5 @@
-/* eslint-disable prettier/prettier */
-import React, { useState, } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Alert } from 'react-native'
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity,ToastAndroid } from 'react-native'
 import { moderateScale, scale, moderateVerticalScale } from 'react-native-size-matters';
 import CustomPkgBtn from '../../components/CustomPkgBtn';
 import imagePath from '../../constants/imagePath';
@@ -9,19 +8,20 @@ import { useNavigation } from '@react-navigation/native';
 import TextInputWithLabel from '../../components/TextinputWithLable';
 import NavigationStrings from '../../constants/NavigationStrings';
 import * as Animatable from 'react-native-animatable';
+import auth from '@react-native-firebase/auth';
 import Loader from '../../components/Loader';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Login = () => {
-    const [selectedTab, setSelectedTab] = useState(0);
     const [isLoading, setisLoading] = useState(false);
     const navigation = useNavigation();
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
-
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [isVisible, setVisible] = useState(true)
     const [textWidth, setTextWidth] = useState(null);
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
     const moveToScreen = (screen) => {
         navigation.navigate(screen);
     }
@@ -29,13 +29,88 @@ const Login = () => {
         const { width } = event.nativeEvent.layout;
         setTextWidth(width);
     };
-    // const handleLogin = async (email, password) => {
-    //     if (email && password) {
-    //         setisLoading(true)
-    //         await login(email, password)
-    //         setisLoading(false);
-    //     }
-    // };
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            // Reset email and password fields when screen is loaded
+            setEmail('');
+            setPassword('');
+        });
+        // Clean up the listener
+        return unsubscribe;
+    }, [navigation]);
+    const handleUserLogin = async () => {
+        // setisLoading(true)
+        if (!email || !password) {
+            ToastAndroid.show('Please fill all the field', ToastAndroid.SHORT);
+            return
+        }
+        try {
+            setisLoading(true)
+            const result = await auth().signInWithEmailAndPassword(email, password,uid);
+            ToastAndroid.show('Logged in successfully', ToastAndroid.SHORT);
+            console.log(result);
+            setEmailError('')
+            setPasswordError('')
+            setisLoading(false)
+            // await AsyncStorage.setItem('USERID', uid);
+            // navigation.navigate(NavigationStrings.HOME);
+            goToNextScreen(
+                
+            )
+        } catch (error) {
+            console.log('error', error);
+            ToastAndroid.show('Login Failed', ToastAndroid.SHORT);
+            if (error.code === 'auth/invalid-email') {
+                setEmailError('Invalid email address');
+            } else if (error.code === 'auth/wrong-password') {
+                setPasswordError('Incorrect password');
+            } else if (error.code === 'auth/user-not-found') {
+                // setEmailError('User not found');
+                ToastAndroid.show('User not Found', ToastAndroid.SHORT);
+            } else {
+                setEmailError('');
+                setPasswordError('');
+            }
+            setisLoading(false)
+        }
+    };
+    const goToNextScreen = async (uid,name,email) => {
+        await AsyncStorage.setItem('EMAIL', email);
+        await AsyncStorage.setItem('USERID', uid);
+        await AsyncStorage.setItem('NAME', name);
+        navigation.navigate(NavigationStrings.HOME);
+      };
+    const handleEmailChange = (text) => {
+        setEmail(text);
+        if (!text) {
+            setEmailError('Email is required');
+        } else if (!validateEmail(text)) {
+            setEmailError('Invalid email address');
+        } else {
+            setEmailError('');
+        }
+    };
+
+    const handlePasswordChange = (text) => {
+        setPassword(text);
+        if (!text) {
+            setPasswordError('Password is required');
+        } else if (!validatePassword(text)) {
+            setPasswordError('Password must contain at least 6 characters');
+        } else {
+            setPasswordError('');
+        }
+    };
+
+    const validateEmail = (email) => {
+        const emailRegex = /\S+@\S+\.\S+/;
+        return emailRegex.test(email);
+    };
+
+    const validatePassword = (password) => {
+        return password.length >= 6;
+    };
+
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -69,21 +144,32 @@ const Login = () => {
                         </View>
                         <TextInputWithLabel
                             placeHolder='Enter Email'
-                            onChangeText={(userEmail) => setEmail(userEmail)}
+                            // onChangeText={(userEmail) => setEmail(userEmail)}
+                            onChangeText={handleEmailChange}
                             inputStyle={{ marginBottom: moderateVerticalScale(10) }}
                             keyboardType="email-address"
+                            value={email}
+                        // error={emailError}
                         />
+                        {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
                         <TextInputWithLabel
                             placeHolder={'Password'}
-                            onChangeText={(userPassword) => setPassword(userPassword)}
+                            // onChangeText={(userPassword) => setPassword(userPassword)}
+                            onChangeText={handlePasswordChange}
                             secureTextEntry={isVisible}
                             rightIcon={isVisible ? imagePath.icHide : imagePath.icShow}
                             onPressRight={() => setVisible(!isVisible)}
                             inputStyle={{ marginBottom: moderateVerticalScale(14) }}
-
+                            value={password}
+                        // error={passwordError}
                         />
+                        {passwordError ? (
+                            <Text style={styles.error}>{passwordError}</Text>
+                        ) : null}
 
-                        <TouchableOpacity style={styles.forgotPassView}>
+                        <TouchableOpacity style={styles.forgotPassView} onPress={() => {
+                            moveToScreen(NavigationStrings.RESET_PASSWORD)
+                        }}>
                             <Text style={styles.forgotPassStyle}>Forgot Password </Text>
                         </TouchableOpacity>
 
@@ -91,7 +177,8 @@ const Login = () => {
                             textStyle={{ ...styles.textStyle, ...styles.customTextStyle }}
                             btnStyle={{ ...styles.btnStyle, ...styles.customStyle }}
                             btnText={'Login'}
-                            // onPress={() => handleLogin(email, password)}
+                            onPress={() => handleUserLogin()}
+                            disabled={!email || !password || emailError || passwordError || isLoading}
                         />
                         <TouchableOpacity
                             style={styles.loginSignview}
@@ -132,6 +219,10 @@ const styles = StyleSheet.create({
         // justifyContent: 'center',
         // alignItems: 'center'
     },
+    error: {
+        color: 'red',
+        // marginBottom: 10,
+    },
     loginLogoView: {
         marginTop: moderateVerticalScale(100),
         alignItems: 'center',
@@ -140,10 +231,10 @@ const styles = StyleSheet.create({
         width: moderateScale(130),
         height: moderateScale(36),
         justifyContent: 'center',
-        backgroundColor:Colors.white,
+        backgroundColor: Colors.white,
         marginBottom: moderateVerticalScale(60),
-        borderColor:Colors.primaryColor,
-        borderWidth:1,
+        borderColor: Colors.primaryColor,
+        borderWidth: 1,
     },
     textStyle: {
         color: Colors.primaryColor
@@ -158,15 +249,13 @@ const styles = StyleSheet.create({
         marginBottom: moderateVerticalScale(40)
     },
     customStyle: {
-        // width: moderateScale(130),
-        // height: moderateScale(36),
-        marginBottom: moderateVerticalScale(30),
-        backgroundColor:Colors.primaryColor
+        marginBottom: moderateVerticalScale(20),
+        backgroundColor: Colors.primaryColor
     },
     customTextStyle: {
         fontSize: scale(15),
         fontWeight: '500',
-        color:Colors.white
+        color: Colors.white
     },
     loginSignview: {
         flexDirection: 'column',
@@ -174,7 +263,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     loginSignText: {
-        fontSize:scale(15),
+        fontSize: scale(15),
         fontWeight: '500',
         color: Colors.primaryColor
     },

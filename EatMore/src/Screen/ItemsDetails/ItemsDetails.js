@@ -9,19 +9,21 @@ import CustomPkgBtn from '../../components/CustomPkgBtn';
 // import CustomHeader from '../../components/CustomHeader';
 import { scale, moderateVerticalScale, moderateScale } from 'react-native-size-matters';
 import NavigationStrings from '../../constants/NavigationStrings';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation,useIsFocused } from '@react-navigation/native';
 import Loader from '../../components/Loader';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import firestore from '@react-native-firebase/firestore';
 
 const ItemsDetails = (props) => {
-    console.log(props.route.params.detail);
+    console.log('item details',props.route.params.detail.data);
     // console.log(props.index)
     // const{navigation}={props
     const [isLoading, setisLoading] = useState(true);
     const navigation = useNavigation()
-    const { name, price, imageUrl, points, description } = props.route.params.detail.data;
+    const { name, price, imageUrl,points,description } = props.route.params.detail.data;
     const { index } = props.route.params.index;
     const [count, setCount] = useState(0);
-
+    const isFocused = useIsFocused();
     const moveToScreen = (screen) => {
         navigation.navigate(screen)
     }
@@ -39,6 +41,42 @@ const ItemsDetails = (props) => {
             setCount(count - 1)
         }
     }
+    // useEffect(() => {
+    //     getCartItems();
+    //   }, [isFocused]);
+    //   const getCartItems = async () => {
+    //     uid = await AsyncStorage.getItem('USERID');
+    //     const user = await firestore().collection('users').doc(uid).get();
+    //     // setCartCount(user._data.cart.length);
+    //   };
+      const onAddToCart = async (item, index) => {
+        const user = await firestore().collection('users').doc(uid).get();
+        console.log(user._data.cart);
+        let tempDart = [];
+        tempDart = user._data.cart;
+        if (tempDart.length > 0) {
+          let existing = false;
+          tempDart.map(itm => {
+            if (itm.id == item.id) {
+              existing = true;
+              itm.data.qty = itm.data.qty + 1;
+            }
+          });
+          if (existing == false) {
+            tempDart.push(item);
+          }
+          firestore().collection('users').doc(userId).update({
+            cart: tempDart,
+          });
+        } else {
+          tempDart.push(item);
+        }
+        console.log(tempDart);
+        firestore().collection('users').doc(userId).update({
+          cart: tempDart,
+        });
+        getCartItems();
+      };
     return (
         <SafeAreaView style={{ flex: 1 }}>
             {isLoading ? <Loader isLoading={isLoading} /> :
@@ -58,7 +96,7 @@ const ItemsDetails = (props) => {
                             <Animatable.Image
                                 animation="bounceIn"
                                 duraton="1500"
-                                source={{ uri: imageUrl }}
+                                source={{uri:imageUrl}}
                                 style={styles.logo}
                                 resizeMode="stretch"
                             />
@@ -74,8 +112,8 @@ const ItemsDetails = (props) => {
                             color: Colors.black
                         }]}>{name}</Text>
                         <Text style={styles.itemPriceStyle}>Rs.{price}</Text>
-                        <Text style={styles.itemPriceStyle}>Rs.{points}</Text>
-                        <Text style={styles.description}>{description}
+                        <Text style={styles.description}>
+                            {description}
                         </Text>
                         <View style={styles.button}>
                             <View style={styles.CounterView}>
@@ -103,7 +141,7 @@ const ItemsDetails = (props) => {
                             </View>
                             <View>
                                 <CustomPkgBtn
-                                    onPress={() => { moveToScreen(NavigationStrings.ADD_TO_CART) }}
+                                    onPress={() => { onAddToCart(props.route.params.detail.data,index) }}
                                     textStyle={{ ...styles.textStyle }}
                                     btnStyle={{ ...styles.btnStyle }}
                                     btnText={'Add to Cart'}
@@ -154,28 +192,28 @@ const styles = StyleSheet.create({
         fontSize: scale(20)
     },
     button: {
-        flex: 1,
+        // flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: moderateVerticalScale(30),
-        // alignItems: 'center',
-        // backgroundColor: 'red'
+        marginTop: moderateVerticalScale(40),
+        alignItems: 'center',
     },
     CounterView: {
+        // flex:1,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        justifyContent:'center',
     },
     btnStyle: {
         // flex:1,
         width: moderateScale(150),
         height: moderateScale(45),
-        backgroundColor: Colors.primaryColor,
+        // backgroundColor: Colors.primaryColor,
         borderRadius: moderateScale(42),
         borderColor: Colors.primaryColor,
         borderWidth: moderateScale(1),
-        backgroundColor: Colors.white,
-        // marginTop: moderateVerticalScale(20)
+        marginBottom:0
     },
     textStyle: {
         fontWeight: '400',

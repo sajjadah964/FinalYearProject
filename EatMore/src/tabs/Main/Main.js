@@ -11,12 +11,10 @@ import NavigationStrings from '../../constants/NavigationStrings';
 import { useNavigation } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import Loader from '../../components/Loader';
-import CustomPkgBtn from '../../components/CustomPkgBtn';
 import auth from '@react-native-firebase/auth';
 import AuthStack from '../../Navigation/AuthStack';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
-
 const numColumns = 2;
 const Main = () => {
     const [isLoading, setisLoading] = useState(true);
@@ -28,33 +26,7 @@ const Main = () => {
     const navigation = useNavigation()
     const [isFocused, setIsFocused] = useState(false);
     const [selectedItem, setSelectedItem] = useState(0);
-    const [selectedIndex, setSelectedIndex] = useState(0);
     const [items, setItems] = useState([])
-    const buttons = [
-        {
-            id: 1,
-            title: 'All Items'
-        },
-        {
-            id: 2,
-            title: 'Burger'
-        },
-        {
-            id: 3,
-            title: 'Pizza'
-        }
-    ]
-
-    const selectCategory = (index) => {
-        setSelectedIndex(index)
-    }
-    const getButtonStyle = (index) => {
-        if (index === selectedIndex) {
-            return styles.selectedButton;
-        } else {
-            return styles.unselectedButton;
-        }
-    };
     const logoutData = async () => {
         Alert.alert(
             'Logout',
@@ -78,7 +50,7 @@ const Main = () => {
             .signOut()
             .then(() => {
                 ToastAndroid.show('Logout Succcessfully', ToastAndroid.SHORT);
-                navigation.navigate(NavigationStrings.MAIN_STACK, { screen: NavigationStrings.LOGIN });
+                navigation.navigate(NavigationStrings.MAIN_STACK, { screen:NavigationStrings.LOGIN});
 
             });
     }
@@ -126,6 +98,40 @@ const Main = () => {
                 setItems(tempData);
             });
     }
+    const renderItem = ({ item, index }) => {
+        // console.log(item)
+        console.log(index)
+        return (
+            <TouchableOpacity
+                style={[styles.categoriesViewStyle,]}
+            >
+                <TouchableOpacity style={[styles.categoriesListStyle, getStyle(index)]}
+                    onPress={() => onItemPress(index)}
+                    activeOpacity={0.8}
+                >
+                    <View style={{
+                        width: moderateScale(60),
+                        height: moderateScale(60),
+                    }}>
+                        <Image
+                            style={{
+                                width: moderateScale(60),
+                                height: moderateScale(60),
+                            }}
+                            source={item.url}
+                        />
+                    </View>
+                </TouchableOpacity>
+                <Text style={{
+                    fontSize: scale(16),
+                    fontWeight: '400',
+                    color: index == selectedItem ? '#7E58F4' : Colors.black,
+                    textAlign: 'center'
+                }}>{item.itemName}
+                </Text>
+            </TouchableOpacity>
+        )
+    }
     const topItemList = ({ item, index }) => {
         console.log(item, 'top item list')
         return (
@@ -137,22 +143,22 @@ const Main = () => {
                 <View style={styles.singleItem}>
                     <View style={{ alignItems: 'center' }}>
                         <Animatable.Image
-                            source={{ uri: item.data.imageUrl }}
+                              source={{ uri: item.data.imageUrl }}
                             duraton="1500"
                             animation="bounce"
-                            style={{ width: 100, height: 100, marginBottom: 5 }}
+                            style={{width:50,height:100}}
                         />
                     </View>
                     <View style={{
                         paddingHorizontal: moderateScale(15)
                     }}>
                         <Text style={styles.itemNameStyle}>{item.data.name}</Text>
-                            <Text style={styles.itemPriceStyle}>Rs.{item.data.price}</Text>
                         <View style={styles.itemPriceDetail}>
-                            <Text style={[styles.itemStyle, {}]}>Points: {item.data.points}</Text> 
-                            <TouchableOpacity style={styles.addToCart}>
-                                <Image source={require ('../../assets/images/add-to-cart.png')} />
-                            </TouchableOpacity>
+                            <Text style={styles.itemPriceStyle}>Rs.{item.data.price}</Text>
+                            <Text style={[styles.itemStyle, {}]}>Points: {item.data.points}</Text>
+                            <Animatable.Image
+                                source={item.plusIcon}
+                            />
                         </View>
                     </View>
                 </View>

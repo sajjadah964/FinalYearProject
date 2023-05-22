@@ -17,7 +17,7 @@ import CustomPkgBtn from '../../components/CustomPkgBtn';
 import Colors from '../../styles/Colors';
 import fontFamily from '../../styles/fontFamily';
 
-const InitialScreen = () => {
+const SplashScreen = () => {
     const navigation = useNavigation();
     const moveToScreen = (screen) => {
         navigation.navigate(screen);
@@ -59,7 +59,7 @@ const InitialScreen = () => {
     )
 }
 
-export default InitialScreen;
+export default SplashScreen;
 const { height } = Dimensions.get("screen");
 const height_logo = height * 0.28;
 
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
     },
     textStyle: {
-        fontWeight: 400,
+        fontWeight:'400',
         fontSize: scale(22),
         color: Colors.white,
         fontStyle: 'normal',

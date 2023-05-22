@@ -1,5 +1,5 @@
 import React, { useState, } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Alert } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Alert,ToastAndroid } from 'react-native'
 import { moderateScale, scale, moderateVerticalScale } from 'react-native-size-matters';
 import CustomPkgBtn from '../../components/CustomPkgBtn';
 import imagePath from '../../constants/imagePath';
@@ -8,24 +8,29 @@ import { useNavigation } from '@react-navigation/native';
 import TextInputWithLabel from '../../components/TextinputWithLable';
 import NavigationStrings from '../../constants/NavigationStrings';
 import * as Animatable from 'react-native-animatable';
+import auth from '@react-native-firebase/auth';
 import Loader from '../../components/Loader';
 
 
 const Login = () => {
     const [isLoading, setisLoading] = useState(false);
     const navigation = useNavigation();
-    const [email, setEmail] = useState();
+    const [email, setEmail] = useState('');
 
     const moveToScreen = (screen) => {
         navigation.navigate(screen);
     }
-    // const handleLogin = async (email, password) => {
-    //     if (email && password) {
-    //         setisLoading(true)
-    //         await login(email, password)
-    //         setisLoading(false);
-    //     }
-    // };
+    const handleResetPassword = async () => {
+        auth()
+            .sendPasswordResetEmail(email)
+            .then(() => {
+                ToastAndroid.show('Password reset email sent successfully.', ToastAndroid.SHORT);
+                // navigation.navigate(NavigationStrings.LOGIN)
+            })
+            .catch(error => {
+                Alert.alert('Reset Email error',error)
+            });
+    };
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -71,7 +76,7 @@ const Login = () => {
                             textStyle={{ ...styles.textStyle, ...styles.customTextStyle }}
                             btnStyle={{ ...styles.btnStyle, ...styles.customStyle }}
                             btnText={'Reset Password'}
-                            // onPress={() => handleLogin(email, password)}
+                            onPress={handleResetPassword}
                         />
 
                     </View>
@@ -110,10 +115,10 @@ const styles = StyleSheet.create({
         width: moderateScale(195),
         height: moderateScale(36),
         justifyContent: 'center',
-        backgroundColor:Colors.white,
+        backgroundColor: Colors.white,
         marginBottom: moderateVerticalScale(38),
-        borderColor:Colors.primaryColor,
-        borderWidth:1,
+        borderColor: Colors.primaryColor,
+        borderWidth: 1,
     },
     textStyle: {
         color: Colors.primaryColor
@@ -129,12 +134,12 @@ const styles = StyleSheet.create({
     },
     customStyle: {
         marginBottom: moderateVerticalScale(20),
-        backgroundColor:Colors.primaryColor
+        backgroundColor: Colors.primaryColor
     },
     customTextStyle: {
         fontSize: scale(15),
         fontWeight: '500',
-        color:Colors.white
+        color: Colors.white
     },
     loginSignview: {
         flexDirection: 'column',
@@ -142,7 +147,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     loginSignText: {
-        fontSize:scale(15),
+        fontSize: scale(15),
         fontWeight: '500',
         color: Colors.primaryColor
     },

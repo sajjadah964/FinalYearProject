@@ -1,34 +1,23 @@
 /* eslint-disable prettier/prettier */
 import React from "react";
 import NavigationStrings from "../constants/NavigationStrings";
-import { AllOrder, Checkout, Home, InitialScreen, ItemsDetails, Login, OrderInformation, ResetPassword, Signup, } from "../Screen";
+import { AllOrder, Checkout, Home, ItemsDetails, OrderInformation, } from "../Screen";
 import Main from "../tabs/Main/Main";
 import Search from "../tabs/Search/Search";
 import AddToCart from "../tabs/AddToCart/AddToCart";
 import Profile from "../tabs/Profile/Profile";
-export default function (Stack) {
-    return (
-        <>
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-            <Stack.Screen
-                name={NavigationStrings.LOGIN}
-                component={Login}
-            />
+const Stack = createNativeStackNavigator();
+
+export default function MainStack() {
+    console.log("this is my mainstack file")
+    return (
+        <Stack.Navigator screenOptions={{ presentation: 'card', headerShown: false }}>
+
             <Stack.Screen
                 name={NavigationStrings.HOME}
                 component={Home}
-            />
-            <Stack.Screen
-                name={NavigationStrings.INITIAL_SCREEN}
-                component={InitialScreen}
-            />
-            <Stack.Screen
-                name={NavigationStrings.SIGNUP}
-                component={Signup}
-            />
-            <Stack.Screen
-                name={NavigationStrings.RESET_PASSWORD}
-                component={ResetPassword}
             />
             <Stack.Screen
                 name={NavigationStrings.MAIN}
@@ -63,7 +52,7 @@ export default function (Stack) {
                 name={NavigationStrings.ALL_ORDER}
                 component={AllOrder}
             />
-        </>
+        </Stack.Navigator>
     )
 
 }
