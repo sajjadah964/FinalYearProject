@@ -46,11 +46,14 @@ const Signup = ({navigateToLogin}) => {
         try {
             setisLoading(true);
             const result = await auth().createUserWithEmailAndPassword(email, password);
-            firestore().collection('users').doc(result.user.uid).set({
+            firestore().collection('users').
+            doc(result.user.uid)
+            .set({
                 name: name,
                 email: result.user.email,
                 uid: result.user.uid,
                 // pic:image
+                cart:[],
             })
             ToastAndroid.show('Signed up successfully', ToastAndroid.SHORT);
             // Navigate to the Login screen after successful signup

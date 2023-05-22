@@ -10,11 +10,10 @@ import NavigationStrings from '../../constants/NavigationStrings';
 import * as Animatable from 'react-native-animatable';
 import auth from '@react-native-firebase/auth';
 import Loader from '../../components/Loader';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Login = () => {
-    const [selectedTab, setSelectedTab] = useState(0);
     const [isLoading, setisLoading] = useState(false);
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
@@ -47,13 +46,17 @@ const Login = () => {
         }
         try {
             setisLoading(true)
-            const result = await auth().signInWithEmailAndPassword(email, password);
+            const result = await auth().signInWithEmailAndPassword(email, password,uid);
             ToastAndroid.show('Logged in successfully', ToastAndroid.SHORT);
             console.log(result);
             setEmailError('')
             setPasswordError('')
             setisLoading(false)
-            navigation.navigate(NavigationStrings.HOME);
+            // await AsyncStorage.setItem('USERID', uid);
+            // navigation.navigate(NavigationStrings.HOME);
+            goToNextScreen(
+                
+            )
         } catch (error) {
             console.log('error', error);
             ToastAndroid.show('Login Failed', ToastAndroid.SHORT);
@@ -71,7 +74,12 @@ const Login = () => {
             setisLoading(false)
         }
     };
-
+    const goToNextScreen = async (uid,name,email) => {
+        await AsyncStorage.setItem('EMAIL', email);
+        await AsyncStorage.setItem('USERID', uid);
+        await AsyncStorage.setItem('NAME', name);
+        navigation.navigate(NavigationStrings.HOME);
+      };
     const handleEmailChange = (text) => {
         setEmail(text);
         if (!text) {
