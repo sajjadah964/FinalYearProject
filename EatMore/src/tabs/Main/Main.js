@@ -227,7 +227,7 @@ const Main = () => {
         )
     }
     const topItemList = ({ item, index }) => {
-        console.log(item, 'top item list')
+        // console.log(item, 'top item list')
         return (
             <TouchableOpacity
                 style={[styles.mainTopItemView, (index + 1) % 2 === 0 ? { marginRight: 0 } : null]}
