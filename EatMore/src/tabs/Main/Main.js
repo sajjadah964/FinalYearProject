@@ -68,7 +68,13 @@ const Main = () => {
         // setCartCount(user.data.cart.length);
       };
       const onAddToCart = async (item, index) => {
-        const user = await firestore().collection('users').doc(userId).get();
+        console.log(item);
+        console.log(index)
+        // console.log(userId)
+        const id = await AsyncStorage.getItem('USERID');
+        console.log(id)
+        console.log( AsyncStorage.getItem('USERID'))
+        const user = await firestore().collection('users').doc(id).get();
 
         console.log(user);
         // console.log(user.data.cart);
@@ -203,6 +209,7 @@ const Main = () => {
                     onPress={() => onItemPress(index)}
                     activeOpacity={0.8}
                 >
+                    
                     <View style={{
                         width: moderateScale(60),
                         height: moderateScale(60),
@@ -250,10 +257,11 @@ const Main = () => {
                             <Text style={styles.itemPriceStyle}>Rs.{item.data.price}</Text>
                         <View style={styles.itemPriceDetail}>
                             <Text style={[styles.itemStyle, {}]}>Points: {item.data.points}</Text>
-                            <TouchableOpacity style={styles.addToCart} onPress={() => {onAddToCart()}}>
+                            <TouchableOpacity style={styles.addToCart} onPress={() => {onAddToCart(item, index)}}>
                                 <Image source={require ('../../assets/images/add-to-cart.png')}
                                  />
                             </TouchableOpacity>
+                            
                         </View>
                     </View>
                 </View>
@@ -268,7 +276,18 @@ const Main = () => {
                         <TouchableOpacity onPress={() => moveToScreen(NavigationStrings.ALL_ORDER)} activeOpacity={0.8}>
                             <Text style={styles.headerTitleStyle}>Menu</Text>
                         </TouchableOpacity>
+
+
+                        <TouchableOpacity  onPress={logout}>
+                            <Text >logout</Text>
+                            </TouchableOpacity>
+
+
+
                         <TouchableOpacity
+
+
+
                         // onPress={() => logoutData()}
                         // activeOpacity={0.7}
                         >

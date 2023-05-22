@@ -47,13 +47,18 @@ const Login = () => {
         }
         try {
             setisLoading(true)
-            const result = await auth().signInWithEmailAndPassword(email, password,uid);
+            const result = await auth().signInWithEmailAndPassword(email, password);
             ToastAndroid.show('Logged in successfully', ToastAndroid.SHORT);
+            console.log('this is a data');
+
             console.log(result);
+            console.log(result.user);
+            console.log(result.user.uid);
+
             setEmailError('')
             setPasswordError('')
             setisLoading(false)
-            // await AsyncStorage.setItem('USERID', uid);
+            await AsyncStorage.setItem('USERID', result.user.uid);
             // navigation.navigate(NavigationStrings.HOME);
             goToNextScreen(
                 
