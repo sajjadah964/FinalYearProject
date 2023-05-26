@@ -58,11 +58,11 @@ const Login = () => {
             setEmailError('')
             setPasswordError('')
             setisLoading(false)
-            await AsyncStorage.setItem('USERID', result.user.uid);
-            // navigation.navigate(NavigationStrings.HOME);
-            goToNextScreen(
+            AsyncStorage.setItem('USERID', result.user.uid);
+            navigation.navigate(NavigationStrings.HOME);
+            // goToNextScreen(
                 
-            )
+            // )
         } catch (error) {
             console.log('error', error);
             ToastAndroid.show('Login Failed', ToastAndroid.SHORT);
@@ -80,12 +80,12 @@ const Login = () => {
             setisLoading(false)
         }
     };
-    const goToNextScreen = async (uid,name,email) => {
-        await AsyncStorage.setItem('EMAIL', email);
-        await AsyncStorage.setItem('USERID', uid);
-        await AsyncStorage.setItem('NAME', name);
-        navigation.navigate(NavigationStrings.HOME);
-      };
+    // const goToNextScreen = async (uid,name,email) => {
+    //     await AsyncStorage.setItem('EMAIL', email);
+    //     await AsyncStorage.setItem('USERID', uid);
+    //     await AsyncStorage.setItem('NAME', name);
+    //     navigation.navigate(NavigationStrings.HOME);
+    //   };
     const handleEmailChange = (text) => {
         setEmail(text);
         if (!text) {

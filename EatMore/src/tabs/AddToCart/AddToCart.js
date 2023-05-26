@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { FlatList, Image, SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import React, { useState, useEffect, useId } from 'react';
+import { FlatList, Image, SafeAreaView, StyleSheet, Text, View, TouchableOpacity, ToastAndroid, Button } from 'react-native'
 import CustomHeader from '../../components/CustomHeader';
 import Colors from '../../styles/Colors';
-import TopItemList from './TopItemList';
 import imagePath from '../../constants/imagePath';
 import { moderateScale, scale, moderateVerticalScale } from 'react-native-size-matters';
 import CustomPkgBtn from '../../components/CustomPkgBtn';
@@ -10,18 +9,79 @@ import NavigationStrings from '../../constants/NavigationStrings';
 import { useNavigation } from '@react-navigation/native';
 import * as Animatable from 'react-native-animatable';
 import Loader from '../../components/Loader';
+import firestore from '@react-native-firebase/firestore';
+import { useIsFocused } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+let uid = '';
 const AddToCart = () => {
-    const [count, setCount] = useState(0);
+    const isFocused = useIsFocused();
+    const [cartList, setCartList] = useState([]);
     const [isLoading, setisLoading] = useState(true);
-    const navigation = useNavigation()
-    const counter = (type) => {
-        if (type == "increment") {
-            setCount(count + 1)
-        } else if (type == "decrement" && count > 0) {
-            setCount(count - 1)
+    const navigation = useNavigation();
+
+    useEffect(() => {
+        getCartItems();
+    }, [isFocused]);
+    const getCartItems = async () => {
+        uid = await AsyncStorage.getItem('USERID');
+        const user = await firestore().collection('users').doc(uid).get();
+        setCartList(user._data.cart);
+    };
+
+    const addItem = async (item, index) => {
+        const user = await firestore().collection('users').doc(uid).get();
+        console.log(user._data.cart);
+        let tempCart = [];
+        tempCart = user._data.cart; // Initialize tempCart with existing cart items, or an empty array if it doesn't exist
+        let existingItemIndex = tempCart.findIndex(itm => itm.id === item.id);
+        if (existingItemIndex !== -1) {
+            // Item already exists in the cart, update its quantity
+            tempCart[existingItemIndex].data.quantity += 1;
         }
-    }
+        firestore().collection('users').doc(uid).update({
+            cart: tempCart,
+        });
+        getCartItems();
+    };
+
+    const removeItem = async item => {
+        const user = await firestore().collection('users').doc(uid).get();
+        console.log(user._data);
+        let tempCart = [];
+        tempCart = user._data.cart; // Initialize tempCart with existing cart items, or an empty array if it doesn't exist
+
+        let existingItemIndex = tempCart.findIndex(itm => itm.id === item.id);
+
+        if (existingItemIndex !== -1) {
+            // Item already exists in the cart, update its quantity
+            tempCart[existingItemIndex].data.quantity -= 1;
+        }
+        firestore().collection('users').doc(uid).update({
+            cart: tempCart,
+        });
+
+        getCartItems();
+    };
+    const deleteItem = async index => {
+        const user = await firestore().collection('users').doc(uid).get();
+        let tempCart = [];
+        tempCart = user._data.cart;
+        tempCart.splice(index, 1);
+        ToastAndroid.show('Item deleted from the cart', ToastAndroid.SHORT);
+        firestore().collection('users').doc(uid).update({
+            cart: tempCart,
+        });
+        getCartItems();
+    };
+    const getTotal = () => {
+        let total = 0;
+        cartList.map(item => {
+            total = total + item.data.quantity * item.data.price;
+        });
+        return total;
+    };
+
     const moveToScreen = (screen) => {
         navigation.navigate(screen)
     }
@@ -32,57 +92,75 @@ const AddToCart = () => {
         }, 1000);
     }),
         [];
+    // useEffect(() => {
+    //     handleEmptyCart();
+    // }),
+    //     [];
+    const handleEmptyCart = () => {
+        if (cartList.length <= 0) {
+            ToastAndroid.show('No item in Cart ', ToastAndroid.SHORT);
+        }
+    }
     const renderItem = ({ item, index }) => {
+        console.log('this is the add cart item', item)
+        console.log(item.data.imageUrl)
         return (
             <View style={{
-                // flex: 1,
-                // backgroundColor: 'blue',
                 flexDirection: 'row',
                 alignItems: 'center'
             }}>
                 <View style={styles.itemImageStyle}>
                     <Animatable.Image
-                        source={imagePath.icCartBurger}
+                        source={{ uri: item.data.imageUrl }}
                         resizeMode="stretch"
                         animation="bounce"
                         duraton="2000"
+                        style={{ width: 70, height: 70, borderRadius: 10 }}
                     />
                 </View>
+
                 <View style={styles.cartItemFlex}>
                     <View style={{
                     }}>
-                        <Text style={styles.cartItemNameStyle}>{item.itemName}</Text>
-                        <Text style={styles.cartItemPriceStyle}>Rs.{item.itemPrice}</Text>
+                        <Text style={styles.cartItemNameStyle}>{item.data.name}</Text>
+                        <Text style={styles.cartItemPriceStyle}>Rs.{item.data.price}</Text>
                         <View style={styles.CounterView}>
                             <TouchableOpacity
                                 activeOpacity={0.7}
-                                onPress={() => counter('decrement')}
+                                onPress={() => {
+                                    if (item.data.quantity > 1) {
+                                        removeItem(item);
+                                    } else {
+                                        deleteItem(index);
+                                    }
+                                }}
                             >
                                 <Image
                                     style={styles.counterImgStyle}
                                     source={imagePath.icMinus}
-                                // resizeMode="contain"
                                 />
                             </TouchableOpacity>
                             <Text style={{
                                 marginHorizontal: moderateScale(10),
                                 fontSize: scale(20),
                                 fontWeight: '400',
-                            }}>{count}</Text>
+                            }}>{item.data.quantity}</Text>
                             <TouchableOpacity
                                 activeOpacity={0.7}
-                                onPress={() => counter('increment')}
+                                onPress={() => {
+                                    addItem(item);
+                                }}
                             >
                                 <Image
                                     style={styles.counterImgStyle}
-
                                     source={imagePath.icPLus}
                                 />
                             </TouchableOpacity>
                         </View>
                     </View>
+
                     <TouchableOpacity
-                        onPress={() => alert('delte')}
+                        onPress={() => deleteItem(index)}
                     >
                         <Image
                             source={imagePath.icDeleteCart}
@@ -105,26 +183,30 @@ const AddToCart = () => {
                     {/* <View style={{ }}> */}
                     <View style={styles.cartItemStyle}>
                         <FlatList
-                            data={TopItemList}
+                            data={cartList}
                             renderItem={renderItem}
                             keyExtractor={(item, index) => index.toString()}
                             ItemSeparatorComponent={() => <View style={{ marginBottom: moderateScale(20) }} />}
                         />
                     </View>
 
-                    <View style={{ flex: 0.5, justifyContent: 'center' }}>
-                        <View style={styles.totalPriceView}>
-                            <Text style={styles.totalPriceHeading}>Total</Text>
-                            <Text style={styles.totalPrice}>Rs.400</Text>
+                    {cartList.length > 0 ?
+                        <View style={{ flex: 0.5, justifyContent: 'center' }}>
+                            <View style={styles.totalPriceView}>
+                                <Text style={styles.totalPriceHeading}>Total</Text>
+                                <Text style={styles.totalPrice}> {'Items(' + cartList.length + ')\nPrice:' + getTotal()}</Text>
+                            </View>
+                            <CustomPkgBtn
+                                onPress={() => { moveToScreen(NavigationStrings.CHECKOUT) }}
+                                textStyle={{ ...styles.textStyle }}
+                                btnStyle={{ ...styles.btnStyle }}
+                                btnText={'Checkout'}
+                            />
                         </View>
-                        <CustomPkgBtn
-                            onPress={() => { moveToScreen(NavigationStrings.CHECKOUT) }}
-                            textStyle={{ ...styles.textStyle }}
-                            btnStyle={{ ...styles.btnStyle }}
-                            btnText={'Checkout'}
-                        />
-                    </View>
-                    {/* </View> */}
+                        :
+                        // handleEmptyCart() // Call the function directly
+                        null
+                    }
                 </View>
 
             }
@@ -174,8 +256,8 @@ const styles = StyleSheet.create({
         marginRight: moderateScale(15),
     },
     counterImgStyle: {
-        width: moderateScale(17),
-        height: moderateScale(17)
+        width: moderateScale(25),
+        height: moderateScale(25)
     },
     cartItemFlex: {
         flex: 1,

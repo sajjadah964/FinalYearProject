@@ -22,7 +22,6 @@ const Signup = ({navigateToLogin}) => {
     const [isVisible, setVisible] = useState(true);
     const [CVisible, setCVisible] = useState(true);
     const [textWidth, setTextWidth] = useState(null);
-
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
     const [password, setPassword] = useState('');

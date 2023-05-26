@@ -41,14 +41,14 @@ const ItemsDetails = (props) => {
             setCount(count - 1)
         }
     }
-    // useEffect(() => {
-    //     getCartItems();
-    //   }, [isFocused]);
-    //   const getCartItems = async () => {
-    //     uid = await AsyncStorage.getItem('USERID');
-    //     const user = await firestore().collection('users').doc(uid).get();
-    //     // setCartCount(user._data.cart.length);
-    //   };
+    useEffect(() => {
+        getCartItems();
+      }, [isFocused]);
+      const getCartItems = async () => {
+        uid = await AsyncStorage.getItem('USERID');
+        const user = await firestore().collection('users').doc(uid).get();
+        // setCartCount(user._data.cart.length);
+      };
       const onAddToCart = async (item, index) => {
         const user = await firestore().collection('users').doc(uid).get();
         console.log(user._data.cart);
@@ -65,7 +65,7 @@ const ItemsDetails = (props) => {
           if (existing == false) {
             tempDart.push(item);
           }
-          firestore().collection('users').doc(userId).update({
+          firestore().collection('users').doc(uid).update({
             cart: tempDart,
           });
         } else {
