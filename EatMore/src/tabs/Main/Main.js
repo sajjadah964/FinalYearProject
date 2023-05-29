@@ -12,7 +12,7 @@ import Loader from '../../components/Loader';
 import auth from '@react-native-firebase/auth';
 import CustomPkgBtn from '../../components/CustomPkgBtn';
 import firestore from '@react-native-firebase/firestore';
-import {useIsFocused} from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const numColumns = 2;
@@ -47,35 +47,35 @@ const Main = () => {
     let uid = '';
     useEffect(() => {
         firestore()
-          .collection('items')
-          .get()
-          .then(querySnapshot => {
-            console.log('Total users: ', querySnapshot.size);
-            let tempData = [];
-            querySnapshot.forEach(documentSnapshot => {
-              console.log(
-                'User ID: ',
-                documentSnapshot.id,
-                documentSnapshot.data(),
-              );
-              tempData.push({
-                id: documentSnapshot.id,
-                data: documentSnapshot.data(),
-              });
+            .collection('items')
+            .get()
+            .then(querySnapshot => {
+                console.log('Total users: ', querySnapshot.size);
+                let tempData = [];
+                querySnapshot.forEach(documentSnapshot => {
+                    console.log(
+                        'User ID: ',
+                        documentSnapshot.id,
+                        documentSnapshot.data(),
+                    );
+                    tempData.push({
+                        id: documentSnapshot.id,
+                        data: documentSnapshot.data(),
+                    });
+                });
+                setItems(tempData);
             });
-            setItems(tempData);
-          });
         // Stop listening for updates when no longer required
         // return () => subscriber();
-      }, []);
-      useEffect(() => {
+    }, []);
+    useEffect(() => {
         getCartItems();
-      }, [isFocused]);
-      const getCartItems = async () => {
+    }, [isFocused]);
+    const getCartItems = async () => {
         uid = await AsyncStorage.getItem('USERID');
         const user = await firestore().collection('users').doc(uid).get();
         setCartCount(user._data.cart.length);
-      };
+    };
     //   const onAddToCart = async (item, index) => {
     //     console.log("this is the new item",item.data)
     //             uid = await AsyncStorage.getItem('USERID');
@@ -108,33 +108,33 @@ const Main = () => {
     //     });
     //     getCartItems();
     //   };
-      
+
     const onAddToCart = async (item, index) => {
         console.log("this is the new item", item.data);
         uid = await AsyncStorage.getItem('USERID');
         console.log(uid);
         const user = await firestore().collection('users').doc(uid).get();
         console.log(user._data);
-        let tempCart =[];
-         tempCart = user._data.cart ; // Initialize tempCart with existing cart items, or an empty array if it doesn't exist
-        
+        let tempCart = [];
+        tempCart = user._data.cart; // Initialize tempCart with existing cart items, or an empty array if it doesn't exist
+
         let existingItemIndex = tempCart.findIndex(itm => itm.id === item.id);
-        
+
         if (existingItemIndex !== -1) {
-          // Item already exists in the cart, update its quantity
-          tempCart[existingItemIndex].data.quantity += 1;
+            // Item already exists in the cart, update its quantity
+            tempCart[existingItemIndex].data.quantity += 1;
         } else {
-          // Item does not exist in the cart, add it as a new item
-          tempCart.push(item);
+            // Item does not exist in the cart, add it as a new item
+            tempCart.push(item);
         }
-        
+
         firestore().collection('users').doc(uid).update({
-          cart: tempCart,
+            cart: tempCart,
         });
-        
+
         getCartItems();
-      };
-      
+    };
+
     const selectCategory = (index) => {
         setSelectedIndex(index)
     }
@@ -170,7 +170,7 @@ const Main = () => {
             .signOut()
             .then(() => {
                 ToastAndroid.show('Logout Succcessfully', ToastAndroid.SHORT);
-                navigation.navigate(NavigationStrings.MAIN_STACK, { screen:NavigationStrings.LOGIN});
+                navigation.navigate(NavigationStrings.MAIN_STACK, { screen: NavigationStrings.LOGIN });
 
             });
     }
@@ -221,24 +221,24 @@ const Main = () => {
                 <View style={styles.singleItem}>
                     <View style={{ alignItems: 'center' }}>
                         <Animatable.Image
-                              source={{ uri: item.data.imageUrl }}
+                            source={{ uri: item.data.imageUrl }}
                             duraton="1500"
                             animation="bounce"
-                            style={{width:100,height:100, marginBottom: 10}}
+                            style={{ width: 100, height: 100, marginBottom: 10 }}
                         />
                     </View>
                     <View style={{
                         paddingHorizontal: moderateScale(15)
                     }}>
                         <Text style={styles.itemNameStyle}>{item.data.name}</Text>
-                            <Text style={styles.itemPriceStyle}>Rs.{item.data.price}</Text>
+                        <Text style={styles.itemPriceStyle}>Rs.{item.data.price}</Text>
                         <View style={styles.itemPriceDetail}>
                             <Text style={[styles.itemStyle, {}]}>Points: {item.data.points}</Text>
-                            <TouchableOpacity style={styles.addToCart} onPress={() => {onAddToCart(item, index)}}>
-                                <Image source={require ('../../assets/images/add-to-cart.png')}
-                                 />
+                            <TouchableOpacity style={styles.addToCart} onPress={() => { onAddToCart(item, index) }}>
+                                <Image source={require('../../assets/images/add-to-cart.png')}
+                                />
                             </TouchableOpacity>
-                            
+
                         </View>
                     </View>
                 </View>
@@ -250,25 +250,25 @@ const Main = () => {
             {isLoading ? <Loader isLoading={isLoading} /> :
                 <View style={styles.container}>
                     <View style={styles.homeHeaderView}>
-                        <TouchableOpacity onPress={() => moveToScreen(NavigationStrings.ALL_ORDER)} activeOpacity={0.8}>
-                            <Text style={styles.headerTitleStyle}>Menu</Text>
-                        </TouchableOpacity>
-
-
-                        <TouchableOpacity  onPress={logout}>
-                            <Text >logout</Text>
-                            </TouchableOpacity>
                         <TouchableOpacity
-                        // onPress={() => logoutData()}
-                        // activeOpacity={0.7}
-                        >
-                            <TouchableOpacity  onPress={() => moveToScreen(NavigationStrings.ADD_TO_CART)}>
+                            onPress={() => logoutData()}
+                            activeOpacity={0.7}>
+                            {/* <Text style={styles.headerTitleStyle}>Logut</Text> */}
                             <Image
-                                // source={imagePath.icUserProfileLogo}
-                                source={imagePath.icShoppingCart}
+                                source={imagePath.icUserProfileLogo}
                                 style={{ height: 35, width: 35 }}
                             />
-                            </TouchableOpacity>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={{}}
+                            onPress={() => moveToScreen(NavigationStrings.ADD_TO_CART)}>
+                            <View style={{}}>
+                                <Image
+                                    source={imagePath.icShoppingCart}
+                                    style={{ height: 35, width: 35, alignItems: 'center',}}
+                                />
+                            </View>
                             <View style={{ height: 24, width: 24, backgroundColor: 'red', borderRadius: 12, alignItems: 'center', justifyContent: 'center', bottom: 43, left: 23 }}>
                                 <Text style={{ color: 'white' }}>{cartCount}</Text>
                             </View>
@@ -288,7 +288,7 @@ const Main = () => {
                         </TextInputWithLabel>
                     </View>
                     <View style={styles.categoryView}>
-                    <View style={styles.categoryBtnView}>
+                        <View style={styles.categoryBtnView}>
                             {buttons.map((button, index) => {
                                 return (
                                     <CustomPkgBtn
@@ -300,7 +300,6 @@ const Main = () => {
                                     />
                                 )
                             })
-
                             }
                         </View>
                     </View>
@@ -308,7 +307,6 @@ const Main = () => {
                         style={styles.topItemViewStyle}
                     >
                         <Text style={styles.topItemListHeading}>Top Items</Text>
-
                         <FlatList
                             data={items}
                             renderItem={topItemList}
@@ -325,10 +323,8 @@ const Main = () => {
                             />}
                         />
                     </View>
-
                 </View>
             }
-
         </SafeAreaView>
     )
 }
@@ -343,8 +339,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         marginTop: moderateVerticalScale(20),
-        alignItems: 'center',
-        marginBottom: moderateVerticalScale(20),
+        // alignItems: 'center',
+        marginBottom: moderateVerticalScale(0),
     },
     headerTitleStyle: {
         fontSize: scale(36),
@@ -356,7 +352,6 @@ const styles = StyleSheet.create({
         marginBottom: moderateVerticalScale(16),
     },
     inputSearchStyle: {
-        // width: moderateScale(300),
         height: moderateScale(43),
         borderRadius: moderateScale(30),
         backgroundColor: '#F2EFFF',
@@ -431,7 +426,7 @@ const styles = StyleSheet.create({
         flex: 2,
         // backgroundColor: 'red',
         // marginBottom:80,
-        paddingBottom:85
+        paddingBottom: 85
     },
     singleItem: {
         width: '100%',

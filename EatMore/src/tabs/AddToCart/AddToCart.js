@@ -93,14 +93,14 @@ const AddToCart = () => {
     }),
         [];
     // useEffect(() => {
-    //     handleEmptyCart();
+    //     handleEmptyCart(); 
     // }),
     //     [];
-    const handleEmptyCart = () => {
-        if (cartList.length <= 0) {
-            ToastAndroid.show('No item in Cart ', ToastAndroid.SHORT);
-        }
-    }
+    // const handleEmptyCart = () => {
+    //     if (cartList.length <= 0) {
+    //         ToastAndroid.show('No item in Cart ', ToastAndroid.SHORT);
+    //     }
+    // }
     const renderItem = ({ item, index }) => {
         console.log('this is the add cart item', item)
         console.log(item.data.imageUrl)
