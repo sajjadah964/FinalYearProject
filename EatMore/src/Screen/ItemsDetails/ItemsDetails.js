@@ -112,6 +112,7 @@ const ItemsDetails = (props) => {
                             color: Colors.black
                         }]}>{name}</Text>
                         <Text style={styles.itemPriceStyle}>Rs.{price}</Text>
+                        <Text style={styles.itemPointStyle}>{points} points</Text>
                         <Text style={styles.description}>
                             {description}
                         </Text>
@@ -185,11 +186,21 @@ const styles = StyleSheet.create({
         fontSize: scale(24),
         fontWeight: '500'
     },
+    itemView: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+
+    },  
     itemPriceStyle: {
-        color: Colors.primaryColor,
+        color: 'black',
         marginTop: moderateVerticalScale(5),
-        fontWeight: '600',
-        fontSize: scale(20)
+        fontWeight: '500',
+        fontSize: 20
+    },itemPointStyle: {
+        color: 'black',
+        marginTop: moderateVerticalScale(5),
+        fontWeight: '300',
+        fontSize: 20,
     },
     button: {
         // flex: 1,
@@ -218,7 +229,7 @@ const styles = StyleSheet.create({
     textStyle: {
         fontWeight: '400',
         fontSize: 16,
-        color: Colors.primaryColor,
+        color: 'white',
         fontStyle: 'normal',
     },
     description: {

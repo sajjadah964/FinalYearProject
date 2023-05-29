@@ -29,5 +29,7 @@ export default {
     icCartMinus: require('../assets/images/cartMinus.png'),
     icCartPlus: require('../assets/images/cartPlus.png'),
     icShoppingCart: require('../assets/images/shopping-cart.png'),
-    icAddToCart: require('../assets/images/add-to-cart.png')
+    icAddToCart: require('../assets/images/add-to-cart.png'),
+    icItemPlus: require('../assets/images/itemIncrement.png'),
+    icItemMinus: require('../assets/images/itemDecrement.png')
 }

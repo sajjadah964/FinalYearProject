@@ -58,7 +58,7 @@ const Login = () => {
             setEmailError('')
             setPasswordError('')
             setisLoading(false)
-            AsyncStorage.setItem('USERID', result.user.uid);
+            await AsyncStorage.setItem('USERID', result.user.uid);
             navigation.navigate(NavigationStrings.HOME);
             // goToNextScreen(
                 

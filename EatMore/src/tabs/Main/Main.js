@@ -33,7 +33,7 @@ const Main = () => {
     const buttons = [
         {
             id: 1,
-            title: 'All Items'
+            title: 'Recent Items'
         },
         {
             id: 2,
@@ -306,7 +306,7 @@ const Main = () => {
                     <View
                         style={styles.topItemViewStyle}
                     >
-                        <Text style={styles.topItemListHeading}>Top Items</Text>
+                        <Text style={styles.topItemListHeading}>Recent Items</Text>
                         <FlatList
                             data={items}
                             renderItem={topItemList}
