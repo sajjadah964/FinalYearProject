@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { useState, useEffect, useId } from 'react';
-import { FlatList, Image, SafeAreaView, StyleSheet, Text, View, TouchableOpacity, ToastAndroid, Button } from 'react-native'
+import { FlatList, Image, SafeAreaView, StyleSheet, Text, View, TouchableOpacity, ToastAndroid, Button, ScrollView } from 'react-native'
 import CustomHeader from '../../components/CustomHeader';
 import Colors from '../../styles/Colors';
 import imagePath from '../../constants/imagePath';
@@ -19,6 +19,7 @@ const AddToCart = () => {
     const isFocused = useIsFocused();
     const [cartList, setCartList] = useState([]);
     const [isLoading, setisLoading] = useState(true);
+    const [deliveryFess,setDeliveryFees]=useState(30);
     const navigation = useNavigation();
 
     useEffect(() => {
@@ -78,7 +79,8 @@ const AddToCart = () => {
     const getTotal = () => {
         let total = 0;
         cartList.map(item => {
-            total = total + item.data.quantity * item.data.price;
+            total =total + item.data.quantity * item.data.price ;
+            
         });
         return total;
     };
@@ -108,7 +110,10 @@ const AddToCart = () => {
         return (
             <View style={{
                 flexDirection: 'row',
-                alignItems: 'center'
+                alignContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(239, 237, 237, 1)',
+                padding: 5,
             }}>
                 <View style={styles.itemImageStyle}>
                     <Animatable.Image
@@ -164,6 +169,7 @@ const AddToCart = () => {
                         onPress={() => deleteItem(index)}
                     >
                         <Image
+                            style={{ height: 25, width: 25, top: 3 }}
                             source={imagePath.icDeleteCart}
                             resizeMode="stretch"
                         />
@@ -175,7 +181,8 @@ const AddToCart = () => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             {isLoading ? <Loader isLoading={isLoading} /> :
-                <View style={styles.container}>
+                <ScrollView>
+                    <View style={styles.container}>
                     <CustomHeader
                         leftImg={imagePath.icBack}
                         headerTitle={'Items in Cart'}
@@ -193,9 +200,25 @@ const AddToCart = () => {
 
                     {cartList.length > 0 ?
                         <View style={{ flex: 0.5, justifyContent: 'center' }}>
-                            <View style={styles.totalPriceView}>
-                                <Text style={styles.totalPriceHeading}>Total</Text>
-                                <Text style={styles.totalPrice}> {'Items(' + cartList.length + ')\nPrice:' + getTotal()}</Text>
+                            <Text style={{fontSize: 22, fontWeight: '600', color: 'black', marginBottom: 10}}>Order Summary</Text>
+                            <View style={styles.subtotal}>
+                                <View style={styles.totalPriceView}>
+                                    <Text style={styles.totalPriceHeading}>Total Items</Text>
+                                    <Text style={styles.totalPrice}> { cartList.length }</Text>
+                                </View>
+                                <View style={styles.totalPriceView}>
+                                    <Text style={styles.totalPriceHeading}>Subtotal</Text>
+                                    <Text style={styles.totalPrice}> {'Rs:' + getTotal()}</Text>
+                                </View>
+                                <View style={styles.totalPriceView}>
+                                    <Text style={styles.totalPriceHeading}>Delivery Fee</Text>
+                                    <Text style={styles.totalPriceHeading}>{deliveryFess}</Text>
+                                </View>
+                                <View style={styles.totalPriceView}>
+                                    <Text style={styles.total}>Total</Text>
+                                    <Text style={styles.total}>{'Rs:' + getTotal()}</Text>
+                                </View>
+                                {/* <Text style={styles.totalPrice}> {'Items(' + cartList.length + ')\nPrice:' + getTotal()}</Text> */}
                             </View>
                             <CustomPkgBtn
                                 onPress={() => { moveToScreen(NavigationStrings.CHECKOUT) }}
@@ -209,6 +232,7 @@ const AddToCart = () => {
                         null
                     }
                 </View>
+                </ScrollView>
 
             }
         </SafeAreaView>
@@ -224,10 +248,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#FEFEFE'
     },
     headerImgStyle: {
-        tintColor: Colors.black
+        tintColor: Colors.black,
     },
     cartItemStyle: {
         flex: 1,
+        marginBottom: 40
         // backgroundColor:'blue'
     },
     CounterView: {
@@ -242,14 +267,13 @@ const styles = StyleSheet.create({
         color: Colors.black,
     },
     cartItemPriceStyle: {
-        color: Colors.primaryColor,
-        fontSize: scale(20),
+        color: 'rgba(0, 0, 0, 0.5)',
+        fontSize: scale(18),
         fontWeight: '500',
     },
     itemImageStyle: {
         flex: 0.5,
         borderRadius: moderateScale(15),
-        backgroundColor: '#D9D9D9',
         width: '100%',
         height: moderateScale(90),
         alignItems: 'center',
@@ -257,8 +281,8 @@ const styles = StyleSheet.create({
         marginRight: moderateScale(15),
     },
     counterImgStyle: {
-        width: moderateScale(25),
-        height: moderateScale(25)
+        width: moderateScale(18),
+        height: moderateScale(18)
     },
     cartItemFlex: {
         flex: 1,
@@ -267,17 +291,30 @@ const styles = StyleSheet.create({
     },
     totalPriceView: {
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        borderBottomWidth: 1,
+        borderBottomColor: 'rgba(0, 0, 0, 0.32)',
+        marginBottom: 10,
     },
     totalPriceHeading: {
-        fontSize: scale(20),
-        fontWeight: '600',
-        color: Colors.black
+        fontSize: scale(15),
+        fontWeight: '400',
+        color: 'rgba(0, 0, 0, 0.5)',
+    },
+    total: {
+        color: 'rgba(71, 45, 156, 1)',
+        fontSize: 18,
+        fontWeight: '600'
     },
     totalPrice: {
-        fontSize: scale(20),
-        fontWeight: '600',
-        color: Colors.primaryColor
+        fontSize: scale(15),
+        fontWeight: '500',
+        color: 'rgba(0, 0, 0, 0.5)'
+    },
+    subtotal: {
+        backgroundColor: 'rgba(239, 237, 237, 1)',
+        padding: 15,
+        borderRadius: 15,
     },
     btnStyle: {
         width: moderateScale(200),
