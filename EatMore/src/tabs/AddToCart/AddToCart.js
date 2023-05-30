@@ -178,8 +178,11 @@ const AddToCart = () => {
                         headerTitle={'Items in Cart'}
                         headerImgStyle={styles.headerImgStyle}
                     />
-                    <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
-                        {/* <View style={{ }}> */}
+                    <ScrollView 
+                    style={{ flex: 1 }} 
+                    showsVerticalScrollIndicator={false}
+                    
+                    >
                         <View style={styles.cartItemStyle}>
                             <FlatList
                                 data={cartList}
@@ -219,7 +222,7 @@ const AddToCart = () => {
                                     btnText={'Checkout'}
                                 />
                             </View>
-                            : 'Cart is Empty'
+                            : null
                         }
                     </ScrollView>
                 </View>
