@@ -1,5 +1,8 @@
 import React, { useState, } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Alert,ToastAndroid } from 'react-native'
+import {
+    StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Alert, ToastAndroid, ScrollView,
+    KeyboardAvoidingView,
+} from 'react-native'
 import { moderateScale, scale, moderateVerticalScale } from 'react-native-size-matters';
 import CustomPkgBtn from '../../components/CustomPkgBtn';
 import imagePath from '../../constants/imagePath';
@@ -12,7 +15,7 @@ import auth from '@react-native-firebase/auth';
 import Loader from '../../components/Loader';
 
 
-const Login = () => {
+const ResetPassword = () => {
     const [isLoading, setisLoading] = useState(false);
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
@@ -28,60 +31,66 @@ const Login = () => {
                 // navigation.navigate(NavigationStrings.LOGIN)
             })
             .catch(error => {
-                Alert.alert('Reset Email error',error)
+                Alert.alert('Reset Email error', error)
             });
     };
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <Loader isLoading={isLoading} />
-            <View style={{ flex: 1, flexDirection: 'column', }}>
-                <View style={styles.eatmoreLogo}>
-                    <View style={styles.loginLogoView}>
-                        <Animatable.Image
-                            animation="bounceIn"
-                            duraton="1500"
-                            style={styles.loginLogoStyle}
-                            source={imagePath.icLogo}
-                        />
-                    </View>
-                </View>
-                <View style={{
-                    position: 'absolute',
-                    bottom: 30,
-                    left: 0,
-                    right: 0,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}>
-                    <View style={styles.formView}>
-                        <View style={{ marginTop: moderateVerticalScale(40) }}>
-                            <CustomPkgBtn
-                                textStyle={{ ...styles.textStyle }}
-                                btnStyle={{ ...styles.btnStyle }}
-                                btnText={'Reset Password'}
+            <KeyboardAvoidingView style={{ flex: 1 }} enabled>
+                <ScrollView
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    keyboardShouldPersistTaps="handled"
+                >
+                    <View style={styles.eatmoreLogo}>
+                        <View style={styles.loginLogoView}>
+                            <Animatable.Image
+                                animation="bounceIn"
+                                duraton="1500"
+                                style={styles.loginLogoStyle}
+                                source={imagePath.icLogo}
                             />
                         </View>
-                        <TouchableOpacity style={styles.descView}>
-                            <Text style={styles.descStyle}>Enter the email and follow the link in your inbox to reset your password.</Text>
-                        </TouchableOpacity>
-                        <TextInputWithLabel
-                            placeHolder='Enter Email'
-                            onChangeText={(userEmail) => setEmail(userEmail)}
-                            inputStyle={{ marginBottom: moderateVerticalScale(70) }}
-                            keyboardType="email-address"
-                        />
-
-                        <CustomPkgBtn
-                            textStyle={{ ...styles.textStyle, ...styles.customTextStyle }}
-                            btnStyle={{ ...styles.btnStyle, ...styles.customStyle }}
-                            btnText={'Reset Password'}
-                            onPress={handleResetPassword}
-                        />
-
                     </View>
-                </View>
-            </View>
+                    <View style={{
+                        flex: 1,
+                        position: 'relative',
+                        bottom: 80,
+                        left: 0,
+                        right: 0,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}>
+                        <View style={styles.formView}>
+                            <View style={{ marginTop: moderateVerticalScale(40) }}>
+                                <CustomPkgBtn
+                                    textStyle={{ ...styles.textStyle }}
+                                    btnStyle={{ ...styles.btnStyle }}
+                                    btnText={'Reset Password'}
+                                />
+                            </View>
+                            <TouchableOpacity style={styles.descView}>
+                                <Text style={styles.descStyle}>Enter the email and follow the link in your inbox to reset your password.</Text>
+                            </TouchableOpacity>
+                            <TextInputWithLabel
+                                placeHolder='Enter Email'
+                                onChangeText={(userEmail) => setEmail(userEmail)}
+                                inputStyle={{ marginBottom: moderateVerticalScale(70) }}
+                                keyboardType="email-address"
+                            />
+
+                            <CustomPkgBtn
+                                textStyle={{ ...styles.textStyle, ...styles.customTextStyle }}
+                                btnStyle={{ ...styles.btnStyle, ...styles.customStyle }}
+                                btnText={'Reset Password'}
+                                onPress={handleResetPassword}
+                            />
+
+                        </View>
+                    </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     )
 }
@@ -157,5 +166,5 @@ const styles = StyleSheet.create({
         // width: '73%',
     },
 })
-export default Login;
+export default ResetPassword;
 
