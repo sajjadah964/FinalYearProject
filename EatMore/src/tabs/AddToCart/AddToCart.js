@@ -19,16 +19,18 @@ const AddToCart = () => {
     const isFocused = useIsFocused();
     const [cartList, setCartList] = useState([]);
     const [isLoading, setisLoading] = useState(true);
-    const [deliveryFess,setDeliveryFees]=useState(30);
+    const [deliveryFess, setDeliveryFees] = useState(30);
     const navigation = useNavigation();
 
     useEffect(() => {
         getCartItems();
     }, [isFocused]);
     const getCartItems = async () => {
+        setisLoading(true);
         uid = await AsyncStorage.getItem('USERID');
         const user = await firestore().collection('users').doc(uid).get();
         setCartList(user._data.cart);
+        setisLoading(false);
     };
 
     const addItem = async (item, index) => {
@@ -76,34 +78,22 @@ const AddToCart = () => {
         });
         getCartItems();
     };
-    const getTotal = () => {
-        let total = 0;
+    const getSubTotal = () => {
+        let subTotal = 0;
         cartList.map(item => {
-            total =total + item.data.quantity * item.data.price ;
-            
+            subTotal = subTotal + item.data.quantity * item.data.price;
         });
-        return total;
+        return subTotal;
     };
+    const getTotalBill = () => {
+        let totalBill = 0;
+        totalBill = totalBill + getSubTotal() + deliveryFess;
+        return totalBill;
+    }
 
     const moveToScreen = (screen) => {
         navigation.navigate(screen)
     }
-    // LOADING CODE
-    useEffect(() => {
-        setTimeout(() => {
-            setisLoading(false);
-        }, 1000);
-    }),
-        [];
-    // useEffect(() => {
-    //     handleEmptyCart(); 
-    // }),
-    //     [];
-    // const handleEmptyCart = () => {
-    //     if (cartList.length <= 0) {
-    //         ToastAndroid.show('No item in Cart ', ToastAndroid.SHORT);
-    //     }
-    // }
     const renderItem = ({ item, index }) => {
         console.log('this is the add cart item', item)
         console.log(item.data.imageUrl)
@@ -114,6 +104,7 @@ const AddToCart = () => {
                 alignItems: 'center',
                 backgroundColor: 'rgba(239, 237, 237, 1)',
                 padding: 5,
+                borderRadius:10
             }}>
                 <View style={styles.itemImageStyle}>
                     <Animatable.Image
@@ -169,7 +160,7 @@ const AddToCart = () => {
                         onPress={() => deleteItem(index)}
                     >
                         <Image
-                            style={{ height: 25, width: 25, top: 3 }}
+                            style={{ height: 25, width: 25, top: 3,right:7 }}
                             source={imagePath.icDeleteCart}
                             resizeMode="stretch"
                         />
@@ -181,58 +172,57 @@ const AddToCart = () => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             {isLoading ? <Loader isLoading={isLoading} /> :
-                <ScrollView>
-                    <View style={styles.container}>
+                <View style={styles.container}>
                     <CustomHeader
                         leftImg={imagePath.icBack}
                         headerTitle={'Items in Cart'}
                         headerImgStyle={styles.headerImgStyle}
                     />
-                    {/* <View style={{ }}> */}
-                    <View style={styles.cartItemStyle}>
-                        <FlatList
-                            data={cartList}
-                            renderItem={renderItem}
-                            keyExtractor={(item, index) => index.toString()}
-                            ItemSeparatorComponent={() => <View style={{ marginBottom: moderateScale(20) }} />}
-                        />
-                    </View>
-
-                    {cartList.length > 0 ?
-                        <View style={{ flex: 0.5, justifyContent: 'center' }}>
-                            <Text style={{fontSize: 22, fontWeight: '600', color: 'black', marginBottom: 10}}>Order Summary</Text>
-                            <View style={styles.subtotal}>
-                                <View style={styles.totalPriceView}>
-                                    <Text style={styles.totalPriceHeading}>Total Items</Text>
-                                    <Text style={styles.totalPrice}> { cartList.length }</Text>
-                                </View>
-                                <View style={styles.totalPriceView}>
-                                    <Text style={styles.totalPriceHeading}>Subtotal</Text>
-                                    <Text style={styles.totalPrice}> {'Rs:' + getTotal()}</Text>
-                                </View>
-                                <View style={styles.totalPriceView}>
-                                    <Text style={styles.totalPriceHeading}>Delivery Fee</Text>
-                                    <Text style={styles.totalPriceHeading}>{deliveryFess}</Text>
-                                </View>
-                                <View style={styles.totalPriceView}>
-                                    <Text style={styles.total}>Total</Text>
-                                    <Text style={styles.total}>{'Rs:' + getTotal()}</Text>
-                                </View>
-                                {/* <Text style={styles.totalPrice}> {'Items(' + cartList.length + ')\nPrice:' + getTotal()}</Text> */}
-                            </View>
-                            <CustomPkgBtn
-                                onPress={() => { moveToScreen(NavigationStrings.CHECKOUT) }}
-                                textStyle={{ ...styles.textStyle }}
-                                btnStyle={{ ...styles.btnStyle }}
-                                btnText={'Checkout'}
+                    <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+                        {/* <View style={{ }}> */}
+                        <View style={styles.cartItemStyle}>
+                            <FlatList
+                                data={cartList}
+                                renderItem={renderItem}
+                                showsVerticalScrollIndicator={false}
+                                keyExtractor={(item, index) => index.toString()}
+                                ItemSeparatorComponent={() => <View style={{ marginBottom: moderateScale(20) }} />}
                             />
                         </View>
-                        :
-                        // handleEmptyCart() // Call the function directly
-                        null
-                    }
+
+                        {cartList.length > 0 ?
+                            <View style={{ flex: 0.5, justifyContent: 'center' }}>
+                                <Text style={{ fontSize: 22, fontWeight: '600', color: 'black', marginBottom: 10 }}>Order Summary</Text>
+                                <View style={styles.subtotal}>
+                                    <View style={styles.totalPriceView}>
+                                        <Text style={styles.totalPriceHeading}>Total Items</Text>
+                                        <Text style={styles.totalPrice}> {cartList.length}</Text>
+                                    </View>
+                                    <View style={styles.totalPriceView}>
+                                        <Text style={styles.totalPriceHeading}>Subtotal</Text>
+                                        <Text style={styles.totalPrice}> {'Rs:' + getSubTotal()}</Text>
+                                    </View>
+                                    <View style={styles.totalPriceView}>
+                                        <Text style={styles.totalPriceHeading}>Delivery Fee</Text>
+                                        <Text style={styles.totalPriceHeading}>{deliveryFess}</Text>
+                                    </View>
+                                    <View style={styles.totalPriceView}>
+                                        <Text style={styles.total}>Total</Text>
+                                        <Text style={styles.total}>{'Rs:' + getTotalBill()}</Text>
+                                    </View>
+                                    {/* <Text style={styles.totalPrice}> {'Items(' + cartList.length + ')\nPrice:' + getTotal()}</Text> */}
+                                </View>
+                                <CustomPkgBtn
+                                    onPress={() => { moveToScreen(NavigationStrings.CHECKOUT) }}
+                                    textStyle={{ ...styles.textStyle }}
+                                    btnStyle={{ ...styles.btnStyle }}
+                                    btnText={'Checkout'}
+                                />
+                            </View>
+                            : 'Cart is Empty'
+                        }
+                    </ScrollView>
                 </View>
-                </ScrollView>
 
             }
         </SafeAreaView>
@@ -252,8 +242,7 @@ const styles = StyleSheet.create({
     },
     cartItemStyle: {
         flex: 1,
-        marginBottom: 40
-        // backgroundColor:'blue'
+        marginBottom: 40,
     },
     CounterView: {
         flexDirection: 'row',
