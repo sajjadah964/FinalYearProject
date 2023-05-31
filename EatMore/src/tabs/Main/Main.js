@@ -68,9 +68,11 @@ const Main = () => {
         // Stop listening for updates when no longer required
         // return () => subscriber();
     }, []);
+    
     useEffect(() => {
         getCartItems();
     }, [isFocused]);
+
     const getCartItems = async () => {
         uid = await AsyncStorage.getItem('USERID');
         const user = await firestore().collection('users').doc(uid).get();
