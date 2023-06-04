@@ -76,10 +76,12 @@ const Profile = () => {
 
               </View>
               <View style={styles.formView}>
+                <Text style={{fontSize: 20, fontWeight: '900', marginBottom: 5}}>Name:</Text>
                 <View style={styles.inputStyle}>
                   <Image source={require('../../assets/images/profileIcon.png')} style={styles.imgFirst} />
                 <Text style={styles.cardText}>{user.name}</Text>
                 </View>
+                <Text style={{fontSize: 20, fontWeight: '900', marginBottom: 5}}>Email:</Text>
                 <View style={styles.inputStyle}>
                   <Image source={require('../../assets/images/profileEmail.png')} style={styles.imgFirst} />
                 <Text style={styles.cardText}>{user.email}</Text>
@@ -197,8 +199,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     zIndex: 1,
     marginBottom: 20,
-    paddingTop: 20,
-    paddingBottom: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   inputStyleLast: {
     borderBottomWidth: 0,
