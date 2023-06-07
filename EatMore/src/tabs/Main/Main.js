@@ -76,6 +76,7 @@ const Main = () => {
     const getCartItems = async () => {
         uid = await AsyncStorage.getItem('USERID');
         const user = await firestore().collection('users').doc(uid).get();
+        console.log("this is user"+user)
         setCartCount(user._data.cart.length);
     };
     //   const onAddToCart = async (item, index) => {

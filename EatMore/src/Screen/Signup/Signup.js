@@ -29,6 +29,8 @@ const Signup = ({ navigateToLogin }) => {
     const [emailError, setEmailError] = useState('');
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const [number, setNumber] = useState('');
+    const [numberError, setNumberError] = useState('');
     const [name, setName] = useState('');
     const [nameError, setNameError] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
