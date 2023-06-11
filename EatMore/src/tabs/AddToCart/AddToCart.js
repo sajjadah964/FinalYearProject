@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import React, { useState, useEffect, useId } from 'react';
 import { FlatList, Image, SafeAreaView, StyleSheet, Text, View, TouchableOpacity, ToastAndroid, Button, ScrollView } from 'react-native'
 import CustomHeader from '../../components/CustomHeader';
@@ -104,7 +103,7 @@ const AddToCart = () => {
                 alignItems: 'center',
                 backgroundColor: 'rgba(239, 237, 237, 1)',
                 padding: 5,
-                borderRadius:10
+                borderRadius: 10
             }}>
                 <View style={styles.itemImageStyle}>
                     <Animatable.Image
@@ -160,7 +159,7 @@ const AddToCart = () => {
                         onPress={() => deleteItem(index)}
                     >
                         <Image
-                            style={{ height: 25, width: 25, top: 3,right:7 }}
+                            style={{ height: 25, width: 25, top: 3, right: 7 }}
                             source={imagePath.icDeleteCart}
                             resizeMode="stretch"
                         />
@@ -171,63 +170,61 @@ const AddToCart = () => {
     }
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            {isLoading ? <Loader isLoading={isLoading} /> :
-                <View style={styles.container}>
-                    <CustomHeader
-                        leftImg={imagePath.icBack}
-                        headerTitle={'Items in Cart'}
-                        headerImgStyle={styles.headerImgStyle}
-                    />
-                    <ScrollView 
-                    style={{ flex: 1 }} 
+            <Loader isLoading={isLoading} />
+            <View style={styles.container}>
+                <CustomHeader
+                    leftImg={imagePath.icBack}
+                    headerTitle={'Items in Cart'}
+                    headerImgStyle={styles.headerImgStyle}
+                />
+                <ScrollView
+                    style={{ flex: 1 }}
                     showsVerticalScrollIndicator={false}
-                    
-                    >
-                        <View style={styles.cartItemStyle}>
-                            <FlatList
-                                data={cartList}
-                                renderItem={renderItem}
-                                showsVerticalScrollIndicator={false}
-                                keyExtractor={(item, index) => index.toString()}
-                                ItemSeparatorComponent={() => <View style={{ marginBottom: moderateScale(20) }} />}
+
+                >
+                    <View style={styles.cartItemStyle}>
+                        <FlatList
+                            data={cartList}
+                            renderItem={renderItem}
+                            showsVerticalScrollIndicator={false}
+                            keyExtractor={(item, index) => index.toString()}
+                            ItemSeparatorComponent={() => <View style={{ marginBottom: moderateScale(20) }} />}
+                        />
+                    </View>
+
+                    {cartList.length > 0 ?
+                        <View style={{ flex: 0.5, justifyContent: 'center' }}>
+                            <Text style={{ fontSize: 22, fontWeight: '600', color: 'black', marginBottom: 10 }}>Order Summary</Text>
+                            <View style={styles.subtotal}>
+                                <View style={styles.totalPriceView}>
+                                    <Text style={styles.totalPriceHeading}>Total Items</Text>
+                                    <Text style={styles.totalPrice}> {cartList.length}</Text>
+                                </View>
+                                <View style={styles.totalPriceView}>
+                                    <Text style={styles.totalPriceHeading}>Subtotal</Text>
+                                    <Text style={styles.totalPrice}> {'Rs:' + getSubTotal()}</Text>
+                                </View>
+                                <View style={styles.totalPriceView}>
+                                    <Text style={styles.totalPriceHeading}>Delivery Fee</Text>
+                                    <Text style={styles.totalPriceHeading}>{deliveryFess}</Text>
+                                </View>
+                                <View style={styles.totalPriceView}>
+                                    <Text style={styles.total}>Total</Text>
+                                    <Text style={styles.total}>{'Rs:' + getTotalBill()}</Text>
+                                </View>
+                                {/* <Text style={styles.totalPrice}> {'Items(' + cartList.length + ')\nPrice:' + getTotal()}</Text> */}
+                            </View>
+                            <CustomPkgBtn
+                                onPress={() => { moveToScreen(NavigationStrings.CHECKOUT) }}
+                                textStyle={{ ...styles.textStyle }}
+                                btnStyle={{ ...styles.btnStyle }}
+                                btnText={'Checkout'}
                             />
                         </View>
-
-                        {cartList.length > 0 ?
-                            <View style={{ flex: 0.5, justifyContent: 'center' }}>
-                                <Text style={{ fontSize: 22, fontWeight: '600', color: 'black', marginBottom: 10 }}>Order Summary</Text>
-                                <View style={styles.subtotal}>
-                                    <View style={styles.totalPriceView}>
-                                        <Text style={styles.totalPriceHeading}>Total Items</Text>
-                                        <Text style={styles.totalPrice}> {cartList.length}</Text>
-                                    </View>
-                                    <View style={styles.totalPriceView}>
-                                        <Text style={styles.totalPriceHeading}>Subtotal</Text>
-                                        <Text style={styles.totalPrice}> {'Rs:' + getSubTotal()}</Text>
-                                    </View>
-                                    <View style={styles.totalPriceView}>
-                                        <Text style={styles.totalPriceHeading}>Delivery Fee</Text>
-                                        <Text style={styles.totalPriceHeading}>{deliveryFess}</Text>
-                                    </View>
-                                    <View style={styles.totalPriceView}>
-                                        <Text style={styles.total}>Total</Text>
-                                        <Text style={styles.total}>{'Rs:' + getTotalBill()}</Text>
-                                    </View>
-                                    {/* <Text style={styles.totalPrice}> {'Items(' + cartList.length + ')\nPrice:' + getTotal()}</Text> */}
-                                </View>
-                                <CustomPkgBtn
-                                    onPress={() => { moveToScreen(NavigationStrings.CHECKOUT) }}
-                                    textStyle={{ ...styles.textStyle }}
-                                    btnStyle={{ ...styles.btnStyle }}
-                                    btnText={'Checkout'}
-                                />
-                            </View>
-                            : null
-                        }
-                    </ScrollView>
-                </View>
-
-            }
+                        : null
+                    }
+                </ScrollView>
+            </View>
         </SafeAreaView>
     )
 }

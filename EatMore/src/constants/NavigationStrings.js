@@ -7,6 +7,7 @@ export default {
     HOME: 'Home',
     MAIN:'Main',
     ALL_ORDER:'AllOrder',
+    ORDER_STATUS:'OrderStatus',
     ITEMS_DETAILS: 'ItemsDetails',
     PROFILE: 'Profile',
     SEARCH: 'Search',

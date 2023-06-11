@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import React from "react";
 import NavigationStrings from "../constants/NavigationStrings";
-import { AllOrder, Checkout, Home, ItemsDetails, OrderInformation, } from "../Screen";
+import { AllOrder, Checkout, Home, ItemsDetails, OrderInformation, OrderStatus, } from "../Screen";
 import Main from "../tabs/Main/Main";
 import Search from "../tabs/Search/Search";
 import AddToCart from "../tabs/AddToCart/AddToCart";
@@ -51,6 +51,10 @@ export default function MainStack() {
             <Stack.Screen
                 name={NavigationStrings.ALL_ORDER}
                 component={AllOrder}
+            />
+            <Stack.Screen
+                name={NavigationStrings.ORDER_STATUS}
+                component={OrderStatus}
             />
         </Stack.Navigator>
     )

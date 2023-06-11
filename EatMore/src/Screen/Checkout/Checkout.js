@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react';
-import { Image, SafeAreaView, StyleSheet, Text, View, Modal, Button, TouchableOpacity } from 'react-native'
+import { Image, SafeAreaView, StyleSheet, Text, View, Modal, Button, TouchableOpacity, FlatList } from 'react-native'
 import CustomHeader from '../../components/CustomHeader'
 import Colors from '../../styles/Colors'
 import { moderateScale, moderateVerticalScale, scale } from 'react-native-size-matters'
@@ -11,20 +11,27 @@ import CustomModal from '../../constants/CustomModal';
 import { useNavigation } from '@react-navigation/native';
 import NavigationStrings from '../../constants/NavigationStrings';
 import Loader from '../../components/Loader';
-import { RadioButton } from 'react-native-paper';
+import firestore from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { number } from 'prop-types';
+
+let uid = '';
 const Checkout = () => {
     const navigation = useNavigation();
     const [ModalVisible, setModalVisible] = useState(false);
     const [isLoading, setisLoading] = useState(true);
+    const [cartList, setCartList] = useState([]);
+    const [deliveryFess, setDeliveryFees] = useState(30);
+    // const [paymentMethod, setPaymentMethod] = useState(null);
+    // const [textSelected, setTextSelected] = useState(false);
+    const [address, setAddress] = useState('');
+    const [department, setDepartment] = useState('');
     const toggleModal = () => {
         setModalVisible(!ModalVisible);
     };
-    const onClose = () => {
-        setModalVisible(false);
-    }
-    const moveToScreen = (screen) => {
-        navigation.navigate(screen)
-    }
+    // const onClose = () => {
+    //     setModalVisible(false);
+    // }
     // LOADING CODE
     useEffect(() => {
         setTimeout(() => {
@@ -32,171 +39,160 @@ const Checkout = () => {
         }, 1000);
     }),
         [];
-    const [paymentMethod, setPaymentMethod] = useState(null);
-    const [textSelected, setTextSelected] = useState(false);
 
-    const selectPaymentMethod = (method) => {
-        setPaymentMethod(method);
-        //   setTextSelected(false);
+    useEffect(() => {
+        getCartItems();
+    }, []);
+
+    const getCartItems = async () => {
+        setisLoading(true);
+        try {
+            const uid = await AsyncStorage.getItem('USERID');
+            const userSnapshot = await firestore().collection('users').doc(uid).get();
+            const user = userSnapshot.data();
+            if (user && user.cart) {
+                setCartList(user.cart);
+            }
+            console.log("checkout user data", user);
+            console.log("checkout user cart", user.name);
+            console.log("checkout user cart", user.email);
+            console.log("checkout user cart", user.number);
+        } catch (error) {
+            console.log("Error fetching cart items:", error);
+        } finally {
+            setisLoading(false);
+        }
     };
 
-    const paymentMethods = [
-        { name: 'Cash On delivery', description: 'Pay in Cash when your order arrives' },
-        { name: 'EasyPaisa Online', description: 'Pay in Cash when your order arrives' },
-        { name: 'JazzCash Online', description: 'Pay in Cash when your order arrives' },
-        { name: 'Borrow', description: 'Pay in Cash when your order arrives' },
-    ];
+    const getSubTotal = () => {
+        let subTotal = 0;
+        cartList.map(item => {
+            subTotal = subTotal + item.data.quantity * item.data.price;
+        });
+        return subTotal;
+    };
+    const getTotalBill = () => {
+        let totalBill = 0;
+        totalBill = totalBill + getSubTotal() + deliveryFess;
+        return totalBill;
+    }
+    const payNow = async () => {
+        console.log("cart list ",cartList)
+        try {
+        //   const email = await AsyncStorage.getItem('EMAIL');
+        //   console.log("user this email",email)
+        //   const names = await AsyncStorage.getItem('NAME');
+        //   console.log("user this name",names)
+        //   const mobile = await AsyncStorage.getItem('MOBILE');
+        //   console.log("user this number",mobile)
+        const userSnapshot = await firestore().collection('users').doc(uid).get();
+        const user = userSnapshot.data();
+        if (user && user.cart) {
+            setCartList(user.cart);
+        }
+        console.log("checkout user data", user);
+        console.log("checkout user cart", user.name);
+        console.log("checkout user cart", user.email);
+        console.log("checkout user cart", user.number);
+          uid = await AsyncStorage.getItem('USERID');
+          navigation.navigate(NavigationStrings.ORDER_STATUS, {
+            cartList: cartList,
+            total: getTotalBill(),
+            status: 'success',
+            userAddress: address,
+            userDepartment: department,
+            userName:user.name,
+            userEmail: user.email,
+            userMobile:user.number,
+            uid:uid
+          });
+        } catch (error) {
+                 // handle failure
+        navigation.navigate(NavigationStrings.ORDER_STATUS, {
+            status: 'failed',
+          });
+        }
+      };
 
     return (
         <SafeAreaView style={{
             flex: 1
         }}>
-            {isLoading ? <Loader isLoading={isLoading} /> :
-                <View style={styles.container}>
-                    <CustomHeader
-                        leftImg={imagePath.icBack}
-                        headerTitle={'Checkout'}
-                        headerImgStyle={styles.headerImgStyle}
-                    />
-                    <View style={styles.mainContentView}>
-                        <View>
-                            <TextInputWithLabel
-                                label={'Delivery Address'}
-                                inputStyle={styles.inputStyle}
-                                placeHolder="Enter Address"
-                                inlineInputStyle={styles.inlineInputStyle}
-                                placeholderTextColor='rgba(0, 0, 0, 0.5)'
-                            />
-                            <TextInputWithLabel
-                                label={'Phone Number'}
-                                // inputStyle={[styles.inputStyle, {height: verticalScale(45)}]}
-                                inputStyle={{ ...styles.inputStyle, height: moderateScale(45) }}
-                                placeHolder="Enter Number"
-                                inlineInputStyle={styles.inlineInputStyle}
-                                placeholderTextColor='rgba(0, 0, 0, 0.5)'
-                                keyboardType="numeric"
-                            />
-                            <TouchableOpacity style={styles.paymentMethodView} activeOpacity={0.8} onPress={() => toggleModal()}>
-                                <Text style={styles.paymentMethodText}>Payment Method</Text>
-                                <Image
-                                    source={imagePath.icPaymentArrow}
-                                />
-                            </TouchableOpacity>
-                            {/* 
-            <Modal
-                visible={ModalVisible}
-                animationType="fade"
-                style={styles.modal}
-                transparent
-                onRequestClose={() => setModalVisible(false)}
-            >
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalView}>
-                        <Text style={styles.modalTitle}>Payment Method</Text>
-                        <CustomPkgBtn
-                            textStyle={{ ...styles.textStyle, ...styles.customTextStyle }}
-                            btnStyle={{ ...styles.btnStyle, ...styles.customStyle }}
-                            btnText={'Done'}
-                            onPress={toggleModal}
+            <View style={styles.container}>
+                <CustomHeader
+                    leftImg={imagePath.icBack}
+                    headerTitle={'Checkout'}
+                    headerImgStyle={styles.headerImgStyle}
+                />
+                <View style={styles.mainContentView}>
+                    <View>
+                        <TextInputWithLabel
+                            label={'Delivery Address'}
+                            inputStyle={styles.inputStyle}
+                            placeHolder="Enter Address"
+                            inlineInputStyle={styles.inlineInputStyle}
+                            placeholderTextColor='rgba(0, 0, 0, 0.5)'
+                            onChangeText={(address) => setAddress(address)}
                         />
-                    </View>
-                </View>
-            </Modal> */}
-                            <CustomModal
-                                visible={ModalVisible}
-                                title="Payment Method"
-                                buttonText="Done"
-                                onButtonPress={toggleModal}
-                                onRequestClose={onClose}
-                            >
-                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                    <View
-                                        style={{
-                                            backgroundColor: 'white',
-                                            padding: 20,
-                                            // borderRadius: 10,
-                                            // shadowColor: '#000',
-                                            // shadowOffset: { width: 0, height: 2 },
-                                            // shadowOpacity: 0.25,
-                                            // shadowRadius: 4,
-                                            // elevation: 5,
-
-                                        }}
-                                    >
-                                        {paymentMethods.map((method, index) => (
-                                            <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: moderateScale(15), }} key={index}>
-                                                <TouchableOpacity onPress={() => selectPaymentMethod(method.name)}
-                                                >
-                                                    <View
-                                                        style={{
-                                                            height: moderateScale(30),
-                                                            width: moderateScale(30),
-                                                            borderRadius: moderateScale(30 / 2),
-                                                            borderWidth: 2,
-                                                            borderColor: paymentMethod === method.name ? Colors.primaryColor : Colors.primaryColor,
-                                                            alignItems: 'center',
-                                                            justifyContent: 'center',
-                                                            marginRight: moderateScale(20),
-                                                            backgroundColor: paymentMethod === method.name ? 'white' : 'transparent',
-                                                        }}
-                                                    >
-                                                        {paymentMethod === method.name && (
-                                                            <View
-                                                                style={{
-                                                                    height: moderateScale(15),
-                                                                    width: moderateScale(15),
-                                                                    borderRadius: moderateScale(15 / 2),
-                                                                    backgroundColor: Colors.primaryColor,
-                                                                }}
-                                                            />
-                                                        )}
-                                                    </View>
-                                                </TouchableOpacity>
-                                                <TouchableOpacity
-                                                    style={[styles.paymentTextView,
-                                                    { backgroundColor: paymentMethod === method.name ? 'white' : 'transparent', }]}
-                                                    activeOpacity={0.8}
-                                                >
-                                                    <Text style={styles.paymentViewName}>{method.name}</Text>
-                                                    <Text style={styles.paymentViewDesc}>{method.description}</Text>
-                                                </TouchableOpacity>
+                        <TextInputWithLabel
+                            label={'Department'}
+                            // inputStyle={[styles.inputStyle, {height: verticalScale(45)}]}
+                            inputStyle={{ ...styles.inputStyle, height: moderateScale(45) }}
+                            placeHolder="Enter Department Name"
+                            inlineInputStyle={styles.inlineInputStyle}
+                            placeholderTextColor='rgba(0, 0, 0, 0.5)'
+                            onChangeText={(department) => setDepartment(department)}
+                        />
+                        <TouchableOpacity style={styles.paymentMethodView} activeOpacity={0.8} onPress={() => toggleModal()}>
+                            <Text style={styles.paymentMethodText}>Payment Method</Text>
+                        </TouchableOpacity>
+                        <View style={styles.subtotal}>
+                            <Text style={{ fontSize: 22, fontWeight: '600', color: 'black', marginBottom: 10 }}>Order Summary</Text>
+                            <View style={styles.ItemHeadingView}>
+                                <Text style={styles.headingStyle}>Item Name</Text>
+                                <Text style={styles.headingStyle}> Qty</Text>
+                                <Text style={styles.headingStyle}> Price</Text>
+                            </View>
+                            <View>
+                                <FlatList
+                                    data={cartList}
+                                    renderItem={({ item, index }) => {
+                                        return (
+                                            <View style={styles.nameView}>
+                                                <View style={styles.ItemView}>
+                                                    <Text style={[styles.totalPrice, { marginBottom: 0 }]}> {item.data.name}</Text>
+                                                    <Text style={styles.totalPrice}> {item.data.quantity}</Text>
+                                                    <Text style={styles.totalPrice}> {item.data.price * item.data.quantity}</Text>
+                                                </View>
                                             </View>
-                                        ))}
-                                    </View>
-                                </View>
-                            </CustomModal>
+                                        );
+                                    }}
+                                />
+                            </View>
 
-                            <View style={styles.orderSummaryView}>
-                                <Text style={styles.orderSummaryLabel}> Order Summary</Text>
-                                <View style={styles.orderSummaryContent}>
-                                    <View style={styles.singleContent}>
-                                        <Text style={styles.singleContentText}>1x Chicken Burger</Text>
-                                        <Text style={styles.singleContentText}>300</Text>
-                                    </View>
-                                    <View style={[styles.singleContent, { marginBottom: moderateVerticalScale(15) }]}>
-                                        <Text style={styles.singleContentText}>Delivery Fee</Text>
-                                        <Text style={styles.singleContentText}>50</Text>
-                                    </View>
-                                    <View style={styles.singleContent}>
-                                        <Text style={styles.singleContentText}>Total</Text>
-                                        <Text style={styles.singleContentText}>350</Text>
-                                    </View>
+                            <View style={{ justifyContent: 'center' }}>
+                                <View style={styles.totalPriceView}>
+                                    <Text style={styles.total}>Total Price</Text>
+                                    <Text style={styles.total}>{'Rs:' + getTotalBill()}</Text>
+                                </View>
+                                <View style={[styles.totalPriceView, { marginTop: -3 }]}>
+                                    <Text style={styles.total}>Total Item</Text>
+                                    <Text style={styles.total}>{cartList.length}</Text>
                                 </View>
                             </View>
                         </View>
+                    </View>
 
-                        <View>
-                            <CustomPkgBtn
-                                btnText={'Place Order'}
-                                textStyle={{ ...styles.textStyle }}
-                                btnStyle={{ ...styles.btnStyle }}
-                                onPress={() => moveToScreen(NavigationStrings.ORDER_INFORMATION)}
-                            />
-                        </View>
+                    <View>
+                        <CustomPkgBtn
+                            btnText={'Place Order'}
+                            textStyle={{ ...styles.textStyle }}
+                            btnStyle={{ ...styles.btnStyle }}
+                            onPress={payNow}
+                        />
                     </View>
                 </View>
-
-            }
+            </View>
         </SafeAreaView>
     )
 }
@@ -207,10 +203,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: moderateScale(26),
         backgroundColor: '#FEFEFE'
     },
-    mainContentView :{
-        display:'flex',
-        flex:1,
-        justifyContent:'space-evenly',
+    mainContentView: {
+        display: 'flex',
+        flex: 1,
+        justifyContent: 'space-evenly',
         // backgroundColor:'red'
     },
     headerImgStyle: {
@@ -318,7 +314,55 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         fontSize: scale(6),
         color: Colors.primaryColor,
+    },
+
+    totalPriceView: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 10,
+    },
+    totalPriceHeading: {
+        fontSize: scale(15),
+        fontWeight: '400',
+        color: 'rgba(0, 0, 0, 0.5)',
+    },
+    total: {
+        color: 'rgba(71, 45, 156, 1)',
+        fontSize: 18,
+        fontWeight: '600'
+    },
+    totalPrice: {
+        // flex:0.5,
+        fontSize: scale(15),
+        fontWeight: '500',
+        color: 'rgba(0, 0, 0, 0.5)'
+    },
+    subtotal: {
+        backgroundColor: 'rgba(239, 237, 237, 1)',
+        padding: 15,
+        borderRadius: 15,
+    },
+    ItemHeadingView: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        borderBottomWidth: 1,
+        borderTopColor: 'rgba(0, 0, 0, 0.32)',
+        paddingVertical: 6,
+        borderTopWidth: 1,
+        borderBottomColor: 'rgba(0, 0, 0, 0.32)',
+    },
+    headingStyle: {
+        fontSize: 17,
+        color: '#333',
+        fontWeight: '700'
+    },
+    ItemView: {
+        // flex:1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        // backgroundColor:'red',
     }
+
 });
 
 export default Checkout;
