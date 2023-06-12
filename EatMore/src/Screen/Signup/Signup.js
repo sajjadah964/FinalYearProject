@@ -25,6 +25,8 @@ const Signup = ({ navigateToLogin }) => {
     const [isVisible, setVisible] = useState(true);
     const [CVisible, setCVisible] = useState(true);
     const [textWidth, setTextWidth] = useState(null);
+    const [number, setNumber] = useState('');
+    const [numberError, setNumberError] = useState('');
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
     const [password, setPassword] = useState('');
@@ -57,12 +59,14 @@ const Signup = ({ navigateToLogin }) => {
                     name: name,
                     email: result.user.email,
                     uid: result.user.uid,
-                    // pic:image
+                    number: number,
                     cart: [],
                 })
             ToastAndroid.show('Signed up successfully', ToastAndroid.SHORT);
             // Navigate to the Login screen after successful signup
             navigation.replace(NavigationStrings.LOGIN);
+            await AsyncStorage.setItem('NAME', result.user.name);
+            await AsyncStorage.setItem('NUMBER', result.user.number);
 
             setisLoading(false);
         } catch (error) {
@@ -145,6 +149,16 @@ const Signup = ({ navigateToLogin }) => {
             setConfirmPasswordError('');
         }
     };
+    const handleNumberChange = (text) => {
+        setNumber(text);
+        if (text.length !== 11) {
+            setNumberError('Phone number must be 11 digits');
+        } else {
+            setNumberError('');
+        }
+    };
+
+
     // ON CHANGE TEXT METHOD
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -198,6 +212,14 @@ const Signup = ({ navigateToLogin }) => {
                                 value={email}
                             />
                             {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
+                            <TextInputWithLabel
+                                placeHolder='Enter Phone number'
+                                onChangeText={handleNumberChange}
+                                style={styles.placeholder}
+                                keyboardType="number-pad"
+                                value={number}
+                            />
+                            {numberError ? <Text style={styles.error}>{numberError}</Text> : null}
                             <TextInputWithLabel
                                 placeHolder={'Password'}
                                 // onChangeText={(userPassword) => setPassword(userPassword)}

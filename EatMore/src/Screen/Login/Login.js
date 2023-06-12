@@ -69,6 +69,9 @@ const Login = () => {
             setPasswordError('');
             setisLoading(false);
             await AsyncStorage.setItem('USERID', result.user.uid);
+            await AsyncStorage.setItem('EMAIL', email);
+            await AsyncStorage.setItem('NAME', result.user.name);
+            await AsyncStorage.setItem('NUMBER', result.user.number);
             navigation.navigate(NavigationStrings.HOME);
         } catch (error) {
             console.log('error', error);
