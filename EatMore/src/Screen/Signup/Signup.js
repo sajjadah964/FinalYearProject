@@ -16,6 +16,7 @@ import * as Animatable from 'react-native-animatable';
 import auth from '@react-native-firebase/auth';
 import Loader from '../../components/Loader';
 import firestore from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import PropTypes from 'prop-types';
 import { CommonActions } from '@react-navigation/native';
 
@@ -31,8 +32,6 @@ const Signup = ({ navigateToLogin }) => {
     const [emailError, setEmailError] = useState('');
     const [password, setPassword] = useState('');
     const [passwordError, setPasswordError] = useState('');
-    const [number, setNumber] = useState('');
-    const [numberError, setNumberError] = useState('');
     const [name, setName] = useState('');
     const [nameError, setNameError] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -61,6 +60,7 @@ const Signup = ({ navigateToLogin }) => {
                     uid: result.user.uid,
                     number: number,
                     cart: [],
+                    orderInfo: [],
                 })
             ToastAndroid.show('Signed up successfully', ToastAndroid.SHORT);
             // Navigate to the Login screen after successful signup

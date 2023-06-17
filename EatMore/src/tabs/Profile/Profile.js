@@ -57,7 +57,7 @@ const Profile = () => {
       {isLoading ? <Loader isLoading={isLoading} /> :
         <View style={styles.container}>
           <CustomHeader
-            leftImg={imagePath.icBack}
+            // leftImg={imagePath.icBack}
             headerTitle={'Profile'}
             headerImgStyle={styles.headerImgStyle}
           />

@@ -114,6 +114,136 @@ const Checkout = () => {
         }
       };
 
+
+//       const [userInfo, setUserInfo] = useState({ address: '', phoneNumber: '' });
+
+//   const handleCheckout = () => {
+//     // Get a reference to the Firestore collection where you want to store the user information
+//     const usersRef = firestore().collection('users').doc(uid);
+//     // const usersRef = firestore().collection('users').doc(uid).update({
+//     //     orderInfo: usersRef,
+//     // });
+
+//     // Create a new document and set the user information
+//     usersRef
+//       .add(userInfo)
+//       .then(() => {
+//         console.log('User information saved successfully!');
+//         setUserInfo({ address: '', phoneNumber: '' }); // Reset the userInfo object
+//         // Additional logic or navigation after successful save
+//       })
+//       .catch((error) => {
+//         console.error('Error saving user information:', error);
+//       });
+//   };
+
+//   const handleAddressChange = (text) => {
+//     setUserInfo({ ...userInfo, address: text });
+//   };
+
+//   const handlePhoneNumberChange = (text) => {
+//     setUserInfo({ ...userInfo, phoneNumber: text });
+//   };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const [userInfo, setUserInfo] = useState({ address: '', phoneNumber: '' });
+
+// useEffect(() => {
+//   // Fetch the user document from Firestore and populate the input fields
+//   const fetchUser = async () => {
+//     const userRef = firestore().collection('users').doc(uid);
+//     try {
+//       const userDoc = await userRef.get();
+//       if (userDoc.exists) {
+//         const { address, phoneNumber } = userDoc.data();
+//         setUserInfo({ address, phoneNumber });
+//       } else {
+//         console.log('User document does not exist');
+//       }
+//     } catch (error) {
+//       console.error('Error fetching user:', error);
+//     }
+//   };
+
+//   fetchUser();
+// }, []);
+
+// const handleUpdate = () => {
+//   const userRef = firestore().collection('users').doc(uid);
+
+//   // Update the document with the new user information
+//   userRef
+//     .update(userInfo)
+//     .then(() => {
+//       console.log('User information updated successfully!');
+//       // Additional logic or navigation after successful update
+//     })
+//     .catch((error) => {
+//       console.error('Error updating user information:', error);
+//     });
+// };
+
+// const handleAddressChange = (text) => {
+//   setUserInfo((prevState) => ({ ...prevState, address: text }));
+// };
+
+// const handlePhoneNumberChange = (text) => {
+//   setUserInfo((prevState) => ({ ...prevState, phoneNumber: text }));
+// };
+
+
+
+
+
+
+
+
+
+
+const [userInfo, setUserInfo] = useState({ address: '', phoneNumber: '' });
+
+  const handleCheckout = () => {
+    // Get a reference to the Firestore collection where you want to store the user information
+    const usersRef = firestore().collection('orderInfo');
+
+    // Create a new document and set the user information
+    usersRef
+      .add(userInfo)
+      .then(() => {
+        console.log('User information saved successfully!');
+        setUserInfo({ address: '', phoneNumber: '' }); // Reset the userInfo object
+        // Additional logic or navigation after successful save
+      })
+      .catch((error) => {
+        console.error('Error saving user information:', error);
+      });
+  };
+
+  const handleAddressChange = (text) => {
+    setUserInfo({ ...userInfo, address: text });
+  };
+
+  const handlePhoneNumberChange = (text) => {
+    setUserInfo({ ...userInfo, phoneNumber: text });
+  };
+
+
+
+
+
     return (
         <SafeAreaView style={{
             flex: 1
@@ -126,7 +256,7 @@ const Checkout = () => {
                 />
                 <View style={styles.mainContentView}>
                     <View>
-                        <TextInputWithLabel
+                        {/* <TextInputWithLabel
                             label={'Delivery Address'}
                             inputStyle={styles.inputStyle}
                             placeHolder="Enter Address"
@@ -142,7 +272,24 @@ const Checkout = () => {
                             inlineInputStyle={styles.inlineInputStyle}
                             placeholderTextColor='rgba(0, 0, 0, 0.5)'
                             onChangeText={(department) => setDepartment(department)}
-                        />
+                        /> */}
+
+<TextInputWithLabel
+        placeholder="Address"
+        value={userInfo.address}
+        onChangeText={handleAddressChange}
+      />
+      <TextInputWithLabel
+        placeholder="Phone Number"
+        value={userInfo.phoneNumber}
+        onChangeText={handlePhoneNumberChange}
+      />
+
+
+<Button title="Checkout" onPress={handleCheckout} />
+
+
+
                         <TouchableOpacity style={styles.paymentMethodView} activeOpacity={0.8} onPress={() => toggleModal()}>
                             <Text style={styles.paymentMethodText}>Payment Method</Text>
                         </TouchableOpacity>

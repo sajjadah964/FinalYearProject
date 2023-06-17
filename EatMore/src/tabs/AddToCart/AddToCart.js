@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useState, useEffect, useId } from 'react';
 import { FlatList, Image, SafeAreaView, StyleSheet, Text, View, TouchableOpacity, ToastAndroid, Button, ScrollView } from 'react-native'
 import CustomHeader from '../../components/CustomHeader';
@@ -173,7 +174,7 @@ const AddToCart = () => {
             <Loader isLoading={isLoading} />
             <View style={styles.container}>
                 <CustomHeader
-                    leftImg={imagePath.icBack}
+                    leftImg={imagePath.icBack}  
                     headerTitle={'Items in Cart'}
                     headerImgStyle={styles.headerImgStyle}
                 />
