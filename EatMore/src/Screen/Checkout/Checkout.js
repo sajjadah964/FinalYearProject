@@ -22,17 +22,11 @@ const Checkout = () => {
     const [isLoading, setisLoading] = useState(true);
     const [cartList, setCartList] = useState([]);
     const [deliveryFess, setDeliveryFees] = useState(30);
-    // const [paymentMethod, setPaymentMethod] = useState(null);
-    // const [textSelected, setTextSelected] = useState(false);
-    const [address, setAddress] = useState('');
+    const [roomNumber, setroomNumber] = useState('');
     const [department, setDepartment] = useState('');
     const toggleModal = () => {
         setModalVisible(!ModalVisible);
     };
-    // const onClose = () => {
-    //     setModalVisible(false);
-    // }
-    // LOADING CODE
     useEffect(() => {
         setTimeout(() => {
             setisLoading(false);
@@ -53,10 +47,6 @@ const Checkout = () => {
             if (user && user.cart) {
                 setCartList(user.cart);
             }
-            console.log("checkout user data", user);
-            console.log("checkout user cart", user.name);
-            console.log("checkout user cart", user.email);
-            console.log("checkout user cart", user.number);
         } catch (error) {
             console.log("Error fetching cart items:", error);
         } finally {
@@ -77,171 +67,53 @@ const Checkout = () => {
         return totalBill;
     }
     const payNow = async () => {
-        console.log("cart list ",cartList)
+        console.log("cart list ", cartList)
         try {
-        //   const email = await AsyncStorage.getItem('EMAIL');
-        //   console.log("user this email",email)
-        //   const names = await AsyncStorage.getItem('NAME');
-        //   console.log("user this name",names)
-        //   const mobile = await AsyncStorage.getItem('MOBILE');
-        //   console.log("user this number",mobile)
-        const userSnapshot = await firestore().collection('users').doc(uid).get();
-        const user = userSnapshot.data();
-        if (user && user.cart) {
-            setCartList(user.cart);
-        }
-        console.log("checkout user data", user);
-        console.log("checkout user cart", user.name);
-        console.log("checkout user cart", user.email);
-        console.log("checkout user cart", user.number);
-          uid = await AsyncStorage.getItem('USERID');
-          navigation.navigate(NavigationStrings.ORDER_STATUS, {
-            cartList: cartList,
-            total: getTotalBill(),
-            status: 'success',
-            userAddress: address,
-            userDepartment: department,
-            userName:user.name,
-            userEmail: user.email,
-            userMobile:user.number,
-            uid:uid
-          });
+            const name = await AsyncStorage.getItem('NAME');
+            console.log("user this name", name)
+            const email = await AsyncStorage.getItem('EMAIL');
+            console.log("user this email", email)
+            const number = await AsyncStorage.getItem('NUMBER');
+            console.log("user this number", number)
+            const userSnapshot = await firestore().collection('users').doc(uid).get();
+            const user = userSnapshot.data();
+            if (user && user.cart) {
+                setCartList(user.cart);
+            }
+            // console.log("checkout user data", user);
+            // console.log("checkout user name", names);
+            // console.log("checkout user email", email);
+            // console.log("checkout user mobile number", mobile);
+            uid = await AsyncStorage.getItem('USERID');
+            navigation.navigate(NavigationStrings.ORDER_STATUS, {
+                cartList: cartList,
+                total: getTotalBill(),
+                status: 'success',
+                userAddress: roomNumber,
+                userDepartment: department,
+                userName: name,
+                userEmail: email,
+                userMobile: number,
+                uid: uid
+            });
         } catch (error) {
-                 // handle failure
-        navigation.navigate(NavigationStrings.ORDER_STATUS, {
-            status: 'failed',
-          });
+            // handle failure
+            navigation.navigate(NavigationStrings.ORDER_STATUS, {
+                status: 'failed',
+            });
         }
-      };
-
-
-//       const [userInfo, setUserInfo] = useState({ address: '', phoneNumber: '' });
-
-//   const handleCheckout = () => {
-//     // Get a reference to the Firestore collection where you want to store the user information
-//     const usersRef = firestore().collection('users').doc(uid);
-//     // const usersRef = firestore().collection('users').doc(uid).update({
-//     //     orderInfo: usersRef,
-//     // });
-
-//     // Create a new document and set the user information
-//     usersRef
-//       .add(userInfo)
-//       .then(() => {
-//         console.log('User information saved successfully!');
-//         setUserInfo({ address: '', phoneNumber: '' }); // Reset the userInfo object
-//         // Additional logic or navigation after successful save
-//       })
-//       .catch((error) => {
-//         console.error('Error saving user information:', error);
-//       });
-//   };
-
-//   const handleAddressChange = (text) => {
-//     setUserInfo({ ...userInfo, address: text });
-//   };
-
-//   const handlePhoneNumberChange = (text) => {
-//     setUserInfo({ ...userInfo, phoneNumber: text });
-//   };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const [userInfo, setUserInfo] = useState({ address: '', phoneNumber: '' });
-
-// useEffect(() => {
-//   // Fetch the user document from Firestore and populate the input fields
-//   const fetchUser = async () => {
-//     const userRef = firestore().collection('users').doc(uid);
-//     try {
-//       const userDoc = await userRef.get();
-//       if (userDoc.exists) {
-//         const { address, phoneNumber } = userDoc.data();
-//         setUserInfo({ address, phoneNumber });
-//       } else {
-//         console.log('User document does not exist');
-//       }
-//     } catch (error) {
-//       console.error('Error fetching user:', error);
-//     }
-//   };
-
-//   fetchUser();
-// }, []);
-
-// const handleUpdate = () => {
-//   const userRef = firestore().collection('users').doc(uid);
-
-//   // Update the document with the new user information
-//   userRef
-//     .update(userInfo)
-//     .then(() => {
-//       console.log('User information updated successfully!');
-//       // Additional logic or navigation after successful update
-//     })
-//     .catch((error) => {
-//       console.error('Error updating user information:', error);
-//     });
-// };
-
-// const handleAddressChange = (text) => {
-//   setUserInfo((prevState) => ({ ...prevState, address: text }));
-// };
-
-// const handlePhoneNumberChange = (text) => {
-//   setUserInfo((prevState) => ({ ...prevState, phoneNumber: text }));
-// };
-
-
-
-
-
-
-
-
-
-
-const [userInfo, setUserInfo] = useState({ address: '', phoneNumber: '' });
-
-  const handleCheckout = () => {
-    // Get a reference to the Firestore collection where you want to store the user information
-    const usersRef = firestore().collection('orderInfo');
-
-    // Create a new document and set the user information
-    usersRef
-      .add(userInfo)
-      .then(() => {
-        console.log('User information saved successfully!');
-        setUserInfo({ address: '', phoneNumber: '' }); // Reset the userInfo object
-        // Additional logic or navigation after successful save
-      })
-      .catch((error) => {
-        console.error('Error saving user information:', error);
-      });
-  };
-
-  const handleAddressChange = (text) => {
-    setUserInfo({ ...userInfo, address: text });
-  };
-
-  const handlePhoneNumberChange = (text) => {
-    setUserInfo({ ...userInfo, phoneNumber: text });
-  };
-
-
-
+        firestore.collection('orders').add({
+            order: {},
+        })
+            .then((docRef) => {
+                // This block is executed when the document creation is successful
+                console.log('Document written with ID: ', docRef.id);
+            })
+            .catch((error) => {
+                // This block is executed if an error occurs during the operation
+                console.error('Error adding document: ', error);
+            });
+    };
 
 
     return (
@@ -274,22 +146,16 @@ const [userInfo, setUserInfo] = useState({ address: '', phoneNumber: '' });
                             onChangeText={(department) => setDepartment(department)}
                         /> */}
 
-<TextInputWithLabel
-        placeholder="Address"
-        value={userInfo.address}
-        onChangeText={handleAddressChange}
-      />
-      <TextInputWithLabel
-        placeholder="Phone Number"
-        value={userInfo.phoneNumber}
-        onChangeText={handlePhoneNumberChange}
-      />
-
-
-<Button title="Checkout" onPress={handleCheckout} />
-
-
-
+                        <TextInputWithLabel
+                            placeholder="Department Name"
+                            value={department}
+                            onChangeText={(department) => setDepartment(department)}
+                        />
+                        <TextInputWithLabel
+                            placeholder="Room number"
+                            value={roomNumber}
+                            onChangeText={(roomNumber) => setroomNumber(roomNumber)}
+                        />
                         <TouchableOpacity style={styles.paymentMethodView} activeOpacity={0.8} onPress={() => toggleModal()}>
                             <Text style={styles.paymentMethodText}>Payment Method</Text>
                         </TouchableOpacity>

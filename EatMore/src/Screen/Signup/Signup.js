@@ -60,13 +60,14 @@ const Signup = ({ navigateToLogin }) => {
                     uid: result.user.uid,
                     number: number,
                     cart: [],
-                    orderInfo: [],
+                    // orderInfo: [],
                 })
             ToastAndroid.show('Signed up successfully', ToastAndroid.SHORT);
             // Navigate to the Login screen after successful signup
             navigation.replace(NavigationStrings.LOGIN);
-            await AsyncStorage.setItem('NAME', result.user.name);
-            await AsyncStorage.setItem('NUMBER', result.user.number);
+            await AsyncStorage.setItem('NAME',name);
+            await AsyncStorage.setItem('EMAIL', email);
+            await AsyncStorage.setItem('NUMBER', number);
 
             setisLoading(false);
         } catch (error) {

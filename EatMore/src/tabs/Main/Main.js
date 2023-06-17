@@ -169,14 +169,18 @@ const Main = () => {
         );
     }
     const logout = async () => {
+    try {
+        // await AsyncStorage.clear(); // Clear all AsyncStorage data
         auth()
             .signOut()
             .then(() => {
-                ToastAndroid.show('Logout Succcessfully', ToastAndroid.SHORT);
+                ToastAndroid.show('Logout Successfully', ToastAndroid.SHORT);
                 navigation.navigate(NavigationStrings.MAIN_STACK, { screen: NavigationStrings.LOGIN });
-
             });
+    } catch (error) {
+        console.log(error);
     }
+}
     const onFocus = () => {
         setIsFocused(true)
         return (
