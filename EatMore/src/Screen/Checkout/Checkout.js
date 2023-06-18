@@ -22,17 +22,11 @@ const Checkout = () => {
     const [isLoading, setisLoading] = useState(true);
     const [cartList, setCartList] = useState([]);
     const [deliveryFess, setDeliveryFees] = useState(30);
-    // const [paymentMethod, setPaymentMethod] = useState(null);
-    // const [textSelected, setTextSelected] = useState(false);
-    const [address, setAddress] = useState('');
+    const [roomNumber, setroomNumber] = useState('');
     const [department, setDepartment] = useState('');
     const toggleModal = () => {
         setModalVisible(!ModalVisible);
     };
-    // const onClose = () => {
-    //     setModalVisible(false);
-    // }
-    // LOADING CODE
     useEffect(() => {
         setTimeout(() => {
             setisLoading(false);
@@ -53,10 +47,6 @@ const Checkout = () => {
             if (user && user.cart) {
                 setCartList(user.cart);
             }
-            console.log("checkout user data", user);
-            console.log("checkout user cart", user.name);
-            console.log("checkout user cart", user.email);
-            console.log("checkout user cart", user.number);
         } catch (error) {
             console.log("Error fetching cart items:", error);
         } finally {
@@ -77,42 +67,31 @@ const Checkout = () => {
         return totalBill;
     }
     const payNow = async () => {
-        console.log("cart list ",cartList)
+        console.log("checkout cart list data ", cartList)
         try {
-        //   const email = await AsyncStorage.getItem('EMAIL');
-        //   console.log("user this email",email)
-        //   const names = await AsyncStorage.getItem('NAME');
-        //   console.log("user this name",names)
-        //   const mobile = await AsyncStorage.getItem('MOBILE');
-        //   console.log("user this number",mobile)
-        const userSnapshot = await firestore().collection('users').doc(uid).get();
-        const user = userSnapshot.data();
-        if (user && user.cart) {
-            setCartList(user.cart);
-        }
-        console.log("checkout user data", user);
-        console.log("checkout user cart", user.name);
-        console.log("checkout user cart", user.email);
-        console.log("checkout user cart", user.number);
-          uid = await AsyncStorage.getItem('USERID');
-          navigation.navigate(NavigationStrings.ORDER_STATUS, {
-            cartList: cartList,
-            total: getTotalBill(),
-            status: 'success',
-            userAddress: address,
-            userDepartment: department,
-            userName:user.name,
-            userEmail: user.email,
-            userMobile:user.number,
-            uid:uid
-          });
+            const name = await AsyncStorage.getItem('NAME');
+            const email = await AsyncStorage.getItem('EMAIL');
+            const number = await AsyncStorage.getItem('NUMBER');
+            uid = await AsyncStorage.getItem('USERID');
+            navigation.navigate(NavigationStrings.ORDER_STATUS, {
+                cartList: cartList,
+                total: getTotalBill(),
+                status: 'success',
+                roomNumber: roomNumber,
+                userDepartment: department,
+                userName: name,
+                userEmail: email,
+                userMobile: number,
+                uid: uid
+            });
         } catch (error) {
-                 // handle failure
-        navigation.navigate(NavigationStrings.ORDER_STATUS, {
-            status: 'failed',
-          });
+            navigation.navigate(NavigationStrings.ORDER_STATUS, {
+                status: 'failed',
+            });
         }
-      };
+
+    };
+
 
     return (
         <SafeAreaView style={{
@@ -126,7 +105,7 @@ const Checkout = () => {
                 />
                 <View style={styles.mainContentView}>
                     <View>
-                        <TextInputWithLabel
+                        {/* <TextInputWithLabel
                             label={'Delivery Address'}
                             inputStyle={styles.inputStyle}
                             placeHolder="Enter Address"
@@ -142,6 +121,17 @@ const Checkout = () => {
                             inlineInputStyle={styles.inlineInputStyle}
                             placeholderTextColor='rgba(0, 0, 0, 0.5)'
                             onChangeText={(department) => setDepartment(department)}
+                        /> */}
+
+                        <TextInputWithLabel
+                            placeholder="Department Name"
+                            value={department}
+                            onChangeText={(department) => setDepartment(department)}
+                        />
+                        <TextInputWithLabel
+                            placeholder="Room number"
+                            value={roomNumber}
+                            onChangeText={(roomNumber) => setroomNumber(roomNumber)}
                         />
                         <TouchableOpacity style={styles.paymentMethodView} activeOpacity={0.8} onPress={() => toggleModal()}>
                             <Text style={styles.paymentMethodText}>Payment Method</Text>

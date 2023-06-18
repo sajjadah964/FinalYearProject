@@ -15,12 +15,17 @@ import Colors from '../../styles/Colors';
 import { Image } from 'react-native-animatable';
 import Loader from '../../components/Loader';
 import TextInputWithLabel from '../../components/TextinputWithLable';
+import firestore from '@react-native-firebase/firestore';
+import { useIsFocused } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Profile = () => {
   const [selectedTab, setSelectedTab] = useState(0);
 
   const [selectedIndex, setSelectedIndex] = useState('1');
   const [isLoading, setisLoading] = useState(true);
+  const isFocused = useIsFocused();
+  const [user,setUser]=useState([]);
   // LOADING CODE
   useEffect(() => {
     setTimeout(() => {
@@ -28,12 +33,31 @@ const Profile = () => {
     }, 1000);
   }),
     [];
+    // useEffect(() => {
+
+    // }),
+    //   [];
+
+    let uid = '';
+    useEffect(() => {
+      getCartItems();
+  }, [isFocused]);
+
+  const getCartItems = async () => {
+      uid = await AsyncStorage.getItem('USERID');
+      const user = await firestore().collection('users').doc(uid).get();
+      setUser(user._data)
+      console.log('this is the new user',user)
+      console.log('this is the new user',user._data.email);
+      console.log('this is the new user',user._data.name);
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, }}>
       {isLoading ? <Loader isLoading={isLoading} /> :
         <View style={styles.container}>
           <CustomHeader
-            leftImg={imagePath.icBack}
+            // leftImg={imagePath.icBack}
             headerTitle={'Profile'}
             headerImgStyle={styles.headerImgStyle}
           />
@@ -42,53 +66,25 @@ const Profile = () => {
               <View style={styles.profileView}>
                 <Image
                   style={{
-                    width: moderateScale(66),
-                    height: moderateScale(66),
+                    width: moderateScale(150),
+                    height: moderateScale(150),
+                    marginBottom: 20,
                   }}
                   source={imagePath.icUserImg}
                 />
-                <View>
-                  <Text style={styles.cardText}>John Cena</Text>
-                  <Text style={styles.cardText}>John345@gmail.com</Text>
-                  <Text style={styles.cardText}>300 points</Text>
-                </View>
+                <Text style={styles.cardText}>Hello {user.name}!</Text>
+
               </View>
               <View style={styles.formView}>
-                <View>
+                <Text style={{fontSize: 20, fontWeight: '900', marginBottom: 5}}>Name:</Text>
+                <View style={styles.inputStyle}>
                   <Image source={require('../../assets/images/profileIcon.png')} style={styles.imgFirst} />
-                  <TextInputWithLabel
-                    inputStyle={styles.inputStyle}
-                    placeHolder="Name"
-                    style={styles.placeHolder}
-                    inlineInputStyle={styles.inlineInputStyle}
-                    placeholderTextColor='rgba(0, 0, 0, 0.3)'
-                  />
+                <Text style={styles.cardText}>{user.name}</Text>
                 </View>
-                <View>
+                <Text style={{fontSize: 20, fontWeight: '900', marginBottom: 5}}>Email:</Text>
+                <View style={styles.inputStyle}>
                   <Image source={require('../../assets/images/profileEmail.png')} style={styles.imgFirst} />
-                  <TextInputWithLabel
-                    inputStyle={styles.inputStyle}
-                    style={styles.placeHolder}
-                    placeHolder="Email"
-                    inlineInputStyle={styles.inlineInputStyle}
-                    placeholderTextColor='rgba(0, 0, 0, 0.3)'
-                  />
-                  <Image source={require('../../assets/images/profileSecurity.png')} style={styles.imgFirst} />
-                  <TextInputWithLabel
-                    inputStyle={styles.inputStyle}
-                    style={styles.placeHolder}
-                    placeHolder="Password"
-                    inlineInputStyle={styles.inlineInputStyle}
-                    placeholderTextColor='rgba(0, 0, 0, 0.3)'
-                  />
-                  <Image source={require('../../assets/images/profileLanguage.png')} style={styles.imgFirst} />
-                  <TextInputWithLabel
-                    inputStyle={styles.inputStyleLast}
-                    style={styles.placeHolder}
-                    placeHolder="Language"
-                    inlineInputStyle={styles.inlineInputStyle}
-                    placeholderTextColor='rgba(0, 0, 0, 0.3)'
-                  />
+                <Text style={styles.cardText}>{user.email}</Text>
                 </View>
               </View>
               <View>
@@ -146,28 +142,27 @@ const styles = StyleSheet.create({
     height: 25,
   },
   cardText: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: '600',
+    marginLeft: 13,
+    textTransform: 'capitalize',
     color: 'rgba(0, 0, 0, 0.8)'
   },
   profileView: {
-    backgroundColor: '#EFEDED',
-    borderBottomWidth: 1,
-    borderColor: 'rgba(168, 167, 167, 1)',
-    padding: 15,
-    // paddingVertical: 20,
-    // marginBottom: 20,
-    flexDirection: 'row',
-    gap: 10,
-    borderRadius: moderateScale(8),
+    // height: 150,
+    width: '100%',
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 30
   },
   headerImgStyle: {
     tintColor: Colors.black
   },
   imgFirst: {
     zIndex: 2,
-    top: 30,
-    left: 15,
+    top: 7,
+    // left: 15,
   },
   imgSecond: {
     zIndex: 2,
@@ -200,9 +195,12 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#EFEDED',
     borderRadius: moderateScale(8),
-    paddingLeft: 40,
+    paddingLeft: 20,
+    flexDirection: 'row',
     zIndex: 1,
-    // marginBottom: 20
+    marginBottom: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   inputStyleLast: {
     borderBottomWidth: 0,

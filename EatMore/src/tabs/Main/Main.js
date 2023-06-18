@@ -68,12 +68,15 @@ const Main = () => {
         // Stop listening for updates when no longer required
         // return () => subscriber();
     }, []);
+    
     useEffect(() => {
         getCartItems();
     }, [isFocused]);
+
     const getCartItems = async () => {
         uid = await AsyncStorage.getItem('USERID');
         const user = await firestore().collection('users').doc(uid).get();
+        console.log("this is user"+user)
         setCartCount(user._data.cart.length);
     };
     //   const onAddToCart = async (item, index) => {
@@ -166,14 +169,18 @@ const Main = () => {
         );
     }
     const logout = async () => {
+    try {
+        // await AsyncStorage.clear(); // Clear all AsyncStorage data
         auth()
             .signOut()
             .then(() => {
-                ToastAndroid.show('Logout Succcessfully', ToastAndroid.SHORT);
+                ToastAndroid.show('Logout Successfully', ToastAndroid.SHORT);
                 navigation.navigate(NavigationStrings.MAIN_STACK, { screen: NavigationStrings.LOGIN });
-
             });
+    } catch (error) {
+        console.log(error);
     }
+}
     const onFocus = () => {
         setIsFocused(true)
         return (
