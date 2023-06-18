@@ -8,67 +8,57 @@ const OrderStatus = (props) => {
     const navigation = useNavigation();
     const {
         cartList,
-        address,
+        roomNumber,
         userName,
         userEmail,
         userMobile,
+        userDepartment,
+        status,
         uid,
         total,
     } = props.route.params;
+    console.log("list items",cartList);
+    console.log("list room number",roomNumber);
+    console.log("list department",userDepartment);
+    console.log("list name",userName);
+    console.log("list email",userEmail);
+    console.log("list mobile",userMobile);
+    console.log("list total",total);
+    console.log("list uid",uid);
     useEffect(() => {
-        if (props.route.params.status == 'success') {
+        if (status == 'success') {
             placeOrder();
         }
     }, []);
     const placeOrder = async () => {
-        // let tempOrders = [];
-        let user = await firestore()
-            .collection('users')
-            .doc(props.route.params.uid)
-            .get();
-        // if (user._data && user._data.orders) {
-        //     tempOrders = user._data.orders;
-        // }
-        // tempOrders.push({
-        //     items: cartList,
-        //     address: address,
-        //     orderBy: userName,
-        //     userEmail: userEmail,
-        //     userMobile: userMobile,
-        //     userId: uid,
-        //     // orderTotal: total,
-        // });
+        let tempOrders = [];
+        tempOrders.push({
+            items:cartList,
+            roomNumber:roomNumber,
+            userDepartment:userDepartment,
+            userEmail:userEmail,
+            orderBy:uid,
+            userMobile:userMobile,
+            userName:userName,
+            total:total,
+        })
         firestore().collection('users').doc(uid).update({
             cart: [],
-            // orders: tempOrders,
+            ordersInfo: tempOrders,
         });
-        // firestore()
-        //     .collection('orders')
-        //     .set({
-        //         data: {
-        //             items: cartList,
-        //             address: address,
-        //             orderBy: userName,
-        //             userEmail: userEmail,
-        //             userMobile: userMobile,
-        //             userId: uid,
-        //             // orderTotal: total,
-        //         },
-        //         // orderBy: uid,
-        //     });
     };
     return (
         <View style={styles.container}>
             <Image
                 source={
-                    props.route.params.status == 'success'
+                    status == 'success'
                         ? require('../../assets/images/success.gif')
                         : require('../../assets/images/failed.gif')
                 }
                 style={styles.icon}
             />
             <Text style={styles.msg}>
-                {props.route.params.status == 'success'
+                {status == 'success'
                     ? 'Order Placed Successfully !!'
                     : 'Order Failed !!'}
             </Text>

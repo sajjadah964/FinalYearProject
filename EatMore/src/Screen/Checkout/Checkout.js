@@ -67,29 +67,17 @@ const Checkout = () => {
         return totalBill;
     }
     const payNow = async () => {
-        console.log("cart list ", cartList)
+        console.log("checkout cart list data ", cartList)
         try {
             const name = await AsyncStorage.getItem('NAME');
-            console.log("user this name", name)
             const email = await AsyncStorage.getItem('EMAIL');
-            console.log("user this email", email)
             const number = await AsyncStorage.getItem('NUMBER');
-            console.log("user this number", number)
-            const userSnapshot = await firestore().collection('users').doc(uid).get();
-            const user = userSnapshot.data();
-            if (user && user.cart) {
-                setCartList(user.cart);
-            }
-            // console.log("checkout user data", user);
-            // console.log("checkout user name", names);
-            // console.log("checkout user email", email);
-            // console.log("checkout user mobile number", mobile);
             uid = await AsyncStorage.getItem('USERID');
             navigation.navigate(NavigationStrings.ORDER_STATUS, {
                 cartList: cartList,
                 total: getTotalBill(),
                 status: 'success',
-                userAddress: roomNumber,
+                roomNumber: roomNumber,
                 userDepartment: department,
                 userName: name,
                 userEmail: email,
@@ -97,22 +85,11 @@ const Checkout = () => {
                 uid: uid
             });
         } catch (error) {
-            // handle failure
             navigation.navigate(NavigationStrings.ORDER_STATUS, {
                 status: 'failed',
             });
         }
-        firestore.collection('orders').add({
-            order: {},
-        })
-            .then((docRef) => {
-                // This block is executed when the document creation is successful
-                console.log('Document written with ID: ', docRef.id);
-            })
-            .catch((error) => {
-                // This block is executed if an error occurs during the operation
-                console.error('Error adding document: ', error);
-            });
+
     };
 
 

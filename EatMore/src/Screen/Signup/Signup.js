@@ -60,7 +60,7 @@ const Signup = ({ navigateToLogin }) => {
                     uid: result.user.uid,
                     number: number,
                     cart: [],
-                    // orderInfo: [],
+                    ordersInfo:'',
                 })
             ToastAndroid.show('Signed up successfully', ToastAndroid.SHORT);
             // Navigate to the Login screen after successful signup
