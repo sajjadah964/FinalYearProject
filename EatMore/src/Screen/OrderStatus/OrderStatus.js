@@ -34,6 +34,8 @@ const OrderStatus = (props) => {
     }, []);
     const placeOrder = async () => {
         let tempOrders = [];
+        let user= await firestore().collection("users").doc(uid).get();
+        tempOrders=user._data.ordersInfo
         tempOrders.push({
             items:cartList,
             cabinNumber:roomNumber,
