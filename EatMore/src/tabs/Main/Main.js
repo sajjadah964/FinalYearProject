@@ -79,39 +79,6 @@ const Main = () => {
         console.log("this is user"+user)
         setCartCount(user._data.cart.length);
     };
-    //   const onAddToCart = async (item, index) => {
-    //     console.log("this is the new item",item.data)
-    //             uid = await AsyncStorage.getItem('USERID');
-    //             console.log(uid);
-    //     const user = await firestore().collection('users').doc(uid).get();
-    //     console.log(user._data);
-    //     let tempCart = [];
-    //     tempCart = user._data.cart;
-    //     if (tempCart.length > 0) {
-    //         let existing = false;
-    //         // tempCart.push(item);
-    //         tempCart.map(itm => {
-    //           if (itm.id == item.id) {
-    //             existing = true;
-    //             itm.data.quantity = itm.data.quantity + 1;
-    //           }
-    //         });
-    //         if (existing == false) {
-    //           tempCart.push(item);
-    //         }
-    //         firestore().collection('users').doc(uid).update({
-    //           cart: tempCart,
-    //         });
-    //     }
-    //     else{
-    //         tempCart.push(item);
-    //     }
-    //     firestore().collection('users').doc(uid).update({
-    //         cart:tempCart
-    //     });
-    //     getCartItems();
-    //   };
-
     const onAddToCart = async (item, index) => {
         console.log("this is the new item", item.data);
         uid = await AsyncStorage.getItem('USERID');
@@ -282,7 +249,7 @@ const Main = () => {
                         </TouchableOpacity>
                     </View>
 
-                    <View style={styles.searchView}>
+                    {/* <View style={styles.searchView}>
                         <TextInputWithLabel
                             placeHolder='Search'
                             placeholderTextColor="gray"
@@ -293,8 +260,9 @@ const Main = () => {
                             onBlur={() => setIsFocused(false)}
                         >
                         </TextInputWithLabel>
-                    </View>
+                    </View> */}
                     <View style={styles.categoryView}>
+                        <Text  style={styles.topItemListHeading}>Categories</Text>
                         <View style={styles.categoryBtnView}>
                             {buttons.map((button, index) => {
                                 return (
@@ -313,7 +281,7 @@ const Main = () => {
                     <View
                         style={styles.topItemViewStyle}
                     >
-                        <Text style={styles.topItemListHeading}>Recent Items</Text>
+                        <Text style={styles.topItemListHeading}>All Items</Text>
                         <FlatList
                             data={items}
                             renderItem={topItemList}
@@ -443,7 +411,7 @@ const styles = StyleSheet.create({
         paddingVertical: moderateVerticalScale(20),
     },
     topItemListHeading: {
-        fontSize: scale(24),
+        fontSize: scale(22),
         fontWeight: '500',
         fontStyle: 'normal',
         color: Colors.black,

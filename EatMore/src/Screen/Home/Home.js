@@ -4,8 +4,8 @@ import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import { Dimensions } from 'react-native';
 import AddToCart from '../../tabs/AddToCart/AddToCart';
 import Profile from '../../tabs/Profile/Profile';
-import Search from '../../tabs/Search/Search';
 import Main from '../../tabs/Main/Main';
+import Orders from '../../tabs/Orders/Orders';
 const Home = () => {
   const [selectedTab, setSelectedTab] = useState(0);
   return (
@@ -13,7 +13,7 @@ const Home = () => {
       {selectedTab == 0 ? (
         <Main />
       ) : selectedTab == 1 ? (
-        <Search />
+        <Orders />
       ) : selectedTab == 2 ? (
         <AddToCart />
       ) : (
@@ -43,8 +43,8 @@ const Home = () => {
           <Image
             source={
               selectedTab == 1
-                ? require('../../assets/images/search.png')
-                : require('../../assets/images/search.png')
+                ? require('../../assets/images/order-fil.png')
+                : require('../../assets/images/order-unfil.png')
             }
             style={styles.bottomIcon}
           />

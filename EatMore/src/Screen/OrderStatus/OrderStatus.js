@@ -6,6 +6,8 @@ import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 const OrderStatus = (props) => {
     const navigation = useNavigation();
+    const options = { timeZone: 'Asia/Karachi' };
+    const pakistanDate = new Date().toLocaleString('en-US', options);
     const {
         cartList,
         roomNumber,
@@ -34,18 +36,35 @@ const OrderStatus = (props) => {
         let tempOrders = [];
         tempOrders.push({
             items:cartList,
-            roomNumber:roomNumber,
-            userDepartment:userDepartment,
-            userEmail:userEmail,
+            cabinNumber:roomNumber,
+            Department:userDepartment,
+            Email:userEmail,
             orderBy:uid,
-            userMobile:userMobile,
-            userName:userName,
-            total:total,
+            Mobile:userMobile,
+            Name:userName,
+            totalPrice:total,
+            orderDateTime: pakistanDate,
         })
         firestore().collection('users').doc(uid).update({
             cart: [],
             ordersInfo: tempOrders,
         });
+        firestore()
+      .collection('orders')
+      .add({
+        data: {
+            items:cartList,
+            cabinNumber:roomNumber,
+            Department:userDepartment,
+            Email:userEmail,
+            uid:uid,
+            Mobile:userMobile,
+            Name:userName,
+            totalPrice:total,
+            orderDateTime: pakistanDate,
+        },
+        orderBy: uid,
+      });
     };
     return (
         <View style={styles.container}>

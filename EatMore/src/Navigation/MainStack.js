@@ -3,7 +3,6 @@ import React from "react";
 import NavigationStrings from "../constants/NavigationStrings";
 import { AllOrder, Checkout, Home, ItemsDetails, OrderInformation, OrderStatus, } from "../Screen";
 import Main from "../tabs/Main/Main";
-import Search from "../tabs/Search/Search";
 import AddToCart from "../tabs/AddToCart/AddToCart";
 import Profile from "../tabs/Profile/Profile";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -23,10 +22,10 @@ export default function MainStack() {
                 name={NavigationStrings.MAIN}
                 component={Main}
             />
-            <Stack.Screen
+            {/* <Stack.Screen
                 name={NavigationStrings.SEARCH}
                 component={Search}
-            />
+            /> */}
             <Stack.Screen
                 name={NavigationStrings.ADD_TO_CART}
                 component={AddToCart}

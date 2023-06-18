@@ -105,24 +105,6 @@ const Checkout = () => {
                 />
                 <View style={styles.mainContentView}>
                     <View>
-                        {/* <TextInputWithLabel
-                            label={'Delivery Address'}
-                            inputStyle={styles.inputStyle}
-                            placeHolder="Enter Address"
-                            inlineInputStyle={styles.inlineInputStyle}
-                            placeholderTextColor='rgba(0, 0, 0, 0.5)'
-                            onChangeText={(address) => setAddress(address)}
-                        />
-                        <TextInputWithLabel
-                            label={'Department'}
-                            // inputStyle={[styles.inputStyle, {height: verticalScale(45)}]}
-                            inputStyle={{ ...styles.inputStyle, height: moderateScale(45) }}
-                            placeHolder="Enter Department Name"
-                            inlineInputStyle={styles.inlineInputStyle}
-                            placeholderTextColor='rgba(0, 0, 0, 0.5)'
-                            onChangeText={(department) => setDepartment(department)}
-                        /> */}
-
                         <TextInputWithLabel
                             placeholder="Department Name"
                             value={department}
@@ -134,7 +116,7 @@ const Checkout = () => {
                             onChangeText={(roomNumber) => setroomNumber(roomNumber)}
                         />
                         <TouchableOpacity style={styles.paymentMethodView} activeOpacity={0.8} onPress={() => toggleModal()}>
-                            <Text style={styles.paymentMethodText}>Payment Method</Text>
+                            <Text style={styles.paymentMethodText}>Cash on delivery</Text>
                         </TouchableOpacity>
                         <View style={styles.subtotal}>
                             <Text style={{ fontSize: 22, fontWeight: '600', color: 'black', marginBottom: 10 }}>Order Summary</Text>
