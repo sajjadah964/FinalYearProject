@@ -33,24 +33,31 @@ const OrderStatus = (props) => {
         }
     }, []);
     const placeOrder = async () => {
-        let tempOrders = [];
-        let user= await firestore().collection("users").doc(uid).get();
-        tempOrders=user._data.ordersInfo
-        tempOrders.push({
-            items:cartList,
-            cabinNumber:roomNumber,
-            Department:userDepartment,
-            Email:userEmail,
-            orderBy:uid,
-            Mobile:userMobile,
-            Name:userName,
-            totalPrice:total,
+        const order = {
+            items: cartList,
+            cabinNumber: roomNumber,
+            Department: userDepartment,
+            Email: userEmail,
+            orderBy: uid,
+            Mobile: userMobile,
+            Name: userName,
+            totalPrice: total,
             orderDateTime: pakistanDate,
-        })
-        firestore().collection('users').doc(uid).update({
-            cart: [],
-            ordersInfo: tempOrders,
-        });
+          };
+        
+          // Retrieve the current ordersInfo array from Firestore
+          const userDoc = await firestore().collection("users").doc(uid).get();
+          const currentOrdersInfo = userDoc.data()?.ordersInfo || [];
+        
+          // Append the new order to the existing ordersInfo array if cartList is not empty
+          const updatedOrdersInfo = cartList.length > 0 ? [...currentOrdersInfo, order] : currentOrdersInfo;
+        
+          // Update the user document in Firestore with the updated ordersInfo array
+          await firestore().collection("users").doc(uid).update({
+            cart: [], // Clear the cart array
+            ordersInfo: updatedOrdersInfo,
+          });
+        
         firestore()
       .collection('orders')
       .add({
