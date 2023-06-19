@@ -34,49 +34,6 @@ const ItemsDetails = (props) => {
         }, 1000);
     }),
         [];
-    const counter = (type) => {
-        if (type == "increment") {
-            setCount(count + 1)
-        } else if (type == "decrement" && count > 0) {
-            setCount(count - 1)
-        }
-    }
-    useEffect(() => {
-        getCartItems();
-      }, [isFocused]);
-      const getCartItems = async () => {
-        uid = await AsyncStorage.getItem('USERID');
-        const user = await firestore().collection('users').doc(uid).get();
-        // setCartCount(user._data.cart.length);
-      };
-      const onAddToCart = async (item, index) => {
-        const user = await firestore().collection('users').doc(uid).get();
-        console.log(user._data.cart);
-        let tempDart = [];
-        tempDart = user._data.cart;
-        if (tempDart.length > 0) {
-          let existing = false;
-          tempDart.map(itm => {
-            if (itm.id == item.id) {
-              existing = true;
-              itm.data.qty = itm.data.qty + 1;
-            }
-          });
-          if (existing == false) {
-            tempDart.push(item);
-          }
-          firestore().collection('users').doc(uid).update({
-            cart: tempDart,
-          });
-        } else {
-          tempDart.push(item);
-        }
-        console.log(tempDart);
-        firestore().collection('users').doc(userId).update({
-          cart: tempDart,
-        });
-        getCartItems();
-      };
     return (
         <SafeAreaView style={{ flex: 1 }}>
             {isLoading ? <Loader isLoading={isLoading} /> :
@@ -116,7 +73,7 @@ const ItemsDetails = (props) => {
                         <Text style={styles.description}>
                             {description}
                         </Text>
-                        <View style={styles.button}>
+                        {/* <View style={styles.button}>
                             <View style={styles.CounterView}>
                                 <TouchableOpacity
                                     activeOpacity={0.7}
@@ -148,7 +105,7 @@ const ItemsDetails = (props) => {
                                     btnText={'Add to Cart'}
                                 />
                             </View>
-                        </View>
+                        </View> */}
                     </Animatable.View>
                 </View>
             }

@@ -33,15 +33,15 @@ const Main = () => {
     const buttons = [
         {
             id: 1,
-            title: 'Recent Items'
+            title: 'All Items'
         },
         {
             id: 2,
-            title: 'Burger'
+            title: 'Fast Food'
         },
         {
             id: 3,
-            title: 'Pizza'
+            title: 'Desi Food'
         }
     ]
     let uid = '';
@@ -404,8 +404,11 @@ const styles = StyleSheet.create({
         paddingBottom: 85
     },
     singleItem: {
-        width: '100%',
-        height: '100%',
+        // width: '100%',
+        // height: '100%',
+        width: 160,
+        justifyContent: "flex-start",
+        height: 220,
         borderRadius: moderateScale(15),
         backgroundColor: 'rgba(239, 238, 238, 0.85)',
         paddingVertical: moderateVerticalScale(20),
@@ -424,7 +427,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     itemNameStyle: {
-        fontSize: scale(15),
+        fontSize: scale(14),
         fontWeight: '500',
         color: Colors.black,
         // marginBottom: moderateVerticalScale(10)
