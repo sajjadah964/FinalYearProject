@@ -66,13 +66,11 @@ const Login = () => {
             setisLoading(true);
             const result = await auth().signInWithEmailAndPassword(email, password);
             ToastAndroid.show('Logged in successfully', ToastAndroid.SHORT);
+            console.log("this is the my result",result.user);
             setEmailError('');
             setPasswordError('');
             setisLoading(false);
             await AsyncStorage.setItem('USERID', result.user.uid);
-            await AsyncStorage.setItem('EMAIL', email);
-            await AsyncStorage.setItem('NAME', result.user.name);
-            await AsyncStorage.setItem('NUMBER', result.user.number);
             navigation.navigate(NavigationStrings.HOME);
         } catch (error) {
             console.log('error', error);

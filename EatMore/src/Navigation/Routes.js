@@ -25,13 +25,6 @@ function Routes() {
 
     return (
         <NavigationContainer>
-            {/* <Stack.Navigator
-                screenOptions={{ presentation: 'card', headerShown: false }}
-                initialRouteName={NavigationStrings.INITIAL_SCREEN}
-            >
-                {user ? MainStack(Stack) : AuthStack(Stack)}
-                {MainStack(Stack)}
-            </Stack.Navigator> */}
             <Stack.Navigator screenOptions={{ presentation: 'card', headerShown: false }}>
                 {user ? (
                     <Stack.Screen name={NavigationStrings.MAIN_STACK} component={MainStack} />

@@ -65,9 +65,6 @@ const Signup = ({ navigateToLogin }) => {
             ToastAndroid.show('Signed up successfully', ToastAndroid.SHORT);
             // Navigate to the Login screen after successful signup
             console.log("Navigate to the Login screen after successful signup")
-            // navigation.navigate(NavigationStrings.LOGIN);
-            // navigation.replace(NavigationStrings.LOGIN);
-            navigation.navigate(NavigationStrings.LOGIN)
             await AsyncStorage.setItem('NAME',name);
             await AsyncStorage.setItem('EMAIL', email);
             await AsyncStorage.setItem('NUMBER', number);
