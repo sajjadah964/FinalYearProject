@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React from "react";
 import NavigationStrings from "../constants/NavigationStrings";
 import { Login, ResetPassword, Signup, SplashScreen } from "../Screen";

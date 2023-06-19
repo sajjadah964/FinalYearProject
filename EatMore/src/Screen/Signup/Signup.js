@@ -64,7 +64,10 @@ const Signup = ({ navigateToLogin }) => {
                 })
             ToastAndroid.show('Signed up successfully', ToastAndroid.SHORT);
             // Navigate to the Login screen after successful signup
-            navigation.replace(NavigationStrings.LOGIN);
+            console.log("Navigate to the Login screen after successful signup")
+            // navigation.navigate(NavigationStrings.LOGIN);
+            // navigation.replace(NavigationStrings.LOGIN);
+            navigation.navigate(NavigationStrings.LOGIN)
             await AsyncStorage.setItem('NAME',name);
             await AsyncStorage.setItem('EMAIL', email);
             await AsyncStorage.setItem('NUMBER', number);
@@ -251,6 +254,7 @@ const Signup = ({ navigateToLogin }) => {
                                 btnStyle={{ ...styles.btnStyle, ...styles.customStyle }}
                                 btnText={'Sign Up'}
                                 onPress={() => handleUserSignup()}
+                                // onPress={() => navigation.navigate('login')}
                             />
                             <TouchableOpacity
                                 style={styles.loginSignview}
