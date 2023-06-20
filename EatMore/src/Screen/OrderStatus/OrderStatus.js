@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { useRoute } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
+import Colors from '../../styles/Colors';
 const OrderStatus = (props) => {
     const navigation = useNavigation();
     const options = { timeZone: 'Asia/Karachi' };
@@ -95,7 +96,7 @@ const OrderStatus = (props) => {
                 onPress={() => {
                     navigation.navigate('Home');
                 }}>
-                <Text>Go To Home</Text>
+                <Text style={{color:Colors.primaryColor}}>Go To Home</Text>
             </TouchableOpacity>
         </View>
     );

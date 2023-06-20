@@ -7,11 +7,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
 export default function AuthStack() {
     console.log("this is my authstack file")
-    // const navigateToLogin = () => {
-    //     NavigationStrings.navigateToLogin
-    //   };
     return (
-        <Stack.Navigator screenOptions={{ presentation: 'card', headerShown: false }}>
+        <Stack.Navigator screenOptions={{ presentation: 'card', headerShown: false }} initialRouteName={NavigationStrings.SPLASH_SCREEN}>
             <Stack.Screen
                 name={NavigationStrings.SPLASH_SCREEN}
                 component={SplashScreen}

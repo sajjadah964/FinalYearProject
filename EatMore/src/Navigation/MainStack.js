@@ -22,10 +22,6 @@ export default function MainStack() {
                 name={NavigationStrings.MAIN}
                 component={Main}
             />
-            {/* <Stack.Screen
-                name={NavigationStrings.SEARCH}
-                component={Search}
-            /> */}
             <Stack.Screen
                 name={NavigationStrings.ADD_TO_CART}
                 component={AddToCart}

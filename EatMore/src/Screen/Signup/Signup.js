@@ -84,6 +84,7 @@ const Signup = ({ navigateToLogin }) => {
         setEmail('');
         setPassword('');
         setConfirmPassword('');
+        setNumber('');
     };
 
     //   VALIDATION METHOD
