@@ -55,7 +55,7 @@ const OrderStatus = (props) => {
         
           // Update the user document in Firestore with the updated ordersInfo array
           await firestore().collection("users").doc(uid).update({
-            cart: [], // Clear the cart array
+            cart: [],
             ordersInfo: updatedOrdersInfo,
           });
         
