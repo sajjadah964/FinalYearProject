@@ -45,29 +45,54 @@ const Main = () => {
         }
     ]
     let uid = '';
-    useEffect(() => {
-        firestore()
-            .collection('items')
-            .get()
-            .then(querySnapshot => {
-                console.log('Total users: ', querySnapshot.size);
-                let tempData = [];
-                querySnapshot.forEach(documentSnapshot => {
-                    console.log(
-                        'User ID: ',
-                        documentSnapshot.id,
-                        documentSnapshot.data(),
-                    );
-                    tempData.push({
-                        id: documentSnapshot.id,
-                        data: documentSnapshot.data(),
-                    });
-                });
-                setItems(tempData);
-            });
-        // Stop listening for updates when no longer required
-        // return () => subscriber();
-    }, []);
+    // useEffect(() => {
+    //     firestore()
+    //         .collection('items')
+    //         .where('name', '==', 'Cheese Pizza')
+    //         .get()
+    //         .then(querySnapshot => {
+    //             console.log('Total users: ', querySnapshot.size);
+    //             let tempData = [];
+    //             querySnapshot.forEach(documentSnapshot => {
+    //                 console.log(
+    //                     'User ID: ',
+    //                     documentSnapshot.id,
+    //                     documentSnapshot.data(),
+    //                 );
+    //                 tempData.push({
+    //                     id: documentSnapshot.id,
+    //                     data: documentSnapshot.data(),
+    //                 });
+    //             });
+    //             setItems(tempData);
+    //         });
+    //     // Stop listening for updates when no longer required
+    //     // return () => subscriber();
+    // }, []);
+
+
+
+    // useEffect(() => {
+    //     firestore()
+    //         .collection('items')
+    //         .where('name', '==', 'Burger')
+    //         .get()
+    //         .then(querySnapshot => {
+    //             console.log('Total users: ', querySnapshot.size);
+    //             let tempData = [];
+    //             querySnapshot.forEach(documentSnapshot => {
+    //                 console.log(
+    //                     'User ID: ',
+    //                     documentSnapshot.id,
+    //                     documentSnapshot.get('name')
+    //                 );
+    //                 tempData.push(documentSnapshot.get('name'));
+    //             });
+    //             setItems(tempData);
+    //         });
+    // }, []);
+    
+    
     
     useEffect(() => {
         getCartItems();
@@ -166,24 +191,56 @@ const Main = () => {
     }
     useEffect(() => {
         getData();
-    }, []);
-    const getData = async () => {
+      }, [selectedIndex]);
+      
+      const getData = async () => {
+        let category = '';
+        if (selectedIndex === 0) {
+          category = 'Pizza';
+          console.log(category, '11')
+        } else if (selectedIndex === 1) {
+          category = 'Burger';
+          console.log(category, '2')
+        } else if (selectedIndex === 2) {
+          category = 'Pizza';
+          console.log(category, '3')
+        }
+      
         firestore()
-            .collection('items')
-            .get()
-            .then(querySnapshot => {
-                console.log('Total users: ', querySnapshot.size);
-                let tempData = [];
-                querySnapshot.forEach(documentSnapshot => {
-                    console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
-                    tempData.push({
-                        id: documentSnapshot.id,
-                        data: documentSnapshot.data(),
-                    })
-                });
-                setItems(tempData);
+          .collection('items')
+          .where('category', '==', category)
+          .get()
+          .then(querySnapshot => {
+            console.log('Total items: ', querySnapshot.size);
+            let tempData = [];
+            querySnapshot.forEach(documentSnapshot => {
+              console.log('Item ID: ', documentSnapshot.id, documentSnapshot.data());
+              tempData.push({
+                id: documentSnapshot.id,
+                data: documentSnapshot.data(),
+              });
             });
-    }
+            setItems(tempData);
+          });
+      };
+    // const getData = async () => {
+    //     firestore()
+    //         .collection('items')
+    //         .where('category', '==', 'Burger')
+    //         .get()
+    //         .then(querySnapshot => {
+    //             console.log('Total users: ', querySnapshot.size);
+    //             let tempData = [];
+    //             querySnapshot.forEach(documentSnapshot => {
+    //                 console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
+    //                 tempData.push({
+    //                     id: documentSnapshot.id,
+    //                     data: documentSnapshot.data(),
+    //                 })
+    //             });
+    //             setItems(tempData);
+    //         });
+    // }
     const topItemList = ({ item, index }) => {
         // console.log(item, 'top item list')
         return (
