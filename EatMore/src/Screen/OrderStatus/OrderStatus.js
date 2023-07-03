@@ -94,7 +94,7 @@ const OrderStatus = (props) => {
             <TouchableOpacity
                 style={styles.backToHome}
                 onPress={() => {
-                    navigation.navigate('Home');
+                    navigation.navigate('Main');
                 }}>
                 <Text style={{color:Colors.primaryColor}}>Go To Home</Text>
             </TouchableOpacity>

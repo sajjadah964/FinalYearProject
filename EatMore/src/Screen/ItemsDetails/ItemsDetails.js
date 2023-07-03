@@ -16,12 +16,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
 
 const ItemsDetails = (props) => {
-    console.log('item details', props.route.params.detail.data);
+    console.log('item details in routes', props.route.params.detail);
     // console.log(props.index)
     // const{navigation}={props
     const [isLoading, setisLoading] = useState(true);
     const navigation = useNavigation()
-    const { name, price, imageUrl, points, description } = props.route.params.detail.data;
+    const { name, price, imageUrl, points, description, quantity } = props.route.params.detail.data;
     const { index } = props.route.params.index;
     const [count, setCount] = useState(0);
     const isFocused = useIsFocused();
@@ -37,31 +37,28 @@ const ItemsDetails = (props) => {
     }),
         [];
     let uid = '';
-    const onAddToCart = async (item, index) => {
-        console.log("this is the new item", item.data);
+    const onAddToCart = async (item) => {
         uid = await AsyncStorage.getItem('USERID');
-        console.log(uid);
         const user = await firestore().collection('users').doc(uid).get();
-        console.log(user);
-        let tempCart = [];
-        tempCart = user.cart; // Initialize tempCart with existing cart items, or an empty array if it doesn't exist
+        let tempCart = user._data.cart || []; // Initialize tempCart with existing cart items, or an empty array if it doesn't exist
 
-        let existingItemIndex = tempCart.findIndex(itm => itm.id === item.id);
+        const existingItemIndex = tempCart.findIndex((itm) => itm.id === item.id);
 
         if (existingItemIndex !== -1) {
             // Item already exists in the cart, update its quantity
             tempCart[existingItemIndex].quantity += 1;
         } else {
             // Item does not exist in the cart, add it as a new item
+            // item.quantity = 1; // Set the initial quantity to 1
             tempCart.push(item);
         }
 
-        firestore().collection('users').doc(uid).update({
+        await firestore().collection('users').doc(uid).update({
             cart: tempCart,
         });
-
+     
         getCartItems();
-    };
+    }
     useEffect(() => {
         getCartItems();
     }, [isFocused]);
@@ -69,7 +66,7 @@ const ItemsDetails = (props) => {
     const getCartItems = async () => {
         uid = await AsyncStorage.getItem('USERID');
         const user = await firestore().collection('users').doc(uid).get();
-        console.log("this is user" + user)
+        // console.log("this is user11", user._data.cart.length)
         setCartCount(user._data.cart.length);
     };
     const [isChecked, setChecked] = useState(false);
@@ -83,10 +80,23 @@ const ItemsDetails = (props) => {
                 <ScrollView>
                     <View style={styles.container}>
                         {/* <StatusBar backgroundColor='#009387' barStyle="light-content" /> */}
-                        <View style={{ paddingHorizontal: moderateScale(26) }}>
+                        <View style={{ paddingHorizontal: moderateScale(26), flexDirection: 'row', justifyContent: 'space-between' }}>
                             <CustomHeader
                                 leftImg={imagePath.icBack}
                             />
+                            <TouchableOpacity
+                                style={{ top: 20 }}
+                                onPress={() => moveToScreen(NavigationStrings.ADD_TO_CART)}>
+                                <View style={{}}>
+                                    <Image
+                                        source={imagePath.icShoppingCart}
+                                        style={{ height: 35, width: 35, alignItems: 'center', tintColor: 'white' }}
+                                    />
+                                </View>
+                                <View style={{ height: 24, width: 24, backgroundColor: 'white', borderRadius: 12, alignItems: 'center', justifyContent: 'center', bottom: 43, left: 23 }}>
+                                    <Text style={{ color: 'black' }}>{cartCount}</Text>
+                                </View>
+                            </TouchableOpacity>
                         </View>
                         <View style={styles.header}>
                             <View style={{
@@ -142,26 +152,28 @@ const ItemsDetails = (props) => {
                             </TouchableOpacity>
                         </View> */}
                                 <View style={{ justifyContent: 'center', flex: 1 }}>
-                                    <CustomPkgBtn
-                                        onPress={() => { onAddToCart(props.route.params.detail.data, index) }}
-                                        textStyle={{ ...styles.textStyle }}
-                                        btnStyle={{ ...styles.btnStyle }}
-                                        btnText={'Add to Cart'}
-                                    />
+                                    <TouchableOpacity>
+                                        <CustomPkgBtn
+                                            onPress={() => { onAddToCart(props.route.params.detail, index) }}
+                                            textStyle={{ ...styles.textStyle }}
+                                            btnStyle={{ ...styles.btnStyle }}
+                                            btnText={'Add to Cart'}
+                                        />
+                                    </TouchableOpacity>
                                 </View>
 
                             </View>
                             <View style={styles.check1}>
                                 <View style={styles.check}>
-                                <Checkbox
-                                    value={isChecked}
-                                    onValueChange={handleCheckboxChange}
-                                    label={''}
-                                    style={styles.checkboxContainer}
-                                // labelStyle={styles.labelStyle}
-                                />
-                                <Image source={require('../../assets/images/cola.png')} style={{ height: 24, width: 20, marginHorizontal: 5 }} />
-                                <Text style={styles.checkText}>Pepsi</Text>
+                                    <Checkbox
+                                        value={isChecked}
+                                        onValueChange={handleCheckboxChange}
+                                        label={''}
+                                        style={styles.checkboxContainer}
+                                    // labelStyle={styles.labelStyle}
+                                    />
+                                    <Image source={require('../../assets/images/cola.png')} style={{ height: 24, width: 20, marginHorizontal: 5 }} />
+                                    <Text style={styles.checkText}>Pepsi</Text>
                                 </View>
                                 <Text style={{ color: 'black', fontWeight: 'bold' }}>50Rs</Text>
                                 {/* <Text>{isChecked ? 'Checked' : 'Unchecked'}</Text>
@@ -169,15 +181,15 @@ const ItemsDetails = (props) => {
                             </View>
                             <View style={styles.check1}>
                                 <View style={styles.check}>
-                                <Checkbox
-                                    value={isChecked}
-                                    onValueChange={handleCheckboxChange}
-                                    label={''}
-                                    style={styles.checkboxContainer}
-                                // labelStyle={styles.labelStyle}
-                                />
-                                <Image source={require('../../assets/images/cofee.png')} style={{ height: 24, width: 20, marginHorizontal: 5 }} />
-                                <Text style={styles.checkText}>Coffee</Text>
+                                    <Checkbox
+                                        value={isChecked}
+                                        onValueChange={handleCheckboxChange}
+                                        label={''}
+                                        style={styles.checkboxContainer}
+                                    // labelStyle={styles.labelStyle}
+                                    />
+                                    <Image source={require('../../assets/images/cofee.png')} style={{ height: 24, width: 20, marginHorizontal: 5 }} />
+                                    <Text style={styles.checkText}>Coffee</Text>
                                 </View>
                                 <Text style={{ color: 'black', fontWeight: 'bold' }}>50Rs</Text>
                                 {/* <Text>{isChecked ? 'Checked' : 'Unchecked'}</Text>
@@ -185,16 +197,16 @@ const ItemsDetails = (props) => {
                             </View>
                             <View style={styles.check1}>
                                 <View style={styles.check}>
-                                <Checkbox
-                                    value={isChecked}
-                                    onValueChange={handleCheckboxChange}
-                                    label={''}
-                                    style={styles.checkboxContainer}
-                                // labelStyle={styles.labelStyle}
-                                />
-                                <Image source={require('../../assets/images/icecream.png')} style={{ height: 24, width: 20, marginHorizontal: 5 }} />
-                                {/* <Text>{isChecked ? 'Checked' : 'Unchecked'}</Text> */}
-                                <Text style={styles.checkText}>Icecream</Text>
+                                    <Checkbox
+                                        value={isChecked}
+                                        onValueChange={handleCheckboxChange}
+                                        label={''}
+                                        style={styles.checkboxContainer}
+                                    // labelStyle={styles.labelStyle}
+                                    />
+                                    <Image source={require('../../assets/images/icecream.png')} style={{ height: 24, width: 20, marginHorizontal: 5 }} />
+                                    {/* <Text>{isChecked ? 'Checked' : 'Unchecked'}</Text> */}
+                                    <Text style={styles.checkText}>Icecream</Text>
                                 </View>
                                 <Text style={{ color: 'black', fontWeight: 'bold' }}>50Rs</Text>
                                 {/* <Text>{isChecked ? 'Checked' : 'Unchecked'}</Text>
@@ -228,7 +240,7 @@ const styles = StyleSheet.create({
     check1: {
         flexDirection: 'row',
         justifyContent: 'space-between'
-    },  
+    },
     checkText: {
         fontSize: 20,
         color: 'black',
@@ -277,8 +289,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: moderateScale(30)
     },
     logo: {
-        width: height_logo,
-        height: height_logo,
+        width: '40%',
+        height: 160,
+        marginBottom: 60
     },
     itemNameStyle: {
         color: '#000',
@@ -313,7 +326,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        justifyContent: 'center',
+        // justifyContent: 'center',
     },
     btnStyle: {
         // flex:1,
