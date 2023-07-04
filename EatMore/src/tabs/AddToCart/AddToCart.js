@@ -41,7 +41,7 @@ const AddToCart = () => {
         let existingItemIndex = tempCart.findIndex(itm => itm.id === item.id);
         if (existingItemIndex !== -1) {
             // Item already exists in the cart, update its quantity
-            tempCart[existingItemIndex].data.zquantity += 1;
+            tempCart[existingItemIndex].data.quantity += 1;
         }
         firestore().collection('users').doc(uid).update({
             cart: tempCart,
