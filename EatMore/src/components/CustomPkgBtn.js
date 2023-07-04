@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { scale, moderateVerticalScale, moderateScale } from 'react-native-size-matters';
@@ -14,7 +15,7 @@ const CustomPkgBtn = ({
             <TouchableOpacity
                 style={{...styles.btnStyle, ...btnStyle }}
                 onPress={onPress}
-                activeOpacity={1}
+                activeOpacity={0.5}
             >
                 {/* <View style={{ ...styles.gapStyle }}></View> */}
                 <Text style={{ ...styles.textStyle, ...textStyle }}>{btnText}</Text>

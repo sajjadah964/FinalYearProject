@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { useState, useContext, useEffect } from 'react';
-import { Alert, FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, ToastAndroid } from 'react-native';
+import { Alert, FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, ToastAndroid, ScrollView } from 'react-native';
 import { moderateScale, scale, moderateVerticalScale } from 'react-native-size-matters';
 import imagePath from '../../constants/imagePath';
 import TextInputWithLabel from '../../components/TextinputWithLable';
@@ -42,6 +42,10 @@ const Main = () => {
         {
             id: 3,
             title: 'Desi Food'
+        },
+        {
+            id: 4,
+            title: 'Deserts'
         }
     ]
     let uid = '';
@@ -166,6 +170,10 @@ const Main = () => {
             category = 'Pizza';
             console.log(category, '3')
         }
+        else if (selectedIndex === 3) {
+            category = 'Desert';
+            console.log(category, '4')
+        }
         if (category !== '') {
             firestore()
                 .collection('items')
@@ -267,34 +275,23 @@ const Main = () => {
                             </View>
                         </TouchableOpacity>
                     </View>
-
-                    {/* <View style={styles.searchView}>
-                        <TextInputWithLabel
-                            placeHolder='Search'
-                            placeholderTextColor="gray"
-                            inputStyle={{ ...styles.inputSearchStyle, paddingHorizontal: isFocused ? moderateScale(20) : 0 }}
-                            keyboardType="web-search"
-                            searchIcon={isFocused ? null : imagePath.icSearchItem}
-                            onFocus={() => onFocus()}
-                            onBlur={() => setIsFocused(false)}
-                        >
-                        </TextInputWithLabel>
-                    </View> */}
                     <View style={styles.categoryView}>
                         <Text style={styles.topItemListHeading}>Categories</Text>
                         <View style={styles.categoryBtnView}>
-                            {buttons.map((button, index) => {
-                                return (
-                                    <CustomPkgBtn
-                                        key={index}
-                                        btnText={button.title}
-                                        textStyle={{ ...styles.textStyle, ...styles.categoryTextStyle, color: selectedIndex == index ? '#FFF' : '#A8A7A7' }}
-                                        btnStyle={{ ...styles.btnStyle, ...getButtonStyle(index) }}
-                                        onPress={() => selectCategory(index)}
-                                    />
-                                )
-                            })
-                            }
+                            <ScrollView horizontal={true}>
+                                {buttons.map((button, index) => {
+                                    return (
+                                        <CustomPkgBtn
+                                            key={index}
+                                            btnText={button.title}
+                                            textStyle={{ ...styles.textStyle, ...styles.categoryTextStyle, color: selectedIndex == index ? '#FFF' : '#A8A7A7' }}
+                                            btnStyle={{ ...styles.btnStyle, ...getButtonStyle(index) }}
+                                            onPress={() => selectCategory(index)}
+                                        />
+                                    )
+                                })
+                                }
+                            </ScrollView>
                         </View>
                     </View>
                     <View
@@ -392,7 +389,8 @@ const styles = StyleSheet.create({
         height: moderateScale(48),
         backgroundColor: '#50379E',
         marginTop: moderateVerticalScale(22),
-        marginBottom: moderateVerticalScale(90)
+        marginBottom: moderateVerticalScale(90),
+        marginRight: 20,
     },
     categoriesTextStyle: {
         fontSize: scale(24),
