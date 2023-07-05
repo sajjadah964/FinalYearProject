@@ -251,8 +251,9 @@ const Signup = ({ navigateToLogin }) => {
                                 textStyle={{ ...styles.textStyle, ...styles.customTextStyle }}
                                 btnStyle={{ ...styles.btnStyle, ...styles.customStyle }}
                                 btnText={'Sign Up'}
-                                onPress={() => handleUserSignup()}
-                                // onPress={() => navigation.navigate('login')}
+                                // onPress={() => handleUserSignup()}
+
+                                onPress={() => navigation.navigate('Login')}
                             />
                             <TouchableOpacity
                                 style={styles.loginSignview}

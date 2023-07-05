@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import React, { useState, useContext, useEffect } from 'react';
-import { Alert, FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, ToastAndroid } from 'react-native';
+import { Alert, FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View, ToastAndroid, ScrollView } from 'react-native';
 import { moderateScale, scale, moderateVerticalScale } from 'react-native-size-matters';
 import imagePath from '../../constants/imagePath';
 import TextInputWithLabel from '../../components/TextinputWithLable';
@@ -42,33 +42,13 @@ const Main = () => {
         {
             id: 3,
             title: 'Desi Food'
+        },
+        {
+            id: 4,
+            title: 'Deserts'
         }
     ]
     let uid = '';
-    useEffect(() => {
-        firestore()
-            .collection('items')
-            .get()
-            .then(querySnapshot => {
-                console.log('Total users: ', querySnapshot.size);
-                let tempData = [];
-                querySnapshot.forEach(documentSnapshot => {
-                    console.log(
-                        'User ID: ',
-                        documentSnapshot.id,
-                        documentSnapshot.data(),
-                    );
-                    tempData.push({
-                        id: documentSnapshot.id,
-                        data: documentSnapshot.data(),
-                    });
-                });
-                setItems(tempData);
-            });
-        // Stop listening for updates when no longer required
-        // return () => subscriber();
-    }, []);
-    
     useEffect(() => {
         getCartItems();
     }, [isFocused]);
@@ -76,7 +56,7 @@ const Main = () => {
     const getCartItems = async () => {
         uid = await AsyncStorage.getItem('USERID');
         const user = await firestore().collection('users').doc(uid).get();
-        console.log("this is user"+user)
+        console.log("this is user", user)
         setCartCount(user._data.cart.length);
     };
     const onAddToCart = async (item, index) => {
@@ -88,6 +68,14 @@ const Main = () => {
         let tempCart = [];
         tempCart = user._data.cart; // Initialize tempCart with existing cart items, or an empty array if it doesn't exist
 
+        console.log("iyems")
+        console.log(items)
+        console.log("")
+        console.log("Temp cart")
+        console.log(tempCart)
+        console.log("")
+
+
         let existingItemIndex = tempCart.findIndex(itm => itm.id === item.id);
 
         if (existingItemIndex !== -1) {
@@ -96,6 +84,7 @@ const Main = () => {
         } else {
             // Item does not exist in the cart, add it as a new item
             tempCart.push(item);
+            console.log('main temcart', item)
         }
 
         firestore().collection('users').doc(uid).update({
@@ -136,18 +125,18 @@ const Main = () => {
         );
     }
     const logout = async () => {
-    try {
-        // await AsyncStorage.clear(); // Clear all AsyncStorage data
-        auth()
-            .signOut()
-            .then(() => {
-                ToastAndroid.show('Logout Successfully', ToastAndroid.SHORT);
-                navigation.navigate(NavigationStrings.MAIN_STACK, { screen: NavigationStrings.LOGIN });
-            });
-    } catch (error) {
-        console.log(error);
+        try {
+            // await AsyncStorage.clear(); // Clear all AsyncStorage data
+            auth()
+                .signOut()
+                .then(() => {
+                    ToastAndroid.show('Logout Successfully', ToastAndroid.SHORT);
+                    navigation.navigate(NavigationStrings.MAIN_STACK, { screen: NavigationStrings.LOGIN });
+                });
+        } catch (error) {
+            console.log(error);
+        }
     }
-}
     const onFocus = () => {
         setIsFocused(true)
         return (
@@ -155,10 +144,11 @@ const Main = () => {
         )
     }
     const goToDetails = (item, index) => {
-        // console.log('item details',detail);
+        console.log('item details', item);
+        console.log('item details index', index);
         navigation.navigate(NavigationStrings.ITEMS_DETAILS, {
             detail: item,
-            index, index
+            index: index,
         });
     }
     const moveToScreen = (screen) => {
@@ -166,24 +156,61 @@ const Main = () => {
     }
     useEffect(() => {
         getData();
-    }, []);
+    }, [selectedIndex]);
+
     const getData = async () => {
-        firestore()
-            .collection('items')
-            .get()
-            .then(querySnapshot => {
-                console.log('Total users: ', querySnapshot.size);
-                let tempData = [];
-                querySnapshot.forEach(documentSnapshot => {
-                    console.log('User ID: ', documentSnapshot.id, documentSnapshot.data());
-                    tempData.push({
-                        id: documentSnapshot.id,
-                        data: documentSnapshot.data(),
-                    })
+        let category = '';
+        if (selectedIndex === 0) {
+            category = '';
+            console.log(category, '11')
+        } else if (selectedIndex === 1) {
+            category = 'Burger';
+            console.log(category, '2')
+        } else if (selectedIndex === 2) {
+            category = 'Pizza';
+            console.log(category, '3')
+        }
+        else if (selectedIndex === 3) {
+            category = 'Desert';
+            console.log(category, '4')
+        }
+        if (category !== '') {
+            firestore()
+                .collection('items')
+                .where('category', '==', category)
+                .get()
+                .then(querySnapshot => {
+                    console.log('Total items: ', querySnapshot.size);
+                    let tempData = [];
+                    querySnapshot.forEach(documentSnapshot => {
+                        console.log('Item ID: ', documentSnapshot.id, documentSnapshot.data());
+                        tempData.push({
+                            id: documentSnapshot.id,
+                            data: documentSnapshot.data(),
+                        });
+                    });
+                    setItems(tempData);
                 });
-                setItems(tempData);
-            });
-    }
+        }
+        else {
+            firestore()
+                .collection('items')
+                .get()
+                .then(querySnapshot => {
+                    console.log('Total items: ', querySnapshot.size);
+                    let tempData = [];
+                    querySnapshot.forEach(documentSnapshot => {
+                        console.log('Item ID: ', documentSnapshot.id, documentSnapshot.data());
+                        tempData.push({
+                            id: documentSnapshot.id,
+                            data: documentSnapshot.data(),
+                        });
+                    });
+                    setItems(tempData);
+                });
+        }
+
+    };
     const topItemList = ({ item, index }) => {
         // console.log(item, 'top item list')
         return (
@@ -240,7 +267,7 @@ const Main = () => {
                             <View style={{}}>
                                 <Image
                                     source={imagePath.icShoppingCart}
-                                    style={{ height: 35, width: 35, alignItems: 'center',}}
+                                    style={{ height: 35, width: 35, alignItems: 'center', }}
                                 />
                             </View>
                             <View style={{ height: 24, width: 24, backgroundColor: 'red', borderRadius: 12, alignItems: 'center', justifyContent: 'center', bottom: 43, left: 23 }}>
@@ -248,34 +275,23 @@ const Main = () => {
                             </View>
                         </TouchableOpacity>
                     </View>
-
-                    {/* <View style={styles.searchView}>
-                        <TextInputWithLabel
-                            placeHolder='Search'
-                            placeholderTextColor="gray"
-                            inputStyle={{ ...styles.inputSearchStyle, paddingHorizontal: isFocused ? moderateScale(20) : 0 }}
-                            keyboardType="web-search"
-                            searchIcon={isFocused ? null : imagePath.icSearchItem}
-                            onFocus={() => onFocus()}
-                            onBlur={() => setIsFocused(false)}
-                        >
-                        </TextInputWithLabel>
-                    </View> */}
                     <View style={styles.categoryView}>
-                        <Text  style={styles.topItemListHeading}>Categories</Text>
+                        <Text style={styles.topItemListHeading}>Categories</Text>
                         <View style={styles.categoryBtnView}>
-                            {buttons.map((button, index) => {
-                                return (
-                                    <CustomPkgBtn
-                                        key={index}
-                                        btnText={button.title}
-                                        textStyle={{ ...styles.textStyle, ...styles.categoryTextStyle, color: selectedIndex == index ? '#FFF' : '#A8A7A7' }}
-                                        btnStyle={{ ...styles.btnStyle, ...getButtonStyle(index) }}
-                                        onPress={() => selectCategory(index)}
-                                    />
-                                )
-                            })
-                            }
+                            <ScrollView horizontal={true}>
+                                {buttons.map((button, index) => {
+                                    return (
+                                        <CustomPkgBtn
+                                            key={index}
+                                            btnText={button.title}
+                                            textStyle={{ ...styles.textStyle, ...styles.categoryTextStyle, color: selectedIndex == index ? '#FFF' : '#A8A7A7' }}
+                                            btnStyle={{ ...styles.btnStyle, ...getButtonStyle(index) }}
+                                            onPress={() => selectCategory(index)}
+                                        />
+                                    )
+                                })
+                                }
+                            </ScrollView>
                         </View>
                     </View>
                     <View
@@ -373,7 +389,8 @@ const styles = StyleSheet.create({
         height: moderateScale(48),
         backgroundColor: '#50379E',
         marginTop: moderateVerticalScale(22),
-        marginBottom: moderateVerticalScale(90)
+        marginBottom: moderateVerticalScale(90),
+        marginRight: 20,
     },
     categoriesTextStyle: {
         fontSize: scale(24),
@@ -406,9 +423,10 @@ const styles = StyleSheet.create({
     singleItem: {
         // width: '100%',
         // height: '100%',
-        width: 160,
+        width: '100%',
         justifyContent: "flex-start",
-        height: 220,
+        // height: 220,
+        height: 'auto',
         borderRadius: moderateScale(15),
         backgroundColor: 'rgba(239, 238, 238, 0.85)',
         paddingVertical: moderateVerticalScale(20),
