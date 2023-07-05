@@ -106,6 +106,59 @@ const Main = () => {
         }
     };
 
+
+
+
+
+    const [recommendations, setRecommendations] = useState([]);
+
+  useEffect(() => {
+    fetchRecommendations();
+  }, []);
+
+  const fetchRecommendations = async () => {
+    const userUid = await AsyncStorage.getItem('USERID');; // Replace with the user's unique ID
+
+    const recommendationsRef = firestore()
+      .collection('recommendations')
+      .doc(userUid);
+    const recommendationsSnapshot = await recommendationsRef.get();
+
+    if (recommendationsSnapshot.exists) {
+      const recommendationsArray = recommendationsSnapshot.data().items;
+      setRecommendations(recommendationsArray);
+    }
+  };
+
+
+
+    // const [recommendations, setRecommendations] = useState([]);
+
+    // const fetchRecommendations = async () => {
+    //   const userUid = await AsyncStorage.getItem('USERID'); // Replace with the user's unique ID
+  
+    //   const recommendationsRef = firestore()
+    //     .collection("recommendations")
+    //     .doc(userUid);
+    //   const recommendationsSnapshot = await recommendationsRef.get();
+  
+    //   if (recommendationsSnapshot.exists) {
+    //     const recommendationsArray = recommendationsSnapshot.data().productIds;
+    //     setRecommendations(recommendationsArray);
+    //   }
+    // };
+  
+    // useEffect(() => {
+    //   fetchRecommendations();
+    // }, []);
+  
+    // const handleButtonPress = () => {
+    //   // Display recommendations on button press
+    //   console.log(recommendations);
+    // };
+  
+  
+
     const logoutData = async () => {
         Alert.alert(
             'Logout',
@@ -164,10 +217,10 @@ const Main = () => {
             category = '';
             console.log(category, '11')
         } else if (selectedIndex === 1) {
-            category = 'Burger';
+            category = 'Fast';
             console.log(category, '2')
         } else if (selectedIndex === 2) {
-            category = 'Pizza';
+            category = 'Desi';
             console.log(category, '3')
         }
         else if (selectedIndex === 3) {
