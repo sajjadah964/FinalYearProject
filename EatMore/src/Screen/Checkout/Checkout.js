@@ -158,7 +158,7 @@ const Checkout = () => {
                                                         {item.additionalItems.map((additionalItem, additionalIndex) => (
                                                             <View key={additionalIndex} style={styles.ItemView}>
                                                                 <Text style={[styles.totalPrice, { marginBottom: 0 }]}> {additionalItem.name}</Text>
-                                                                <Text style={styles.totalPrice}> {additionalItem.price * item.data.quantity}</Text>
+                                                                {/* <Text style={styles.totalPrice}> {additionalItem.price * item.data.quantity}</Text> */}
                                                             </View>
                                                         ))}
                                                     </View>

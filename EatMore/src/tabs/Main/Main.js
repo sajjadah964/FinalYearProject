@@ -30,6 +30,7 @@ const Main = () => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [cartCount, setCartCount] = useState(0);
     const [items, setItems] = useState([]);
+    const [userName, setUserName] = useState('');
     const buttons = [
         {
             id: 1,
@@ -57,7 +58,9 @@ const Main = () => {
         uid = await AsyncStorage.getItem('USERID');
         const user = await firestore().collection('users').doc(uid).get();
         console.log("this is user", user)
+        console.log("this is user name", user._data.name)
         setCartCount(user._data.cart.length);
+        // setUserName(user._data.name); // Set the user's name
     };
     const onAddToCart = async (item, index) => {
         console.log("this is the new item", item.data);
@@ -254,7 +257,7 @@ const Main = () => {
                         <TouchableOpacity
                             onPress={() => logoutData()}
                             activeOpacity={0.7}>
-                            {/* <Text style={styles.headerTitleStyle}>Logut</Text> */}
+                            {/* <Text style={styles.headerTitleStyle}>{userName}</Text> */}
                             <Image
                                 source={imagePath.icUserProfileLogo}
                                 style={{ height: 35, width: 35 }}
@@ -334,7 +337,7 @@ const styles = StyleSheet.create({
         marginBottom: moderateVerticalScale(0),
     },
     headerTitleStyle: {
-        fontSize: scale(36),
+        fontSize: scale(24),
         fontWeight: '500',
         fontStyle: 'normal',
         color: Colors.black
