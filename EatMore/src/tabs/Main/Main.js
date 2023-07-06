@@ -164,10 +164,10 @@ const Main = () => {
             category = '';
             console.log(category, '11')
         } else if (selectedIndex === 1) {
-            category = 'Burger';
+            category = 'Fast';
             console.log(category, '2')
         } else if (selectedIndex === 2) {
-            category = 'Pizza';
+            category = 'Desi';
             console.log(category, '3')
         }
         else if (selectedIndex === 3) {
