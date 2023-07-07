@@ -34,10 +34,15 @@ const AddToCart = () => {
     };
 
     const addItem = async (item, index) => {
+        console.log("add item to cart")
+        console.log("add item to cart")
+        console.log("add item to cart")
+        console.log(item)
         const user = await firestore().collection('users').doc(uid).get();
         console.log(user._data.cart);
         let tempCart = [];
         tempCart = user._data.cart; // Initialize tempCart with existing cart items, or an empty array if it doesn't exist
+        console.log(tempCart)
         let existingItemIndex = tempCart.findIndex(itm => itm.id === item.id);
         if (existingItemIndex !== -1) {
             // Item already exists in the cart, update its quantity
@@ -47,6 +52,10 @@ const AddToCart = () => {
             cart: tempCart,
         });
         getCartItems();
+
+        console.log("add item to cart")
+        console.log("add item to cart")
+        console.log("add item to cart")
     };
 
     const removeItem = async item => {
@@ -80,11 +89,26 @@ const AddToCart = () => {
     };
     const getSubTotal = () => {
         let subTotal = 0;
-        cartList.map(item => {
-            subTotal = subTotal + item.data.quantity * item.data.price;
+      
+        if (!cartList || !Array.isArray(cartList)) {
+          return subTotal; // Return 0 if cartList is undefined or not an array
+        }
+      
+        cartList.forEach(item => {
+          let additionalItemsTotal = 0;
+      
+          if (item.additionalItems && item.additionalItems.length > 0) {
+            item.additionalItems.forEach(additionalItem => {
+              additionalItemsTotal += additionalItem.price;
+            });
+          }
+      
+          const itemTotal = item.data.quantity * item.data.price + additionalItemsTotal;
+          subTotal += itemTotal;
         });
+      
         return subTotal;
-    };
+      };
     const getTotalBill = () => {
         let totalBill = 0;
         totalBill = totalBill + getSubTotal() + deliveryFess;
@@ -121,6 +145,19 @@ const AddToCart = () => {
                     }}>
                         <Text style={styles.cartItemNameStyle}>{item.data.name}</Text>
                         <Text style={styles.cartItemPriceStyle}>Rs.{item.data.price}</Text>
+                        {/* <Text style={styles.cartItemPriceStyle}>Rs.{item.}</Text> */}
+                       {item.additionalItem ?
+                        <View style={{ flexDirection: 'row' }}>
+                        {item.additionalItems.map((additionalItem, additionalIndex) => (
+                            <View key={additionalIndex} style={styles.additionalItemContainer}>
+                                <Text style={styles.additionalItemName}>{additionalItem.name}</Text>
+                                <Text style={styles.additionalItemPrice}>Rs.{additionalItem.price}</Text>
+                            </View>
+                        ))}
+                    </View> 
+                    :null
+
+                       }
                         <View style={styles.CounterView}>
                             <TouchableOpacity
                                 activeOpacity={0.7}
@@ -174,7 +211,7 @@ const AddToCart = () => {
             <Loader isLoading={isLoading} />
             <View style={styles.container}>
                 <CustomHeader
-                    leftImg={imagePath.icBack}  
+                    leftImg={imagePath.icBack}
                     headerTitle={'Items in Cart'}
                     headerImgStyle={styles.headerImgStyle}
                 />
@@ -252,7 +289,7 @@ const styles = StyleSheet.create({
         width: moderateScale(70),
     },
     cartItemNameStyle: {
-        fontSize: scale(20),
+        fontSize: scale(18),
         fontWeight: '500',
         color: Colors.black,
     },
@@ -262,7 +299,7 @@ const styles = StyleSheet.create({
         fontWeight: '500',
     },
     itemImageStyle: {
-        flex: 0.5,
+        flex: 0.4,
         borderRadius: moderateScale(15),
         width: '100%',
         height: moderateScale(90),
@@ -312,4 +349,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#50379E',
         marginTop: moderateVerticalScale(26),
     },
+    additionalItemContainer: {
+        flexDirection: 'column',
+        marginRight: 10,
+      },
+      additionalItemName: {
+        fontWeight: 'bold',
+        marginRight: 5,
+      },
+      additionalItemPrice: {
+        color: 'gray',
+      },
 })

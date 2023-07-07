@@ -13,7 +13,6 @@ import NavigationStrings from '../../constants/NavigationStrings';
 import Loader from '../../components/Loader';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { number } from 'prop-types';
 
 let uid = '';
 const Checkout = () => {
@@ -54,11 +53,28 @@ const Checkout = () => {
         }
     };
 
+    // const getSubTotal = () => {
+    //     let subTotal = 0;
+    //     cartList.map(item => {
+    //         subTotal = subTotal + item.data.quantity * item.data.price;
+    //     });
+    //     return subTotal;
+    // };
     const getSubTotal = () => {
         let subTotal = 0;
+
         cartList.map(item => {
-            subTotal = subTotal + item.data.quantity * item.data.price;
+            // Calculate the total price of additional items if they exist
+            let additionalItemsTotal = 0;
+            if (item.additionalItems && item.additionalItems.length > 0) {
+                item.additionalItems.map(additionalItem => {
+                    additionalItemsTotal += additionalItem.price;
+                });
+            }
+            const itemTotal = (item.data.quantity * item.data.price) + additionalItemsTotal;
+            subTotal += itemTotal;
         });
+
         return subTotal;
     };
     const getTotalBill = () => {
@@ -129,13 +145,25 @@ const Checkout = () => {
                                 <FlatList
                                     data={cartList}
                                     renderItem={({ item, index }) => {
+                                        console.log("checkout data", item)
                                         return (
                                             <View style={styles.nameView}>
                                                 <View style={styles.ItemView}>
-                                                    <Text style={[styles.totalPrice, { marginBottom: 0 }]}> {item.data.name}</Text>
-                                                    <Text style={styles.totalPrice}> {item.data.quantity}</Text>
+                                                    <Text style={[styles.totalPrice, { marginBottom: 0, flex:0.8}]}> {item.data.name}</Text>
+                                                    <Text style={[styles.totalPrice, { marginBottom: 0, flex:0.5}]}> {item.data.quantity}</Text>
                                                     <Text style={styles.totalPrice}> {item.data.price * item.data.quantity}</Text>
                                                 </View>
+                                                {item.additionalItems ?
+                                                    <View>
+                                                        {item.additionalItems.map((additionalItem, additionalIndex) => (
+                                                            <View key={additionalIndex} style={styles.ItemView}>
+                                                                <Text style={[styles.totalPrice, { marginBottom: 0 }]}> {additionalItem.name}</Text>
+                                                                {/* <Text style={styles.totalPrice}> {additionalItem.price * item.data.quantity}</Text> */}
+                                                            </View>
+                                                        ))}
+                                                    </View>
+                                                    : null
+                                                }
                                             </View>
                                         );
                                     }}
@@ -329,9 +357,9 @@ const styles = StyleSheet.create({
         fontWeight: '700'
     },
     ItemView: {
-        // flex:1,
+        flex: 1,
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        // justifyContent: 'space-between',
         // backgroundColor:'red',
     }
 

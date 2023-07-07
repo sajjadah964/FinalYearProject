@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import React, { useEffect } from 'react';
-import { useRoute } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import Colors from '../../styles/Colors';
+import NavigationStrings from '../../constants/NavigationStrings';
 const OrderStatus = (props) => {
     const navigation = useNavigation();
     const options = { timeZone: 'Asia/Karachi' };
@@ -94,7 +94,7 @@ const OrderStatus = (props) => {
             <TouchableOpacity
                 style={styles.backToHome}
                 onPress={() => {
-                    navigation.navigate('Main');
+                    navigation.navigate(NavigationStrings.HOME);
                 }}>
                 <Text style={{color:Colors.primaryColor}}>Go To Home</Text>
             </TouchableOpacity>
@@ -124,10 +124,11 @@ const styles = StyleSheet.create({
     backToHome: {
         width: '50%',
         height: 50,
-        borderWidth: 0.5,
+        borderWidth:1,
         marginTop: 30,
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
+        borderColor:Colors.primaryColor
     },
 });

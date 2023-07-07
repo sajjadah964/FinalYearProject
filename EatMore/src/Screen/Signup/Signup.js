@@ -261,7 +261,6 @@ const Signup = ({ navigateToLogin }) => {
                                 btnText={'Sign Up'}
                                 onPress={() => {
                                     handleUserSignup();
-                                    navigation.navigate('Login');
                                   }}
                             />
                             <TouchableOpacity
