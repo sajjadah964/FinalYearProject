@@ -30,6 +30,7 @@ const ItemsDetails = (props) => {
     const [isChecked1, setIsChecked1] = useState(false);
     const [isChecked2, setIsChecked2] = useState(false);
     const [isChecked3, setIsChecked3] = useState(false);
+    const [tickColor, setTickColor] = useState('#000000');
     const moveToScreen = (screen) => {
         navigation.navigate(screen)
     }
@@ -156,42 +157,48 @@ const ItemsDetails = (props) => {
                                         {/* Checkbox 1 */}
                                         <Checkbox
                                             label=""
-                                            // status={isChecked1 ? 'checked' : 'unchecked'}
                                             checked={isChecked1}
                                             onChange={() => setIsChecked1(!isChecked1)}
+                                            checkboxStyle={{ width: 20, height: 20 }}
+                                            tintColors={{ true: '#472D9C' }}
                                         />
-                                        <Image source={require('../../assets/images/cola.png')} style={{ height: 24, width: 20, marginHorizontal: 5 }} />
+                                        <Image source={require('../../assets/images/cola.png')} style={{ height: 20, width: 20, marginHorizontal: 5 }} />
                                         <Text style={styles.checkText}>Pepsi</Text>
                                     </View>
-                                    <Text style={{ color: 'black', fontWeight: 'bold' }}>50Rs</Text>
+                                    <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 12 }}>50Rs</Text>
                                 </View>
                                 <View style={styles.check1}>
                                     <View style={styles.check}>
                                         <Checkbox
                                             label=""
                                             status={isChecked2 ? 'checked' : 'unchecked'}
+                                            checkboxStyle={{ width: 20, height: 20}}
                                             checked={isChecked2}
                                             onChange={() => setIsChecked2(!isChecked2)}
+                                            tintColors={{true: '#368098'}}
+                onCheckColor={'#6F763F'}
                                         />
-                                        <Image source={require('../../assets/images/cofee.png')} style={{ height: 24, width: 20, marginHorizontal: 5 }} />
+                                        <Image source={require('../../assets/images/cofee.png')} style={{ height: 20, width: 20, marginHorizontal: 5 }} />
                                         <Text style={styles.checkText}>Coffee</Text>
                                     </View>
-                                    <Text style={{ color: 'black', fontWeight: 'bold' }}>30Rs</Text>
+                                    <Text style={{ color: 'black', fontWeight: 'bold' , fontSize: 12}}>30Rs</Text>
                                 </View>
                                 <View style={styles.check1}>
                                     <View style={styles.check}>
                                         {/* Checkbox 3 */}
                                         <Checkbox
                                             label=""
+                                            checkedColor={'#472D9C'}
+                                            checkboxStyle={{ width: 20, height: 20}}
                                             // status={isChecked3 ? 'checked' : 'unchecked'}
                                             checked={isChecked3}
                                             onChange={() => setIsChecked3(!isChecked3)}
                                         />
-                                        <Image source={require('../../assets/images/icecream.png')} style={{ height: 24, width: 20, marginHorizontal: 5 }} />
+                                        <Image source={require('../../assets/images/icecream.png')} style={{ height: 20, width: 20, marginHorizontal: 5 }} />
                                         {/* <Text>{isChecked ? 'Checked' : 'Unchecked'}</Text> */}
                                         <Text style={styles.checkText}>Icecream</Text>
                                     </View>
-                                    <Text style={{ color: 'black', fontWeight: 'bold' }}>100Rs</Text>
+                                    <Text style={{ color: 'black', fontWeight: 'bold' , fontSize: 12}}>100Rs</Text>
                                 </View>
                             </View>
                             <View style={styles.button}>
@@ -232,6 +239,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 20,
+        marginBottom:3,
     },
     labelStyle: {
         color: 'black',
