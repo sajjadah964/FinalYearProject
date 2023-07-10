@@ -353,7 +353,7 @@ const ItemsDetails = (props) => {
                                             checked={isChecked3}
                                             onChange={() => setIsChecked3(!isChecked3)}
                                         />
-                                        <Image source={require('../../assets/images/icecream.png')} style={{ height: 20, width: 20, marginHorizontal: 5 }} />
+                                        <Image source={require('../../assets/images/ketchup.png')} style={{ height: 20, width: 20, marginHorizontal: 5 }} />
                                         {/* <Text>{isChecked ? 'Checked' : 'Unchecked'}</Text> */}
                                         <Text style={styles.checkText}>Ketchup</Text>
                                     </View>
