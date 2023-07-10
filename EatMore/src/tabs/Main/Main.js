@@ -57,8 +57,8 @@ const Main = () => {
     const getCartItems = async () => {
         uid = await AsyncStorage.getItem('USERID');
         const user = await firestore().collection('users').doc(uid).get();
-        console.log("this is user", user)
-        console.log("this is user name", user._data.name)
+        // console.log("this is user", user)
+        // console.log("this is user name", user._data.name)
         setCartCount(user._data.cart.length);
         // setUserName(user._data.name); // Set the user's name
     };

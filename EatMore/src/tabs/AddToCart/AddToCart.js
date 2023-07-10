@@ -127,12 +127,6 @@ const AddToCart = () => {
         console.log('this is the add cart item', item)
         console.log(item.data.imageUrl)
         console.log(item.additionalItems)
-        console.log('')
-        console.log('')
-        console.log('')
-        console.log('')
-        console.log('.name')
-        console.log(item.additionalItems)
         return (
             <View style={{
                 flexDirection: 'row',
@@ -162,7 +156,7 @@ const AddToCart = () => {
                         <View style={{ flexDirection: 'row' }}>
                         {item.additionalItems.map((additionalItem, additionalIndex) => (
                             <View key={additionalIndex} style={styles.additionalItemContainer}>
-                                <Text style={styles.additionalItemName}>{additionalItem.name}name</Text>
+                                <Text style={styles.additionalItemName}>{additionalItem.name}</Text>
                                 <Text style={styles.additionalItemPrice}>Rs.{additionalItem.price}</Text>
                             </View>
                         ))}
@@ -242,7 +236,7 @@ const AddToCart = () => {
                     </View>
 
                     {cartList.length > 0 ?
-                        <View style={{ flex: 0.5, justifyContent: 'center' }}>
+                        <View style={{ flex: 0.5, justifyContent: 'center',}}>
                             <Text style={{ fontSize: 22, fontWeight: '600', color: 'black', marginBottom: 10 }}>Order Summary</Text>
                             <View style={styles.subtotal}>
                                 <View style={styles.totalPriceView}>
@@ -353,6 +347,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(239, 237, 237, 1)',
         padding: 15,
         borderRadius: 15,
+        marginBottom:60
     },
     btnStyle: {
         width: moderateScale(200),

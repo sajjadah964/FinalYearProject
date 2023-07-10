@@ -26,12 +26,12 @@ const Checkout = () => {
     const toggleModal = () => {
         setModalVisible(!ModalVisible);
     };
-    useEffect(() => {
-        setTimeout(() => {
-            setisLoading(false);
-        }, 1000);
-    }),
-        [];
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         setisLoading(false);
+    //     }, 1000);
+    // }),
+    //     [];
 
     useEffect(() => {
         getCartItems();
@@ -157,8 +157,8 @@ const Checkout = () => {
                                                     <View>
                                                         {item.additionalItems.map((additionalItem, additionalIndex) => (
                                                             <View key={additionalIndex} style={styles.ItemView}>
-                                                                <Text style={[styles.totalPrice, { marginBottom: 0 }]}> {additionalItem.name}</Text>
-                                                                {/* <Text style={styles.totalPrice}> {additionalItem.price * item.data.quantity}</Text> */}
+                                                                <Text style={[styles.totalPrice, { marginBottom: 0,flex:1 }]}> {additionalItem.name}</Text>
+                                                                <Text style={styles.totalPrice}> {additionalItem.price}</Text>
                                                             </View>
                                                         ))}
                                                     </View>

@@ -340,7 +340,7 @@ const ItemsDetails = (props) => {
                                         <Image source={require('../../assets/images/chillisause.png')} style={{ height: 20, width: 20, marginHorizontal: 5 }} />
                                         <Text style={styles.checkText}>Chilli Sause</Text>
                                     </View>
-                                    <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 12 }}>30Rs</Text>
+                                    <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 12 }}>40Rs</Text>
                                 </View>
                                 <View style={styles.check1}>
                                     <View style={styles.check}>
@@ -357,7 +357,7 @@ const ItemsDetails = (props) => {
                                         {/* <Text>{isChecked ? 'Checked' : 'Unchecked'}</Text> */}
                                         <Text style={styles.checkText}>Ketchup</Text>
                                     </View>
-                                    <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 12 }}>100Rs</Text>
+                                    <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 12 }}>90Rs</Text>
                                 </View>
                             </View>
                                 
