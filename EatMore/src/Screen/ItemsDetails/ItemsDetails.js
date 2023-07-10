@@ -21,7 +21,7 @@ const ItemsDetails = (props) => {
     // const{navigation}={props
     const [isLoading, setisLoading] = useState(true);
     const navigation = useNavigation()
-    const { name, price, imageUrl, points, description, quantity } = props.route.params.detail.data;
+    const { name, price, imageUrl, points, description, quantity, category } = props.route.params.detail.data;
     const { index } = props.route.params.index;
     const [count, setCount] = useState(0);
     const isFocused = useIsFocused();
@@ -30,6 +30,7 @@ const ItemsDetails = (props) => {
     const [isChecked1, setIsChecked1] = useState(false);
     const [isChecked2, setIsChecked2] = useState(false);
     const [isChecked3, setIsChecked3] = useState(false);
+    const [tickColor, setTickColor] = useState('#000000');
     const moveToScreen = (screen) => {
         navigation.navigate(screen)
     }
@@ -41,36 +42,140 @@ const ItemsDetails = (props) => {
     }),
         [];
     let uid = '';
+
+
+
+    // const onAddToCart = async (item) => {
+    //     uid = await AsyncStorage.getItem('USERID');
+    //     const user = await firestore().collection('users').doc(uid).get();
+    //     let tempCart = user._data.cart || []; // Initialize tempCart with existing cart items, or an empty array if it doesn't exist
+      
+    //     const existingItemIndex = tempCart.findIndex((itm) => itm.id === item.id);
+      
+    //     if (existingItemIndex !== -1) {
+    //       // Item already exists in the cart, update its quantity
+    //       tempCart[existingItemIndex].quantity += 1;
+    //     } else {
+    //       // Item does not exist in the cart, add it as a new item
+    //       // item.quantity = 1; // Set the initial quantity to 1
+      
+    //       let additionalItems = [];
+      
+    //       if (category === "Desi") {
+    //         if (isChecked1) {
+    //           additionalItems.push({ id: item.id + '_additional_1', name: 'Pepsi', price: 50 });
+    //         }
+    //         if (isChecked2) {
+    //           additionalItems.push({ id: item.id + '_additional_2', name: 'Raita', price: 30 });
+    //         }
+    //         if (isChecked3) {
+    //           additionalItems.push({ id: item.id + '_additional_3', name: 'Salad', price: 100 });
+    //         }
+    //       }
+      
+    //       if (category === "Fast") {
+    //         if (isChecked1) {
+    //           additionalItems.push({ id: item.id + '_additional_1', name: 'Pepsi', price: 50 });
+    //         }
+    //         if (isChecked2) {
+    //           additionalItems.push({ id: item.id + '_additional_2', name: 'Coffee', price: 30 });
+    //         }
+    //         if (isChecked3) {
+    //           additionalItems.push({ id: item.id + '_additional_3', name: 'Ketchup', price: 100 });
+    //         }
+    //       }
+      
+    //       const newItem = {
+    //         ...item,
+    //         additionalItems: additionalItems.length > 0 ? additionalItems : []
+    //       };
+          
+    //       console.log('')
+    //       console.log('')
+    //       console.log('')
+    //       console.log('')
+    //       console.log(newItem)
+      
+    //       tempCart.push(newItem);
+    //     }
+      
+    //     await firestore().collection('users').doc(uid).update({
+    //       cart: tempCart,
+    //     });
+      
+    //     getCartItems();
+    //   };
+
+
+
+
     const onAddToCart = async (item) => {
         uid = await AsyncStorage.getItem('USERID');
         const user = await firestore().collection('users').doc(uid).get();
         let tempCart = user._data.cart || []; // Initialize tempCart with existing cart items, or an empty array if it doesn't exist
-
+        console.log('this is add to cart')
         const existingItemIndex = tempCart.findIndex((itm) => itm.id === item.id);
 
         if (existingItemIndex !== -1) {
             // Item already exists in the cart, update its quantity
             tempCart[existingItemIndex].quantity += 1;
+            console.log('')
+            console.log('')
+            console.log('')
+            console.log(item.id)
         } else {
             // Item does not exist in the cart, add it as a new item
             // item.quantity = 1; // Set the initial quantity to 1
             const additionalItems = [];
 
+            console.log('')
+            console.log('')
+            console.log('')
+            console.log(item.id)
+                  if (category === "Desi") {
             if (isChecked1) {
-                additionalItems.push({ id: item.id + '_additional_1', name: 'Pepsi', price: 50 });
+              additionalItems.push({ id: item.id + '_additional_1', name: 'Pepsi', price: 50 });
             }
             if (isChecked2) {
-                additionalItems.push({ id: item.id + '_additional_2', name: 'Coffee', price: 30 });
+              additionalItems.push({ id: item.id + '_additional_2', name: 'Raita', price: 30 });
             }
             if (isChecked3) {
-                additionalItems.push({ id: item.id + '_additional_3', name: 'Icecream', price: 100 });
+              additionalItems.push({ id: item.id + '_additional_3', name: 'Salad', price: 100 });
             }
+          }
+      
+          if (category === "Fast") {
+            if (isChecked1) {
+              additionalItems.push({ id: item.id + '_additional_1', name: 'Pepsi', price: 50 });
+            }
+            if (isChecked2) {
+              additionalItems.push({ id: item.id + '_additional_2', name: 'Chille', price: 40 });
+            }
+            if (isChecked3) {
+              additionalItems.push({ id: item.id + '_additional_3', name: 'Ketchup', price: 90 });
+            }
+          }
     
+
+
+
+
+
+            // if (isChecked1) {
+            //     additionalItems.push({ id: item.id + '_additional_1', name: 'Pepsi', price: 50 });
+            // }
+            // if (isChecked2) {
+            //     additionalItems.push({ id: item.id + '_additional_2', name: 'Coffee', price: 30 });
+            // }
+            // if (isChecked3) {
+            //     additionalItems.push({ id: item.id + '_additional_3', name: 'Icecream', price: 100 });
+            // }
+
             const newItem = {
                 ...item,
                 additionalItems: additionalItems.length > 0 ? additionalItems : []
             };
-    
+
             tempCart.push(newItem);
         }
 
@@ -150,50 +255,113 @@ const ItemsDetails = (props) => {
                                     {description}
                                 </Text>
                             </View>
-                            <View>
+
+                            {category === "Desi" && (
+                               <View>
+                               <View style={styles.check1}>
+                                   <View style={styles.check}>
+                                       {/* Checkbox 1 */}
+                                       <Checkbox
+                                           label=""
+                                           checked={isChecked1}
+                                           onChange={() => setIsChecked1(!isChecked1)}
+                                           checkboxStyle={{ width: 20, height: 20 }}
+                                           tintColors={{ true: '#472D9C' }}
+                                       />
+                                       <Image source={require('../../assets/images/cola.png')} style={{ height: 20, width: 20, marginHorizontal: 5 }} />
+                                       <Text style={styles.checkText}>Pepsi</Text>
+                                   </View>
+                                   <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 12 }}>50Rs</Text>
+                               </View>
+                               <View style={styles.check1}>
+                                   <View style={styles.check}>
+                                       <Checkbox
+                                           label=""
+                                           status={isChecked2 ? 'checked' : 'unchecked'}
+                                           checkboxStyle={{ width: 20, height: 20 }}
+                                           checked={isChecked2}
+                                           onChange={() => setIsChecked2(!isChecked2)}
+                                           tintColors={{ true: '#368098' }}
+                                           onCheckColor={'#6F763F'}
+                                       />
+                                       <Image source={require('../../assets/images/raita.png')} style={{ height: 20, width: 20, marginHorizontal: 5 }} />
+                                       <Text style={styles.checkText}>Raita</Text>
+                                   </View>
+                                   <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 12 }}>30Rs</Text>
+                               </View>
+                               <View style={styles.check1}>
+                                   <View style={styles.check}>
+                                       {/* Checkbox 3 */}
+                                       <Checkbox
+                                           label=""
+                                           checkedColor={'#472D9C'}
+                                           checkboxStyle={{ width: 20, height: 20 }}
+                                           // status={isChecked3 ? 'checked' : 'unchecked'}
+                                           checked={isChecked3}
+                                           onChange={() => setIsChecked3(!isChecked3)}
+                                       />
+                                       <Image source={require('../../assets/images/salad.png')} style={{ height: 20, width: 20, marginHorizontal: 5 }} />
+                                       {/* <Text>{isChecked ? 'Checked' : 'Unchecked'}</Text> */}
+                                       <Text style={styles.checkText}>Salad</Text>
+                                   </View>
+                                   <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 12 }}>100Rs</Text>
+                               </View>
+                           </View>
+                            )}
+
+                            {category === "Fast" && (
+                                <View>
                                 <View style={styles.check1}>
                                     <View style={styles.check}>
                                         {/* Checkbox 1 */}
                                         <Checkbox
                                             label=""
-                                            // status={isChecked1 ? 'checked' : 'unchecked'}
                                             checked={isChecked1}
                                             onChange={() => setIsChecked1(!isChecked1)}
+                                            checkboxStyle={{ width: 20, height: 20 }}
+                                            tintColors={{ true: '#472D9C' }}
                                         />
-                                        <Image source={require('../../assets/images/cola.png')} style={{ height: 24, width: 20, marginHorizontal: 5 }} />
+                                        <Image source={require('../../assets/images/cola.png')} style={{ height: 20, width: 20, marginHorizontal: 5 }} />
                                         <Text style={styles.checkText}>Pepsi</Text>
                                     </View>
-                                    <Text style={{ color: 'black', fontWeight: 'bold' }}>50Rs</Text>
+                                    <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 12 }}>50Rs</Text>
                                 </View>
                                 <View style={styles.check1}>
                                     <View style={styles.check}>
                                         <Checkbox
                                             label=""
                                             status={isChecked2 ? 'checked' : 'unchecked'}
+                                            checkboxStyle={{ width: 20, height: 20 }}
                                             checked={isChecked2}
                                             onChange={() => setIsChecked2(!isChecked2)}
+                                            tintColors={{ true: '#368098' }}
+                                            onCheckColor={'#6F763F'}
                                         />
-                                        <Image source={require('../../assets/images/cofee.png')} style={{ height: 24, width: 20, marginHorizontal: 5 }} />
-                                        <Text style={styles.checkText}>Coffee</Text>
+                                        <Image source={require('../../assets/images/chillisause.png')} style={{ height: 20, width: 20, marginHorizontal: 5 }} />
+                                        <Text style={styles.checkText}>Chilli Sause</Text>
                                     </View>
-                                    <Text style={{ color: 'black', fontWeight: 'bold' }}>30Rs</Text>
+                                    <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 12 }}>30Rs</Text>
                                 </View>
                                 <View style={styles.check1}>
                                     <View style={styles.check}>
                                         {/* Checkbox 3 */}
                                         <Checkbox
                                             label=""
+                                            checkedColor={'#472D9C'}
+                                            checkboxStyle={{ width: 20, height: 20 }}
                                             // status={isChecked3 ? 'checked' : 'unchecked'}
                                             checked={isChecked3}
                                             onChange={() => setIsChecked3(!isChecked3)}
                                         />
-                                        <Image source={require('../../assets/images/icecream.png')} style={{ height: 24, width: 20, marginHorizontal: 5 }} />
+                                        <Image source={require('../../assets/images/ketchup.png')} style={{ height: 20, width: 20, marginHorizontal: 5 }} />
                                         {/* <Text>{isChecked ? 'Checked' : 'Unchecked'}</Text> */}
-                                        <Text style={styles.checkText}>Icecream</Text>
+                                        <Text style={styles.checkText}>Ketchup</Text>
                                     </View>
-                                    <Text style={{ color: 'black', fontWeight: 'bold' }}>100Rs</Text>
+                                    <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 12 }}>100Rs</Text>
                                 </View>
                             </View>
+                                
+                            )}
                             <View style={styles.button}>
                                 <View style={{ justifyContent: 'center', flex: 1 }}>
                                     <CustomPkgBtn
@@ -232,6 +400,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 20,
+        marginBottom: 3,
     },
     labelStyle: {
         color: 'black',

@@ -109,6 +109,59 @@ const Main = () => {
         }
     };
 
+
+
+
+
+    const [recommendations, setRecommendations] = useState([]);
+
+  useEffect(() => {
+    fetchRecommendations();
+  }, []);
+
+  const fetchRecommendations = async () => {
+    const userUid = await AsyncStorage.getItem('USERID');; // Replace with the user's unique ID
+
+    const recommendationsRef = firestore()
+      .collection('recommendations')
+      .doc(userUid);
+    const recommendationsSnapshot = await recommendationsRef.get();
+
+    if (recommendationsSnapshot.exists) {
+      const recommendationsArray = recommendationsSnapshot.data().items;
+      setRecommendations(recommendationsArray);
+    }
+  };
+
+
+
+    // const [recommendations, setRecommendations] = useState([]);
+
+    // const fetchRecommendations = async () => {
+    //   const userUid = await AsyncStorage.getItem('USERID'); // Replace with the user's unique ID
+  
+    //   const recommendationsRef = firestore()
+    //     .collection("recommendations")
+    //     .doc(userUid);
+    //   const recommendationsSnapshot = await recommendationsRef.get();
+  
+    //   if (recommendationsSnapshot.exists) {
+    //     const recommendationsArray = recommendationsSnapshot.data().productIds;
+    //     setRecommendations(recommendationsArray);
+    //   }
+    // };
+  
+    // useEffect(() => {
+    //   fetchRecommendations();
+    // }, []);
+  
+    // const handleButtonPress = () => {
+    //   // Display recommendations on button press
+    //   console.log(recommendations);
+    // };
+  
+  
+
     const logoutData = async () => {
         Alert.alert(
             'Logout',

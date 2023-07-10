@@ -60,17 +60,25 @@ const Signup = ({ navigateToLogin }) => {
                     uid: result.user.uid,
                     number: number,
                     cart: [],
-                    ordersInfo:'',
-                })
+                    ordersInfo: '',
+                });
+
+            // Create recommendations document in 'recommendations' collection
+            await firestore().collection('recommendations').doc(result.user.uid).set({
+                uid: result.user.uid,
+                productIds: [],
+            });
             ToastAndroid.show('Signed up successfully', ToastAndroid.SHORT);
             // Navigate to the Login screen after successful signup
             console.log("Navigate to the Login screen after successful signup")
-            await AsyncStorage.setItem('NAME',name);
+            await AsyncStorage.setItem('NAME', name);
             await AsyncStorage.setItem('EMAIL', email);
             await AsyncStorage.setItem('NUMBER', number);
 
             setisLoading(false);
-        } catch (error) {
+        }
+
+        catch (error) {
             console.log('error', error);
             ToastAndroid.show('Sign up failed', ToastAndroid.SHORT);
             if (error.code === 'auth/email-already-in-use') {
@@ -123,7 +131,7 @@ const Signup = ({ navigateToLogin }) => {
         setPassword(text);
 
         if (!validatePassword(text)) {
-            setPasswordError('Invalid password');
+            // setPasswordError('Invalid password');
         } else {
             setPasswordError('');
         }
@@ -251,9 +259,9 @@ const Signup = ({ navigateToLogin }) => {
                                 textStyle={{ ...styles.textStyle, ...styles.customTextStyle }}
                                 btnStyle={{ ...styles.btnStyle, ...styles.customStyle }}
                                 btnText={'Sign Up'}
-                                onPress={() => handleUserSignup()}
-
-                                // onPress={() => navigation.navigate('Login')}
+                                onPress={() => {
+                                    handleUserSignup();
+                                  }}
                             />
                             <TouchableOpacity
                                 style={styles.loginSignview}
