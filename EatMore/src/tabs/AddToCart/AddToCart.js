@@ -30,6 +30,11 @@ const AddToCart = () => {
         uid = await AsyncStorage.getItem('USERID');
         const user = await firestore().collection('users').doc(uid).get();
         setCartList(user._data.cart);
+        console.log('')
+        console.log('')
+        console.log('addcart')
+        console.log('addcart')
+        console.log(user._data.cart)
         setisLoading(false);
     };
 
@@ -121,6 +126,13 @@ const AddToCart = () => {
     const renderItem = ({ item, index }) => {
         console.log('this is the add cart item', item)
         console.log(item.data.imageUrl)
+        console.log(item.additionalItems)
+        console.log('')
+        console.log('')
+        console.log('')
+        console.log('')
+        console.log('.name')
+        console.log(item.additionalItems)
         return (
             <View style={{
                 flexDirection: 'row',
@@ -146,17 +158,16 @@ const AddToCart = () => {
                         <Text style={styles.cartItemNameStyle}>{item.data.name}</Text>
                         <Text style={styles.cartItemPriceStyle}>Rs.{item.data.price}</Text>
                         {/* <Text style={styles.cartItemPriceStyle}>Rs.{item.}</Text> */}
-                       {item.additionalItem ?
+                       {item.additionalItems ?
                         <View style={{ flexDirection: 'row' }}>
                         {item.additionalItems.map((additionalItem, additionalIndex) => (
                             <View key={additionalIndex} style={styles.additionalItemContainer}>
-                                <Text style={styles.additionalItemName}>{additionalItem.name}</Text>
+                                <Text style={styles.additionalItemName}>{additionalItem.name}name</Text>
                                 <Text style={styles.additionalItemPrice}>Rs.{additionalItem.price}</Text>
                             </View>
                         ))}
                     </View> 
                     :null
-
                        }
                         <View style={styles.CounterView}>
                             <TouchableOpacity
